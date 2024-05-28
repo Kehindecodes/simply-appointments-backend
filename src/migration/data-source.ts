@@ -28,3 +28,12 @@ export async function init() {
         console.error("Database connection error: ", error)
     }
 }
+
+export async function close() {
+    try{
+        await AppDataSource.destroy();
+        console.log("Database has been closed!")
+    } catch(error) {
+        console.error("Database connection error: ", error)
+    }
+}
