@@ -5,7 +5,6 @@ import { close,init } from "./migration/data-source";
 describe('GET /', () => {
   beforeAll(async () => {
     await init();
-    console.log("Database has been initialized!")
   })
   // afterAll(async () => {
   //   await close();
