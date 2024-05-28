@@ -11,6 +11,9 @@ app.use(cors());
 
 
 //routes
+app.get("/", (req, res) => {
+    res.send("It is about to get down!");
+})
 
 
 
