@@ -1,0 +1,62 @@
+version: '3'
+services:
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: simply-appointments-api
+    ports:
+      - "5050:5050"
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=1234
+      - DB_NAME=simply-appointments-db
+    depends_on:
+      - postgres
+    restart: always
+    networks:
+      - Simply-Appointments
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+
+  server-prod:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    container_name: simply-appointments-api-prod
+    ports:
+      - "5050:5050"
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=1234
+      - DB_NAME=simply-appointments-db
+    depends_on:
+      - postgres
+    restart: always
+    networks:
+      - Simply-Appointments
+
+  postgres:
+    image: postgres
+    container_name: simply-appointments-db
+    ports:
+      - "5450:5450"
+    restart: always
+    environment:
+      - POSTGRES_USERNAME=postgres
+      - POSTGRES_DATABASE=simply-appointments-db
+      - POSTGRES_PASSWORD=1234
+    networks:
+      - Simply-Appointments
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+
+networks:
+  Simply-Appointments:
+volumes:
+  postgres_data:

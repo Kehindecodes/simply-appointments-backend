@@ -4,11 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node src/server.ts",
+    "start": "node dist/server.js",
     "test": "jest",
+    "prebuild":"mkdir -p dist/@types && cp -R node_modules/@types/. dist/@types/",
     "build": "tsc --build",
     "dev": "nodemon --exec ts-node src/server.ts",
-    "serve": "node dist/src/server.js"
+    "serve": "node dist/server.js"
   },
   "keywords": [],
   "author": "",
@@ -23,7 +24,7 @@
     "morgan": "^1.10.0",
     "nodemon": "^3.1.0",
     "supertest": "^6.3.4",
-    "ts-jest": "^29.1.2",
+    "ts-jest": "^29.1.4",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5"
   },

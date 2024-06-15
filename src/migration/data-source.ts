@@ -1,4 +1,5 @@
 import { DataSource } from "typeorm";
+import { User } from "../entity/User";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -7,17 +8,19 @@ const { DB_HOST, DB_PORT, DB_USERNAME, DB_PASSWORD, DB_NAME, DB_DATABASE } = pro
 
 export const AppDataSource = new DataSource({
     type: "postgres",
-    host: DB_HOST,
-    port: Number(DB_PORT),
-    username: DB_USERNAME,
-    password: DB_PASSWORD,
-    database: DB_DATABASE,
+    host: process.env.POSTGRES_HOST || DB_HOST,
+    port:  Number( process.env.POSTGRES_PORT || DB_PORT),
+    username: process.env.POSTGRES_USERNAME || DB_USERNAME,
+    password: process.env.POSTGRES_PASSWORD || DB_PASSWORD,
+    database:  process.env.POSTGRES_DATABASE || DB_DATABASE,
     synchronize: true,
     logging: true,
-    entities: [],
-    subscribers: [],
+    entities: [User],
+    subscribers: [], 
     migrations: [],
 })
+
+
 
 
 export async function init() {

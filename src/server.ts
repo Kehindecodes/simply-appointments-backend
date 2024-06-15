@@ -2,6 +2,7 @@ import http from "http";
 import { init, AppDataSource } from "./migration/data-source";
 import app from "./index";
 import dotenv from "dotenv";
+import "reflect-metadata";
 
 dotenv.config();
 
