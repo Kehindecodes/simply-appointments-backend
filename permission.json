@@ -1,0 +1,158 @@
+[
+  {
+    "id": 1,
+    "name": "View Appointments",
+    "description": "Permission to view appointments",
+    "roles": [1, 2, 3]
+  },
+  {
+    "id": 2,
+    "name": "Book Appointments",
+    "description": "Permission to book appointments",
+    "roles": [2]
+  },
+  {
+    "id": 3,
+    "name": "Cancel Appointments",
+    "description": "Permission to cancel appointments",
+    "roles": [1, 2]
+  },
+  {
+    "id": 4,
+    "name": "Add Staff",
+    "description": "Permission to Add staff members",
+    "roles": [1]
+  },
+  {
+    "id": 5,
+    "name": "Add Services",
+    "description": "Permission to Add services",
+    "roles": [1]
+  },
+  {
+    "id": 6,
+    "name": "view Roles",
+    "description": "Permission to view roles",
+    "roles": [1]
+  },
+  {
+    "id": 7,
+    "name": "view Users",
+    "description": "Permission to view users",
+    "roles": [1]
+  },
+  {
+    "id": 8,
+    "name": "View Staff Appointments",
+    "description": "Permission to view staff appointments",
+    "roles": [1, 3]
+  },
+  {
+    "id": 9,
+    "name": "Reschedule Appointments",
+    "description": "Permission to reschedule appointments",
+    "roles": [1, 2]
+  },
+  {
+    "id": 10,
+    "name": "Update Appointment Status",
+    "description": "Permission to update appointment status",
+    "roles": [1, 2]
+  },
+  {
+    "id": 11,
+    "name": "Send Notifications",
+    "description": "Permission to send notifications",
+    "roles": [1]
+  },
+  {
+    "id": 12,
+    "name": "View Reports",
+    "description": "Permission to view reports",
+    "roles": [1]
+  },
+  {
+    "id": 13,
+    "name": "Manage Settings",
+    "description": "Permission to manage system settings",
+    "roles": [1]
+  },
+  {
+    "id": 14,
+    "name": "View Dashboard",
+    "description": "Permission to view dashboard",
+    "roles": [1, 2, 3]
+  },
+  {
+      "id": 15,
+      "name":"view staff appointments",
+      "description": "Permission to view staff appointments",
+      "roles": [1, 3]
+  },
+  {
+      "id": 16,
+      "name": "Delete Staff",
+      "description": "Permission to delete staff",
+      "roles": [1]
+  },
+  {
+     "id":17,
+     "name": "Delete Service",
+     "description": "Permission to delete service",
+     "roles": [1]
+  },
+  {
+      "id": 18,
+      "name": "Add Roles",
+      "description": "Permission to add roles",
+      "roles": [1]
+  },
+  {
+      "id": 19,
+      "name": "Delete Roles",
+      "description": "Permission to delete roles",
+      "roles": [1]
+  },
+  {
+      "id": 20,
+      "name": "Update Staff Status",
+      "description": "Permission to update staff status",
+      "roles": [1]
+  },{
+      "id": 21,
+      "name":"view services",
+      "description": "Permission to view services",
+      "roles": [1, 2, 3]
+  },
+  {
+      "id":22,
+      "name": "view staff",
+      "description": "Permission to view staff",
+      "roles": [1, 2, 3]
+  },
+  {
+      "id": 23,
+      "name": "add user",
+      "description": "Permission to add user",
+      "roles": [1]
+  },
+  {
+      "id": 24,
+      "name": "delete user",
+      "description": "Permission to delete user",
+      "roles": [1]
+  },
+  {
+
+    "id": 25,
+    "name": "Add staff service",
+    "description": "Permission to add staff service",
+    "roles": [1]
+  },
+  {
+      "id": 26,
+      "name": "Delete staff service",
+      "description": "Permission to delete staff service",
+      "roles": [1]
+  }
+]
