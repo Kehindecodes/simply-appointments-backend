@@ -139,3 +139,10 @@ dist
 .svelte-kit
 
 postgres-data/
+node_modules
+.env
+/dist/
+/postgres_data/
+.vscode/
+.gitignore
+/
