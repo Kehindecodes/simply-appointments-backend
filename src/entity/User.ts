@@ -1,16 +1,36 @@
-import { Entity, PrimaryGeneratedColumn, Column, PrimaryColumn } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column, PrimaryColumn } from "typeorm";
 
 @Entity()
 export class User {
     @PrimaryGeneratedColumn("uuid")
-    id?: string 
-
-    @Column() 
-    firstName?: string
+    id?: string;
 
     @Column()
-    lastName?: string
+    firstName?: string;
 
     @Column()
-    isActive?: boolean
+    lastName?: string;
+
+    @Column()
+    email?: string;
+
+    @Column()
+    phone?: string;
+
+    @Column()
+    userType?: string;
+    required?: [
+        "customer", 
+        "staff", 
+        "admin"
+    ];
+
+    // @Column()
+    // address?: string;
+
+    @Column()
+    isActive?: boolean;
+
+    @Column()
+    qualification?: string
 }
