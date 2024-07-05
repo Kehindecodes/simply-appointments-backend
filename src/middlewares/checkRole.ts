@@ -1,10 +1,10 @@
 import {Request, Response, NextFunction} from "express";
 import { Role } from "../entity/Role";
 import { AppDataSource } from "../migration/data-source";
-import { RequestWithRole } from "../types/custom-express";
+import { CustomRequest } from "../types/custom-express";
 
 
-export const checkRole = async (req: RequestWithRole, res: Response, next: NextFunction) => {
+export const checkRole = async (req: CustomRequest, res: Response, next: NextFunction) => {
     try{
         // check if role exists in the route
         let roleId = Number(req.params.id);

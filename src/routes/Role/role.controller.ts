@@ -1,7 +1,7 @@
 import {Request, Response} from "express"
 import { Role } from "../../entity/Role";
 import { AppDataSource } from "../../migration/data-source";
-import { RequestWithRole } from "../../types/custom-express";
+import { CustomRequest } from "../../types/custom-express";
 
 
 export const createRole = async (
@@ -43,7 +43,7 @@ export const getRoles = async ( req: Request, res: Response ) : Promise<void> =>
     }
 }
 
-export const getRole = async ( req: RequestWithRole, res: Response ) : Promise<void> => {
+export const getRole = async ( req: CustomRequest, res: Response ) : Promise<void> => {
     try{
         // get role from the request
         const role = req.role
