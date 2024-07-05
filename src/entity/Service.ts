@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
-import { currency } from "../enum/Currency";
+import { currency } from '../enum/currency.enum';
 
 Entity();
 export class Service {

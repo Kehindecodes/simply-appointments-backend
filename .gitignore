@@ -138,11 +138,11 @@ dist
 # SvelteKit build / generate output
 .svelte-kit
 
-../postgres-data
-.env
+postgres-data/
 node_modules
+.env
+/dist/
+/postgres_data/
+.vscode/
 .gitignore
-.DS_Store
-.git
-.gitignore
-.vscode
+/

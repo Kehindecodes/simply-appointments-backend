@@ -1,8 +1,10 @@
 import { DataSource } from "typeorm";
-import { User } from "../entity/User";
+import {User } from "../entity/User";
+import {Permission} from "../entity/Permission";
+import {Role} from "../entity/Role";
 import dotenv from "dotenv";
 import { Service } from '../entity/Service';
-
+ 
 dotenv.config();
 
 const { DB_HOST, DB_PORT, DB_USERNAME, DB_PASSWORD, DB_NAME, DB_DATABASE } = process.env
@@ -16,8 +18,8 @@ export const AppDataSource = new DataSource({
     database:  process.env.POSTGRES_DATABASE || DB_DATABASE,
     synchronize: true,
     logging: true,
-    entities: [User,Service],
-    subscribers: [],
+    entities: [User,Service,Permission,Role ],
+    subscribers: [], 
     migrations: [],
 })
 
