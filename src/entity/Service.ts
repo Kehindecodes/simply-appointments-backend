@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
 import { currency } from '../enum/currency.enum';
+import { User } from './User';
 
 Entity();
 export class Service {
@@ -30,6 +31,9 @@ export class Service {
     @Column()
     availability?: boolean
     default?: true
+
+    // @OneToMany(() => User, (user) => user.service)
+    // users?: User[]
 
     declare createdAt?: Date
 }
