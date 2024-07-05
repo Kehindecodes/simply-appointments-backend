@@ -1,69 +1,9 @@
 import { Request, Response } from "express";
 import { Permission } from "../../entity/Permission";
 import { AppDataSource } from "../../migration/data-source";
-import fs from "fs";
-import path from "path";
 import { Role } from "../../entity/Role";
 import { In } from "typeorm";
 
-// const permissionPath = path.join(__dirname, "../../../", "permission.json");
-// // const rolePermissionPath = path.join(__dirname,'../../../','rolePermission.json');
-
-// let permissions;
-
-// export const createBulkPermission = async (
-//     req: Request,
-//     res: Response
-// ): Promise<void> => {
-//     try {
-//         const data = fs.readFileSync(permissionPath, "utf-8");
-//         permissions = JSON.parse(data);
-
-//         for (const permissionItem of permissions) {
-//             const existingPermission = await AppDataSource.manager.findOneBy(
-//                 Permission,
-//                 {
-//                     id: permissionItem.id,
-//                 }
-//             );
-
-//             if (existingPermission) {
-//                res.status(400).send({
-//                     message: "Permission already exists",
-//                 });
-//                 continue;
-//             }
-//             let existingRoles = [];
-//             // get the role from the database
-//         //   const permissionRoles : number[] =  permissionItem.roles
-//             for (const role of permissionItem.roles!) {
-//                 const existingRole = await AppDataSource.manager.findOneBy(
-//                     Role,
-//                     {
-//                         id: role,
-//                     }
-//                 );
-//                 if (existingRole) {
-//                     existingRoles.push(existingRole);
-//                 }
-//             }
-//             // console.log(existingRoles);
-//             permissionItem.roles = existingRoles;
-//             await AppDataSource.manager.insert(Permission, permissionItem);
-
-//         }
-
-//         res.status(201).send({
-//             message: "Permissions created successfully",
-//         });
-//     } catch (err: any) {
-//         console.error(`Error reading permission.json file: ${err}`);
-//         res.status(500).send({
-//             message: "Error creating permissions",
-//             error: err.message,
-//         });
-//     }
-// };
 
 export const createPermission = async (
     req: Request,
@@ -148,30 +88,3 @@ export const getRolePermission = async (
         });
     }
 };
-
-//   export const creatbulkRolePermission = async (req: Request, res: Response) : Promise<void> =>{
-//     try {
-//         const data = fs.readFileSync(rolePermissionPath, 'utf-8');
-//         const rolePermissions: RolePermission[] = JSON.parse(data);
-
-//         for (const rolePermissionItem of rolePermissions) {
-//           const existingRolePermission = await AppDataSource.manager.findOneBy(RolePermission, {
-//             id: rolePermissionItem.id,
-//           });
-
-//           if (!existingRolePermission) {
-//             await AppDataSource.manager.insert(RolePermission, rolePermissionItem);
-//           }
-//         }
-
-//         res.status(201).send({
-//           message: "Role Permissions created successfully",
-//         });
-//       } catch (err: any) {
-//         console.error(`Error reading role permission.json file: ${err}`);
-//         res.status(500).send({
-//           message: "Error creating role permissions",
-//           error: err.message,
-//         });
-//       }
-//   }

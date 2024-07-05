@@ -3,6 +3,7 @@ import {User } from "../entity/User";
 import {Permission} from "../entity/Permission";
 import {Role} from "../entity/Role";
 import dotenv from "dotenv";
+import { Service } from '../entity/Service';
  
 dotenv.config();
 
@@ -17,13 +18,10 @@ export const AppDataSource = new DataSource({
     database:  process.env.POSTGRES_DATABASE || DB_DATABASE,
     synchronize: true,
     logging: true,
-    entities: [User,Permission,Role ],
+    entities: [User,Service,Permission,Role ],
     subscribers: [], 
     migrations: [],
 })
-
-
-
 
 export async function init() {
     try{
