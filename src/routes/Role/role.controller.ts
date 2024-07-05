@@ -55,7 +55,7 @@ export const getRole = async ( req: RequestWithRole, res: Response ) : Promise<v
     } catch (err: any) {
         console.error(`Error getting role.json file: ${err}`);
         res.status(500).send({
-            message: "Error creating roles",
+            message: "Error getting roles",
             error: err.message,
         });
     }
