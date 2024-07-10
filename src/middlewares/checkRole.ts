@@ -2,7 +2,6 @@ import {Request, Response, NextFunction} from "express";
 import { Role } from "../entity/Role";
 import { AppDataSource } from "../migration/data-source";
 import { CustomRequest } from "../types/custom-express";
-import { AppError } from "../utils/AppError";
 
 
 export const checkRole = async (req: CustomRequest, res: Response, next: NextFunction) => {

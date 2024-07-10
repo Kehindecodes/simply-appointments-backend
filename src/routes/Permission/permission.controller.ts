@@ -3,7 +3,6 @@ import { Permission } from "../../entity/Permission";
 import { AppDataSource } from "../../migration/data-source";
 import { Role } from "../../entity/Role";
 import { In } from "typeorm";
-import { AppError } from "../../utils/AppError";
 
 
 export const createPermission = async (
