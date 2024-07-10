@@ -45,6 +45,10 @@ export const getRole = async (
     try {
         // get role from the request
         const role = req.role;
+        if (!role) {
+            res.status(404).json({ message: "Role not found" });
+            return;
+        }
         res.status(200).json(role);
     } catch (err: any) {
         res.status(500).send({
