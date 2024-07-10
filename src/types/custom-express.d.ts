@@ -2,6 +2,9 @@
 import { Request } from 'express';
 import { Role } from '../entity/Role';
 
-interface RequestWithRole extends Request {
-    role?: Role;
-  }
+export interface CustomRequest extends Request {
+  role?: Role;
+  // user?: User;
+  // token?: string;
+  // permissions?: string[];
+}
