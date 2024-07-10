@@ -1,8 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
-import { currency } from '../enum/currency.enum';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable } from "typeorm";
 import { User } from './User';
 
-Entity();
+
+@Entity()
 export class Service {
     @PrimaryGeneratedColumn("uuid")
     id?: string;
@@ -11,29 +11,26 @@ export class Service {
     serviceName?: string;
 
     @Column()
+    price?: number;
+
+    @Column({
+        nullable: true
+    })
     description?: string;
 
     @Column()
     isActive?: boolean;
 
-    @Column() // use the currency enum here
-    currency?: currency;
+    @Column({
+        nullable: true
+    })
+    duration?: string;
 
     @Column()
-    price?: number;
+    availability?: boolean;
 
-    @Column()
-    duration?: number;
-    required?: [
-        "name",
-        "price"
-    ];
-    @Column()
-    availability?: boolean
-    default?: true
-
-    // @OneToMany(() => User, (user) => user.service)
-    // users?: User[]
-
-    declare createdAt?: Date
+    // Add a ManyToMany relationship
+    @ManyToMany(() => User)
+    @JoinTable() // This decorator is used to define the join table
+    users?: User[];
 }

@@ -1,5 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, PrimaryColumn, ManyToOne } from "typeorm";
-import { Service } from './Service';
+import {
+    Entity,
+    PrimaryGeneratedColumn,
+    Column,
+    ManyToMany,
+    JoinTable,
+} from "typeorm";
+import { Service } from "./Service";
+// import { Service } from './Service';
 
 @Entity()
 export class User {
@@ -20,11 +27,7 @@ export class User {
 
     @Column()
     userType?: string;
-    required?: [
-        "customer", 
-        "staff", 
-        "admin"
-    ];
+    required?: ["customer", "staff", "admin"];
 
     // @Column()
     // address?: string;
@@ -33,8 +36,9 @@ export class User {
     isActive?: boolean;
 
     @Column()
-    qualification?: string
+    qualification?: string;
 
-    // @ManyToOne(type => Service, service => service.users)
-    // service?: Service
+    @ManyToMany(() => Service)
+    @JoinTable() // This decorator is used to define the join table
+    bookedServices?: Service[];
 }
