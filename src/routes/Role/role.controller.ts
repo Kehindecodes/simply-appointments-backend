@@ -1,8 +1,7 @@
-import {Request, Response} from "express"
+import { Request, Response } from "express";
 import { Role } from "../../entity/Role";
 import { AppDataSource } from "../../migration/data-source";
 import { CustomRequest } from "../../types/custom-express";
-
 
 export const createRole = async (
     req: Request,
@@ -11,23 +10,19 @@ export const createRole = async (
     try {
         const role = new Role();
         role.name = req.body.name;
-        if(!role.name) {
-            res.status(400).send("name is required");
-            return;
+        if (!role.name) {
+            res.status(400).json({ message: "Role name is required" });
         }
         await AppDataSource.manager.save(role);
         res.status(201).json(role);
     } catch (err: any) {
-        console.error(`Error creating role: ${err}`);
-        res.status(500).send({
-            message: "Error creating role",
-            error: err.message,
-        });
+        console.error(`Error creating role:`, err);
+        res.status(500).json({ message: "Error creating role" });
     }
-}
+};
 
-export const getRoles = async ( req: Request, res: Response ) : Promise<void> => {
-    try{
+export const getRoles = async (req: Request, res: Response): Promise<void> => {
+    try {
         let data = [];
         const roles = await AppDataSource.manager.find(Role);
         for (const role of roles) {
@@ -35,47 +30,42 @@ export const getRoles = async ( req: Request, res: Response ) : Promise<void> =>
         }
         res.status(200).json(data);
     } catch (err: any) {
-        console.error(`Error getting role.json file: ${err}`);
         res.status(500).send({
-            message: "Error creating roles",
+            message: "Error creating role",
             error: err.message,
         });
-    }
-}
 
-export const getRole = async ( req: CustomRequest, res: Response ) : Promise<void> => {
-    try{
+    }
+};
+
+export const getRole = async (
+    req: CustomRequest,
+    res: Response
+): Promise<void> => {
+    try {
         // get role from the request
-        const role = req.role
-        if (!role) {
-            res.status(404).json({ message: "Role not found" });
-            return;
-        }
+        const role = req.role;
         res.status(200).json(role);
     } catch (err: any) {
-        console.error(`Error getting role.json file: ${err}`);
         res.status(500).send({
-            message: "Error getting roles",
+            message: "Error getting role",
             error: err.message,
         });
     }
+};
 
-}
-
-export const deleteRole = async ( req: Request, res: Response ) : Promise<void> => {
+export const deleteRole = async (
+    req: CustomRequest,
+    res: Response
+): Promise<void> => {
     try{
-        const role = await AppDataSource.manager.findOneBy(Role, {id: Number(req.params.id)});
-        if (!role) {
-            res.status(404).json({ message: "Role not found" });
-            return;
-        }
+        const role = req.role;
         await AppDataSource.manager.remove(role);
         res.status(200);
     } catch (err: any) {
-        console.error(`Error getting role.json file: ${err}`);
         res.status(500).send({
-            message: "Error creating roles",
+            message: "Error deleting role",
             error: err.message,
         });
     }
-}
+};

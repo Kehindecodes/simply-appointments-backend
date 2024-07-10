@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import permissionRouter from "./routes/Permission/permission.route";
 import roleRouter from "./routes/Role/role.route";
+import { errorHandler } from "./middlewares/errorHandler";
 
 
 const app = express();

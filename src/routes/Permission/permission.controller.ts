@@ -3,6 +3,7 @@ import { Permission } from "../../entity/Permission";
 import { AppDataSource } from "../../migration/data-source";
 import { Role } from "../../entity/Role";
 import { In } from "typeorm";
+import { AppError } from "../../utils/AppError";
 
 
 export const createPermission = async (
@@ -23,7 +24,8 @@ export const createPermission = async (
         });
 
         if (roles.length === 0) {
-            throw new Error(`No roles found with IDs ${roleIds.join(", ")}`);
+             throw new Error(`No roles found with IDs ${roleIds.join(", ")}`);
+
         }
 
         // Associate the permission with the existing roles
@@ -53,12 +55,11 @@ export const getPermission = async (
         }
         res.status(200).json(data);
     } catch (err: any) {
-        console.error(`Error reading permission.json file: ${err}`);
-        res.status(500).send({
-            message: "Error creating permissions",
+        res.status(500).send({  
+            message: "Error creating permission",
             error: err.message,
         });
-    }
+        }
 };
 
 // get role permissions
@@ -75,16 +76,10 @@ export const getRolePermission = async (
             .leftJoinAndSelect("permission.roles", "role")
             .getOne();
         if (!permission) {
-            res.status(404).send({
-                message: "permission not found",
-            });
-            return;
+            res.status(404).json({ message: "Permission not found" });
         }
         res.status(200).json(permission);
     } catch (err: any) {
-        res.status(500).send({
-            message: "Error in get role and permissions",
-            error: err.message,
-        });
+        res.status(500).json({ message: "Error getting role permissions" });
     }
 };

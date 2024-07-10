@@ -2,6 +2,7 @@ import {Request, Response, NextFunction} from "express";
 import { Role } from "../entity/Role";
 import { AppDataSource } from "../migration/data-source";
 import { CustomRequest } from "../types/custom-express";
+import { AppError } from "../utils/AppError";
 
 
 export const checkRole = async (req: CustomRequest, res: Response, next: NextFunction) => {
@@ -12,8 +13,8 @@ export const checkRole = async (req: CustomRequest, res: Response, next: NextFun
         if (!roleId) {
            const reqBody = req.body
            if(!reqBody.roleId) {
-               res.status(400).send("roleId is required");
-               return;
+            res.status(400).json({message: "Role not found"});
+            return;
            }
            roleId = Number(reqBody.roleId);
         }

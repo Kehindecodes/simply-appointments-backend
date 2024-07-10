@@ -3,7 +3,7 @@ import { Service } from "../entity/Service";
 import { response } from "express";
 const serviceRepository = AppDataSource.getRepository(Service);
 
-export const createService = async (req: any, res: any) => {
+export const createService = async (req: Request, res: any) => {
     try {
         const { serviceName, price, description, duration } = req.body;
         if (
