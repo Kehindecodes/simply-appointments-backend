@@ -7,16 +7,19 @@ export class User {
     id?: string;
 
     @Column()
-    firstName?: string;
-
-    @Column()
-    lastName?: string;
+    name?: string;
 
     @Column()
     email?: string;
 
     @Column()
-    phone?: string;
+    phoneNumber?: string;
+
+    @Column()
+    password?: string;
+
+    @Column()
+    address?: string;
 
     @Column()
     userType?: string;
@@ -25,15 +28,6 @@ export class User {
         "staff", 
         "admin"
     ];
-
-    // @Column()
-    // address?: string;
-
-    @Column()
-    isActive?: boolean;
-
-    @Column()
-    qualification?: string
 
     // @ManyToOne(type => Service, service => service.users)
     // service?: Service
