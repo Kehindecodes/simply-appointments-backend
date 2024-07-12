@@ -12,7 +12,7 @@ export const checkRole = async (req: CustomRequest, res: Response, next: NextFun
         if (!roleId) {
            const reqBody = req.body
            if(!reqBody.roleId) {
-            res.status(400).json({message: "Role not found"});
+            res.status(400).json({message: "role is required"});
             return;
            }
            roleId = Number(reqBody.roleId);
