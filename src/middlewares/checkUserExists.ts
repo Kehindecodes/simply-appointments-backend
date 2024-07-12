@@ -13,7 +13,7 @@ export const checkUserExists = async (req: CustomRequest, res: Response, next: N
         }
         const user = await AppDataSource.manager.findOneBy(User, {email: email});
         if (user) {
-            res.status(404).json({ message: "User already exists" });
+            res.status(400).json({ message: "User with this email already exists" });
             return;
         }
         next();
