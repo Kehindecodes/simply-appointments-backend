@@ -3,6 +3,7 @@ import { AppDataSource } from "../../migration/data-source";
 import { User } from "../../entity/User";
 import bcrypt from "bcrypt";
 import { validate } from "class-validator";
+import { UserType } from "../../enum/UserTypes";
 
 export const registerUser = async (
     req: Request,
@@ -19,7 +20,7 @@ export const registerUser = async (
         user.phoneNumber = phoneNumber;
         user.password = password;
         user.address = address;
-        user.userType = userType;
+        user.userType = userType || UserType.CUSTOMER;
 
         // Validate the user instance
         const errors = await validate(user);
