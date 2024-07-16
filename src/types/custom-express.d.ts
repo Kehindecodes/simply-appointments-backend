@@ -4,7 +4,7 @@ import { Role } from '../entity/Role';
 
 export interface CustomRequest extends Request {
   role?: Role;
-  // user?: User;
+  user?: User;
   // token?: string;
   // permissions?: string[];
 }
