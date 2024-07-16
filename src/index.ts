@@ -4,7 +4,7 @@ import permissionRouter from "./routes/Permission/permission.route";
 import roleRouter from "./routes/Role/role.route";
 import userRouter from "./routes/User/user.route";
 import passport from "passport";
-import { localStrategy } from "./passport-config";
+import { localStrategy } from "./services/passport-config";
 
 
 const app = express();
@@ -22,6 +22,8 @@ passport.use('local', localStrategy);
 app.use('/api/v1/permissions', permissionRouter);
 app.use('/api/v1/roles', roleRouter);
 app.use('/api/v1/users', userRouter);
+
+
 
 
 

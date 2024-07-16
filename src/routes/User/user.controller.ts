@@ -3,8 +3,11 @@ import { AppDataSource } from "../../migration/data-source";
 import { User } from "../../entity/User";
 import bcrypt from "bcrypt";
 import { validate } from "class-validator";
-import { UserType } from "../../enum/UserTypes";
+import { UserType } from "../../enum/userTypes.enum";
 import passport from "passport";
+import { generateOTP, sendOTP } from "../../utils/otp.utils";
+import { CustomRequest } from "../../types/custom-express";
+import { OTP } from "../../entity/OTP";
 
 export const registerUser = async (
     req: Request,
@@ -52,7 +55,7 @@ export const registerUser = async (
 };
 
 export const loginUser = async (
-    req: Request,
+    req: CustomRequest,
     res: Response,
     next: NextFunction
 ): Promise<void> => {
@@ -62,16 +65,30 @@ export const loginUser = async (
             res.status(400).json({ message: "Email and password are required" });
             return;
         }
-        passport.authenticate('local', (err: any, user:User, info: any) => {
+        passport.authenticate('local', async (err: any, user:User, info: any) => {
             if (err) {
                 return next(err);
             }
             if (!user) {
                 return res.status(401).json({ message: info.message });
             }
-            return res.status(200).json({
-                message: "User logged in successfully"});
-        },)(req, res, next);
+                // generate One Time Password
+                const otp = generateOTP();
+                // save OTP to database
+                await AppDataSource.manager.save(OTP, {
+                    otp,
+                    email,
+                })
+              const infoMail = await sendOTP(otp, email);
+              if (infoMail){
+                return res.status(200).json({
+                    message: "User logged in successfully. Please check your email for OTP",});
+              }
+              return res.status(500).json({
+                  message: "Error sending OTP",
+              })
+        },
+        )(req, res, next);
     } catch (err: any) {
         console.error(`Error logging in user: ${err}`);
         res.status(500).send({
@@ -82,3 +99,4 @@ export const loginUser = async (
     }
 
 };
+
