@@ -31,6 +31,7 @@ export const AppDataSource = new DataSource({
             sslmode: "require",
             sslrootcert: SSLROOTCERT,
         },
+        timezone: "UTC",
     },
     synchronize: true,
     logging: true,

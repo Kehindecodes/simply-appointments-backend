@@ -12,8 +12,14 @@ export class OTP {
     email?: string;
 
     @CreateDateColumn()
-    @Index({
-        expireAfterSeconds: 300
-    })
     createdAt?: Date
+
+    
+    public get getOtp() : string {
+        return  this.otp || "";
+    }
+    public get isExpired() : boolean {
+        return  this.createdAt ?  Date.now() > this.createdAt.getTime() + 300000 : false;
+    }
+    
 }
