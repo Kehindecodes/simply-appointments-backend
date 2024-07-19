@@ -136,7 +136,9 @@ export const ValidateOTP = async (req: Request, res: Response) => {
 
     if (otp === DbOtp) {
         // Generate JWT token
-        const token = jwt.sign({ user }, process.env.SECRET_KEY as string,);
+        const token = jwt.sign({ user }, process.env.SECRET_KEY as string, {
+            algorithm: "HS256",
+        } );
         res.header("Authorization", `Bearer ${token}`);
         return res.status(200).json({ message: "OTP validated successfully" });
     }
