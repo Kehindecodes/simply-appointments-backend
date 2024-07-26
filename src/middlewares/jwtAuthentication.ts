@@ -1,10 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import { CustomRequest } from "../types/custom-express";
 
 dotenv.config();
 
-export const jwtAuthentication = (req: Request, res: Response, next: NextFunction) => {
+export const jwtAuthentication = (req: CustomRequest, res: Response, next: NextFunction) => {
     if (!req.headers.authorization) {
         return res.status(401).send('Authorization header is missing');
     }
