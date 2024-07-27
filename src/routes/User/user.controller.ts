@@ -36,7 +36,7 @@ export const registerUser = async (
         });
 
         if (!role) {
-            res.status(400).json({ message: "Invalid user type" });
+            res.status(400).json({ message: "role not found" });
             return;
         }
 

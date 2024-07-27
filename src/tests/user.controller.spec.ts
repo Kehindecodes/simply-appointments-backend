@@ -31,50 +31,58 @@ const testRegisterUserValidation = (
   };
   
 
-describe("/users", () => {
-  beforeAll(async () => {
-    jest.mock("../migration/data-source"); // Mock the ORM datasource
-});
+  describe("/users", () => {
+    beforeAll(async () => {
+      jest.mock("../migration/data-source");
+    });
+  
     it("should create a new user", async () => {
-        // Mock AppDataSource methods
-        
-        const mockSave = jest.fn().mockImplementation((user) => {
-          // This simulates returning the saved user with an id
-          return Promise.resolve({ ...user, id: '123e4567-e89b-12d3-a456-426614174000' });
-        });
-        AppDataSource.manager.save = mockSave;
-        // Mock request object
-        const req = getMockReq({
-            body: {
-                name: "Test User",
-                email: "2WUeh@example.com",
-                phoneNumber: "09097876541",
-                password: "password",
-                address: "123 Main St",
-                userType: "customer",
-            },
-        });
-        const res = getMockRes().res;
+      const mockSave = jest.fn().mockImplementation((user) => {
+        console.log("mockSave called with:", user);
+        return Promise.resolve({ ...user, id: '123e4567-e89b-12d3-a456-426614174000'});
+      });
+  
+      const mockFindOneBy = jest.fn().mockResolvedValue({ id: 2, name: "Customer" });
+  
+      AppDataSource.manager.save = mockSave;
+      AppDataSource.manager.findOneBy = mockFindOneBy;
 
-        // Call the function
-        await registerUser(req, res);
-
-        // Assertions
-        expect(mockSave).toHaveBeenCalledWith(expect.any(User)); // Check if user is saved
-        expect(res.status).toHaveBeenCalledWith(201); // Check response status
-        expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
-          id: expect.any(String),
+      const req = getMockReq({
+        body: {
           name: "Test User",
           email: "2WUeh@example.com",
           phoneNumber: "09097876541",
+          password: "password",
           address: "123 Main St",
-          userType: "customer",
-          password: expect.any(String),
-      })); // Check response data
-    })
-
-})
-
+          userType: "Customer",
+        },
+      });
+  
+      const { res } = getMockRes();
+  
+      await registerUser(req, res);
+  
+      const mockUser = {
+        id: expect.any(String),
+        name: "Test User",
+        email: "2WUeh@example.com",
+        phoneNumber: "09097876541",
+        password: expect.any(String),
+        address: "123 Main St",
+        userType: "Customer",
+        role: {
+          id: 2,
+          name: "Customer",
+        },
+      };
+  
+      expect(mockSave).toHaveBeenCalledTimes(1);
+      expect(mockSave).toHaveBeenCalledWith(expect.any(User));
+      expect(mockFindOneBy).toHaveBeenCalledTimes(1);
+      expect(res.status).toHaveBeenCalledWith(201);
+      expect(res.json).toHaveBeenCalledWith(expect.objectContaining(mockUser));
+    });
+  });
 describe('User Registration Validation', () => {
     testRegisterUserValidation(
       'should validate user email',
