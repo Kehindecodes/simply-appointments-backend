@@ -9,8 +9,9 @@ import { generateOTP, sendOTP } from "../../utils/otp.utils";
 import { CustomRequest } from "../../types/custom-express";
 import { OTP } from "../../entity/OTP";
 import jwt from "jsonwebtoken";
-import {LessThan, MoreThan } from "typeorm";
-import moment from 'moment-timezone';
+import { LessThan, MoreThan } from "typeorm";
+import moment from "moment-timezone";
+import { Role } from "../../entity/Role";
 
 export const registerUser = async (
     req: Request,
@@ -28,6 +29,18 @@ export const registerUser = async (
         user.password = password;
         user.address = address;
         user.userType = userType || UserType.CUSTOMER;
+
+        // add role based on user type
+        const role = await AppDataSource.manager.findOneBy(Role, {
+            name: user.userType,
+        });
+
+        if (!role) {
+            res.status(400).json({ message: "role not found" });
+            return;
+        }
+
+        user.role = role || undefined;
 
         // Validate the user instance
         const errors = await validate(user);
@@ -107,7 +120,6 @@ export const loginUser = async (
     }
 };
 
-
 export const ValidateOTP = async (req: Request, res: Response) => {
     const { email, otp } = req.body;
 
@@ -115,15 +127,18 @@ export const ValidateOTP = async (req: Request, res: Response) => {
     const dbTimezone = (AppDataSource.options.extra as any)?.timezone || "UTC";
 
     // Calculate 5 minutes ago in the database's timezone
-    const fiveMinutesAgo = moment().tz(dbTimezone).subtract(5, 'minutes').toDate();
+    const fiveMinutesAgo = moment()
+        .tz(dbTimezone)
+        .subtract(5, "minutes")
+        .toDate();
 
     // find the latest unexpired OTP for the email
     const otpData = await AppDataSource.manager.findOne(OTP, {
-        where: { 
+        where: {
             email,
-            createdAt: LessThan(fiveMinutesAgo)
+            createdAt: LessThan(fiveMinutesAgo),
         },
-        order: { createdAt: 'DESC' }
+        order: { createdAt: "DESC" },
     });
 
     if (!otpData) {
@@ -138,10 +153,29 @@ export const ValidateOTP = async (req: Request, res: Response) => {
         // Generate JWT token
         const token = jwt.sign({ user }, process.env.SECRET_KEY as string, {
             algorithm: "HS256",
-        } );
+        });
         res.header("Authorization", `Bearer ${token}`);
         return res.status(200).json({ message: "OTP validated successfully" });
     }
 
     return res.status(400).json({ message: "Invalid OTP" });
+};
+
+export const getUsersWithRole = async (
+    req: Request,
+    res: Response
+): Promise<void> => {
+    try {
+        const users = await AppDataSource.getRepository(User)
+            .createQueryBuilder("user")
+            .leftJoinAndSelect("user.role", "role")
+            .getMany();
+
+        res.status(200).json(users);
+    } catch (err: any) {
+        res.status(500).send({
+            message: "Error getting users",
+            error: err.message,
+        });
+    }
 };

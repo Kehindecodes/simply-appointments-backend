@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from "typeorm";
 import {
     IsEmail,
     MinLength,
@@ -8,6 +8,7 @@ import {
     IsString,
     IsIn,
 } from "class-validator";
+import { Role } from "./Role";
 
 @Entity()
 export class User {
@@ -41,7 +42,11 @@ export class User {
     address?: string;
 
     @IsNotEmpty({ message: "User type cannot be empty" })
-    @IsIn(["customer", "staff", "admin"], { message: "Invalid user type" })
+    @IsIn(["Customer", "Staff", "Admin"], { message: "Invalid user type" })
     @Column()
     userType?: string;
+
+    @ManyToOne(() => Role , (role: Role) => role.users, { eager: true, nullable: true })
+    @JoinColumn({ name: 'roleId'})
+    role?: Role
 }
