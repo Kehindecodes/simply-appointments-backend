@@ -2,6 +2,7 @@ import { NextFunction, Response } from "express";
 import { CustomRequest } from "../types/custom-express";
 import { AppDataSource } from "../migration/data-source";
 import { Appointment } from "../entity/Appointment";
+import { errorHandler } from "../httpResponse-handler/errorHandler";
 
 export const checkAppointment = async (
     req: CustomRequest,

@@ -4,6 +4,7 @@ import { Status } from "../../enum/Status";
 import { validate, Validate, Validator } from "class-validator";
 import { AppDataSource } from "../../migration/data-source";
 import { ResponseStatus } from "../../model/response-status";
+import { errorHandler } from '../../httpResponse-handler/errorHandler';
 
 export const createAppointment = async (req: Request, res: Response) => {
     try {
