@@ -5,6 +5,7 @@ import { Role } from "../entity/Role";
 import dotenv from "dotenv";
 import { Service } from "../entity/Service";
 import { OTP } from "../entity/OTP";
+import { Appointment } from "../entity/Appointment";
 
 dotenv.config();
 
@@ -36,7 +37,7 @@ export const AppDataSource = new DataSource({
     },
     synchronize: true,
     logging: true,
-    entities: [User, Service, Permission, Role, OTP],
+    entities: [User, Service, Permission, Role, OTP, Appointment],
     subscribers: [],
     migrations: [],
 });
