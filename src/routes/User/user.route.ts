@@ -10,4 +10,4 @@ userRouter.post('/validate-otp', ValidateOTP);
 userRouter.get('/', getUsersWithRole);
 
 
-export default userRouter
+export default userRouter;
