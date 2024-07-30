@@ -1,11 +1,13 @@
 import express from "express";
 import { createRole, getRoles, getRole } from "./role.controller";
 import { checkRole } from "../../middlewares/checkRole";
+import { jwtAuthentication } from "../../middlewares/jwtAuthentication";
+import { authorizeUser } from "../../middlewares/authorizeUser";
 
 const roleRouter = express.Router();
 
-roleRouter.post("/", createRole);
-roleRouter.get("/", getRoles);
-roleRouter.get("/:id", checkRole, getRole);
+roleRouter.post("/", jwtAuthentication, authorizeUser(["Add Roles"]), createRole);
+roleRouter.get("/", jwtAuthentication,authorizeUser(["view Roles"]), getRoles);
+roleRouter.get("/:id", jwtAuthentication, authorizeUser(["view Roles"]), checkRole, getRole);
 
 export default roleRouter;
