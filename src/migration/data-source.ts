@@ -20,14 +20,15 @@ const {
 
 export const AppDataSource = new DataSource({
     type: "postgres",
-    host: process.env.PGHOST || DB_HOST,
-    port: Number(process.env.PGPORT || DB_PORT),
-    username: process.env.PGUSER || DB_USERNAME,
-    password: process.env.PGPASSWORD || DB_PASSWORD,
-    database: process.env.PGDATABASE || DB_DATABASE,
+    url: process.env.DATABASE_URL,
+    // host: process.env.PGHOST || DB_HOST,
+    // port: Number(process.env.PGPORT || DB_PORT),
+    // username: process.env.PGUSER || DB_USERNAME,
+    // password: process.env.PGPASSWORD || DB_PASSWORD,
+    // database: process.env.PGDATABASE || DB_DATABASE,
     extra: {
         ssl: {
-            rejectUnauthorized: true,
+            rejectUnauthorized: false,
             sslmode: "require",
             sslrootcert: SSLROOTCERT,
         },
