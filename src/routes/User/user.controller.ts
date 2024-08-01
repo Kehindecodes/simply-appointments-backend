@@ -12,7 +12,9 @@ import jwt from "jsonwebtoken";
 import { LessThan, MoreThan } from "typeorm";
 import moment from "moment-timezone";
 import { Role } from "../../entity/Role";
-import { generateToken, sendPasswordResetLink, verifyToken } from "../../utils/token.utils";
+import {
+    sendPasswordResetLink,
+} from "../../utils/token.utils";
 import { LinkToken } from "../../entity/Token";
 
 export const registerUser = async (
@@ -133,43 +135,48 @@ export const ValidateOTP = async (req: Request, res: Response) => {
         .tz(dbTimezone)
         .subtract(5, "minutes")
         .toDate();
-try{
-    // find the latest unexpired OTP for the email
-    const otpData = await AppDataSource.manager.findOne(OTP, {
-        where: {
-            email,
-            createdAt: LessThan(fiveMinutesAgo),
-        },
-        order: { createdAt: "DESC" },
-    });
+    try {
+        // find the latest unexpired OTP for the email
+        const otpData = await AppDataSource.manager.findOne(OTP, {
+            where: {
+                email,
+                createdAt: LessThan(fiveMinutesAgo),
+            },
+            order: { createdAt: "DESC" },
+        });
 
-    if (!otpData) {
-        return res.status(400).json({ message: "Invalid OTP" });
+        if (!otpData) {
+            return res.status(400).json({ message: "Invalid OTP" });
+        }
+
+        const DbOtp = otpData.getOtp;
+
+        const user = await AppDataSource.manager.findOneBy(User, { email });
+
+        if (user) {
+            if (otp === DbOtp) {
+                // Generate JWT token
+                const token = jwt.sign(
+                    { id: user.userId },
+                    process.env.SECRET_KEY as string,
+                    {
+                        algorithm: "HS256",
+                        expiresIn: "1h",
+                    }
+                );
+                res.header("Authorization", `Bearer ${token}`);
+                return res
+                    .status(200)
+                    .json({ message: "OTP validated successfully" });
+            }
+            return res.status(400).json({ message: "Invalid OTP" });
+        }
+        return res.status(404).json({ message: "No user found" });
+    } catch (err: any) {
+        res.status(500).send({
+            message: "Error validating OTP",
+        });
     }
-
-    const DbOtp = otpData.getOtp;
-
-    const user = await AppDataSource.manager.findOneBy(User, { email });
-
-    if(user){
-        if (otp === DbOtp) {
-            // Generate JWT token
-            const token = jwt.sign({ id: user.userId }, process.env.SECRET_KEY as string, {
-                algorithm: "HS256",
-                expiresIn: "1h",
-            });
-            res.header("Authorization", `Bearer ${token}`);
-            return res.status(200).json({ message: "OTP validated successfully" });
-        } 
-        return res.status(400).json({ message: "Invalid OTP" });
-    } 
-    return res.status(404).json({ message: "No user found" });
-} catch (err: any) {
-    res.status(500).send({
-        message: "Error validating OTP",
-    })
-}
-    
 };
 
 export const getUsersWithRole = async (
@@ -191,28 +198,42 @@ export const getUsersWithRole = async (
     }
 };
 
-export const forgotPassword = async (req: Request, res: Response) : Promise<void> => {
+export const forgotPassword = async (
+    req: Request,
+    res: Response
+): Promise<void> => {
     const { email } = req.body;
     if (!email) {
-        res.status(400).json({message: "Email is required"});
+        res.status(400).json({ message: "Email is required" });
         return;
     }
     try {
-            await sendPasswordResetLink(email);
-            res.status(200).json({message: "Reset password link sent successfully"});
-
+        await sendPasswordResetLink(email);
+        res.status(200).json({
+            message: "Reset password link sent successfully",
+        });
     } catch (error) {
-        console.error(error); // Log the error for debugging purposes
-        res.status(500).json({message: "Error sending reset password link", error: error});
+        console.error(error);
+        res.status(500).json({
+            message: "Error sending reset password link",
+            error: error,
+        });
     }
-}
+};
 
-export const allowPasswordReset = async (req: Request, res: Response) : Promise<void> => {
+export const allowPasswordReset = async (
+    req: Request,
+    res: Response
+): Promise<void> => {
     const { token } = req.params;
     try {
-        const storedToken = await AppDataSource.manager.findOne(LinkToken, { where: { token } });
+        const storedToken = await AppDataSource.manager.findOne(LinkToken, {
+            where: { token },
+        });
         if (!storedToken) {
-            res.status(401).json({ message: "Invalid or expired token. Please request a new token" });
+            res.status(401).json({
+                message: "Invalid or expired token. Please request a new token",
+            });
         }
         res.status(200).json({ message: "Enter new password" });
     } catch (err: any) {
@@ -221,27 +242,34 @@ export const allowPasswordReset = async (req: Request, res: Response) : Promise<
             error: err,
         });
     }
-}
+};
 
-export const resetPassword = async (req: Request, res: Response) : Promise<Response> => {
-    const {password, confirmPassword, email} = req.body;
+export const resetPassword = async (
+    req: Request,
+    res: Response
+): Promise<Response> => {
+    const { password, confirmPassword, email } = req.body;
     if (!password || !confirmPassword || !email) {
-        return res.status(400).json({message: "All fields are required"});
+        return res.status(400).json({ message: "All fields are required" });
     }
     if (password !== confirmPassword) {
-       return res.status(400).json({message: "Passwords do not match"});
+        return res.status(400).json({ message: "Passwords do not match" });
     }
-    const user =   await AppDataSource.manager.findOne(User,{ where:{email} });
-    if(!user) {
-        return res.status(400).json({message: "wrong email"});
+    const user = await AppDataSource.manager.findOne(User, {
+        where: { email },
+    });
+    if (!user) {
+        return res.status(400).json({ message: "wrong email" });
     }
     const hashedPassword = await bcrypt.hash(password, 10);
-    const updatedUser = await AppDataSource.manager.update(User, {email}, {password: hashedPassword});
+    const updatedUser = await AppDataSource.manager.update(
+        User,
+        { email },
+        { password: hashedPassword }
+    );
     res.status(200).json({
         message: "Password reset successfully",
-        updatedUser : updatedUser
-});
+        updatedUser: updatedUser,
+    });
     return res;
-
-
-}
+};
