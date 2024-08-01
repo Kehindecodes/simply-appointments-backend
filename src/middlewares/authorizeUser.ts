@@ -9,20 +9,20 @@ import { Permission } from "../entity/Permission";
 export const authorizeUser = (permissions: string[]) => {
  return async (req: CustomRequest, res: Response, next: NextFunction) => {
    try{ 
-    const user = req.user
-    if (!user) {
+    const userId = req.userId
+    if (!userId) {
         res.status(401).send({
             message: "User not authenticated",
     });
 }
 
-console.log(`Fetching user with ID: ${user.user.id}`);
+console.log(`Fetching user with ID: ${userId}`);
         // Fetch the user's role and permissions
       const userWithRole = await AppDataSource.getRepository(User)
       .createQueryBuilder('user')
       .leftJoinAndSelect('user.role', 'role')
       .leftJoinAndSelect('role.permissions', 'permissions')
-      .where('user.id = :userId', { userId: user.user.id })
+      .where('user.id = :userId', { userId: userId })
       .cache(true)
       .getOne();
 
