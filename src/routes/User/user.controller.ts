@@ -255,21 +255,28 @@ export const resetPassword = async (
     if (password !== confirmPassword) {
         return res.status(400).json({ message: "Passwords do not match" });
     }
-    const user = await AppDataSource.manager.findOne(User, {
-        where: { email },
-    });
-    if (!user) {
-        return res.status(400).json({ message: "wrong email" });
+    try{
+        const user = await AppDataSource.manager.findOne(User, {
+            where: { email },
+        });
+        if (!user) {
+            return res.status(400).json({ message: "wrong email" });
+        }
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const updatedUser = await AppDataSource.manager.update(
+            User,
+            { email },
+            { password: hashedPassword }
+        );
+        return res.status(200).json({
+            message: "Password reset successfully",
+            updatedUser: updatedUser,
+        });
+    }catch(err: any){
+        return res.status(500).json({
+            message: err.message,
+            error: 'Error resetting password',
+        });
     }
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const updatedUser = await AppDataSource.manager.update(
-        User,
-        { email },
-        { password: hashedPassword }
-    );
-    res.status(200).json({
-        message: "Password reset successfully",
-        updatedUser: updatedUser,
-    });
-    return res;
+   
 };
