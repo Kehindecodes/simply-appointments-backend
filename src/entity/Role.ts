@@ -15,4 +15,5 @@ export class Role {
 
     @OneToMany(()=> User, (user: User) => user.role)
     users?: User[]
+
 }

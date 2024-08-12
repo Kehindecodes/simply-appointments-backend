@@ -57,4 +57,12 @@ export class User {
     public get userId() : string | undefined {
         return this.id;
     }
+
+    public set updateUserType(userType: string) {
+        this.userType = userType;
+    }
+
+    public set updateRole(role: Role) {
+        this.role = role;
+    }
 }

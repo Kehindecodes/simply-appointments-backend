@@ -7,7 +7,7 @@ import { CustomRequest } from "../types/custom-express";
 export const checkRole = async (req: CustomRequest, res: Response, next: NextFunction) => {
     try{
         // check if role exists in the route
-        let roleId = Number(req.params.id);
+        let roleId = Number(req.params.roleId);
         // check the request body 
         if (!roleId) {
            const reqBody = req.body

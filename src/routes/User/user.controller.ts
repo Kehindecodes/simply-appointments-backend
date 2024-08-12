@@ -161,7 +161,7 @@ export const ValidateOTP = async (req: Request, res: Response) => {
                     process.env.SECRET_KEY as string,
                     {
                         algorithm: "HS256",
-                        expiresIn: "1h",
+                         expiresIn: "1h",
                     }
                 );
                 res.header("Authorization", `Bearer ${token}`);
@@ -198,6 +198,31 @@ export const getUsersWithRole = async (
     }
 };
 
+export const getUserWithRole = async (
+    req: Request,
+    res: Response
+): Promise<void> => {
+    try {
+        const user = await AppDataSource.getRepository(User)
+            .createQueryBuilder("user")
+            .where("user.id = :id", { id: req.params.id })
+            .leftJoinAndSelect("user.role", "role")
+            .getOne();
+        
+            if (!user) {
+            res.status(404).send({
+                message: "User not found",
+            });
+            return;
+        }
+        res.status(200).json(user);
+    } catch (err: any) {
+        res.status(500).send({
+            message: "Error getting user",
+            error: err.message,
+        });
+    }
+};
 export const forgotPassword = async (
     req: Request,
     res: Response
@@ -280,3 +305,34 @@ export const resetPassword = async (
     }
    
 };
+
+export const deleteUser = async (
+    req: CustomRequest,
+    res: Response
+): Promise<void> => {
+    try {
+        await AppDataSource.manager.remove(req.user);
+        res.status(200).json({ message: "User deleted successfully" });
+    } catch (err: any) {
+        res.status(500).send({
+            message: "Error deleting user",
+            error: err.message,
+        });
+    }
+};
+
+
+export const updateUserRole = async ( req: CustomRequest, res: Response) : Promise<void> => {
+     const {user, role} = req 
+    try{
+        user.updateUserType = role?.name;
+        user.updateRole = role;
+        await AppDataSource.manager.save(user)
+        res.status(200).json({message: "User updated successfully"});
+    }catch(err: any){
+        res.status(500).send({
+            message: "Error updating user",
+            error: err.message,
+        });
+    }
+}
