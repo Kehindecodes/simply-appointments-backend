@@ -5,7 +5,7 @@ import { Role } from "../entity/Role";
 import dotenv from "dotenv";
 import { Service } from "../entity/Service";
 import { OTP } from "../entity/OTP";
-import { Appointment } from "../entity/Appointment";
+import { UserService } from "../entity/UserService";
 
 dotenv.config();
 
@@ -15,20 +15,20 @@ const {
     DB_USERNAME,
     DB_PASSWORD,
     DB_NAME,
-    DB_DATABASE,
+    DATABASE_URL,
     SSLROOTCERT,
 } = process.env;
 
 export const AppDataSource = new DataSource({
     type: "postgres",
-    host: process.env.PGHOST || DB_HOST,
-    port: Number(process.env.PGPORT || DB_PORT),
-    username: process.env.PGUSER || DB_USERNAME,
-    password: process.env.PGPASSWORD || DB_PASSWORD,
-    database: process.env.PGDATABASE || DB_DATABASE,
+    url: DATABASE_URL,
+    // port: Number(process.env.PGPORT || DB_PORT),
+    // username: process.env.PGUSER || DB_USERNAME,
+    // password: process.env.PGPASSWORD || DB_PASSWORD,
+    // database: process.env.PGDATABASE || DB_DATABASE,
     extra: {
         ssl: {
-            rejectUnauthorized: true,
+            rejectUnauthorized: false,
             sslmode: "require",
             sslrootcert: SSLROOTCERT,
         },
@@ -36,7 +36,7 @@ export const AppDataSource = new DataSource({
     },
     synchronize: true,
     logging: true,
-    entities: [User, Service, Permission, Role, OTP, Appointment],
+    entities: [User, Service, Permission, Role, OTP, UserService],
     subscribers: [],
     migrations: [],
 });

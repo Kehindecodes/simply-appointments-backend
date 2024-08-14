@@ -12,6 +12,7 @@ import { Role } from "./Role";
 
 @Entity()
 export class User {
+    @IsNotEmpty({ message: "ID cannot be empty" })
     @PrimaryGeneratedColumn("uuid")
     id?: string;
 

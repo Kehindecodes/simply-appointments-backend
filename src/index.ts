@@ -1,12 +1,12 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
-import permissionRouter from "./routes/Permission/permission.route";
 import roleRouter from "./routes/Role/role.route";
 import userRouter from "./routes/User/user.route";
 import passport from "passport";
 import { localStrategy } from "./services/passport-config";
+import permissionRouter from "./routes/Permission/permission.route";
 import { serviceRouter } from "./routes/Service/service.route";
-import { appointmentRouter } from "./routes/Apppointment/appointment.route";
+import { userServiceRouter } from "./routes/UserService/userService.route";
 
 const app = express();
 
@@ -21,6 +21,6 @@ app.use("/api/v1/permissions", permissionRouter);
 app.use("/api/v1/roles", roleRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/services", serviceRouter);
-app.use("/api/v1/appointments", appointmentRouter);
+app.use("/api/v1/userServices", userServiceRouter);
 
 export default app;

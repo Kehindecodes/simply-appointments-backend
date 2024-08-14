@@ -8,5 +8,4 @@ export interface CustomRequest extends Request {
     // token?: string;
     // permissions?: string[];
     service?: Service;
-    appointment?: Appointment;
 }

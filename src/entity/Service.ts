@@ -93,7 +93,7 @@ export class Service {
     public data() {
         const createdAtFormatted = this.createdAt.toISOString().split("T")[0];
         return {
-            id: this.id,
+            serviceId: this.id,
             serviceName: this.serviceName,
             price: this.price,
             description: this.description,
