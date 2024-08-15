@@ -49,4 +49,20 @@ export class User {
     @ManyToOne(() => Role , (role: Role) => role.users, { eager: true, nullable: true })
     @JoinColumn({ name: 'roleId'})
     role?: Role
+    
+    public set resetPassword(password: string) {
+        this.password = password;
+    }
+
+    public get userId() : string | undefined {
+        return this.id;
+    }
+
+    public set updateUserType(userType: string) {
+        this.userType = userType;
+    }
+
+    public set updateRole(role: Role) {
+        this.role = role;
+    }
 }
