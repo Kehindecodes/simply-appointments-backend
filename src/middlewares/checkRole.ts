@@ -10,8 +10,8 @@ export const checkRole = async (
 ) => {
     try {
         // check if role exists in the route
-        let roleId = Number(req.params.id);
-        // check the request body
+        let roleId = Number(req.params.roleId);
+        // check the request body 
         if (!roleId) {
             const reqBody = req.body;
             if (!reqBody.roleId) {
