@@ -159,6 +159,7 @@ export const ValidateOTP = async (req: Request, res: Response) => {
                 const token = jwt.sign(
                     { id: user.userId },
                     process.env.SECRET_KEY as string,
+                
                     {
                         algorithm: "HS256",
                          expiresIn: "1h",

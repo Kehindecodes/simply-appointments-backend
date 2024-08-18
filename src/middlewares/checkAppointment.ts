@@ -14,12 +14,12 @@ export const checkAppointment = async (
         let appointmentId = req.params.id;
         if (!appointmentId) {
             //check the parsed body instead
-            const post = req.body;
-            if (!post.appointmentId) {
+            const reqBody = req.body;
+            if (!reqBody.appointmentId) {
                 res.status(400).json({ message: "Appointment id is required" });
                 return;
             }
-            appointmentId = post.appointmentId;
+            appointmentId = reqBody.appointmentId;
         }
         // query the Appointment entity for an appointment id existence
         const appointment = AppDataSource.getRepository(Appointment).findOneBy({
