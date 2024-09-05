@@ -10,7 +10,6 @@ import {
 } from "class-validator";
 import { Role } from "./Role";
 import { Service } from './Service';
-
 @Entity()
 export class User {
     @IsNotEmpty({ message: "ID cannot be empty" })
@@ -55,7 +54,7 @@ export class User {
     @ManyToOne(() => Service , (service: Service) => service.users, { eager: true, nullable: true })
     @JoinColumn({ name: 'serviceId'})
     service?: Service
-    
+     
     public set resetPassword(password: string) {
         this.password = password;
     }
