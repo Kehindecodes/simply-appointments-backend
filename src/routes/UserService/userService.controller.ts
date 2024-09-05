@@ -9,7 +9,6 @@ export const addServiceToUser = async (
     res: Response
 ): Promise<void> => {
     try {
-        const id = req.body;
         const userId = req.params.userId;
         const serviceId = req.params.serviceId;
         const user = await AppDataSource.manager.findOneBy(User, {
@@ -35,7 +34,6 @@ export const addServiceToUser = async (
         }
 
         const userService = new UserService();
-        userService.id = id;
         userService.userId = user.id;
         userService.serviceId = service.id;
         await AppDataSource.manager.save(userService);
@@ -50,3 +48,37 @@ export const addServiceToUser = async (
         });
     }
 };
+
+export const getUsersService = async (
+    req: Request,
+    res: Response
+): Promise<void> => {
+    try {
+        const userId = req.params.userId;
+        const user = await AppDataSource.manager.findOneBy(User, {
+            id: userId,
+        });
+        if (!user) {
+            res.json({
+                message: "User not found",
+                status: 404,
+            });
+            return; // this exit the function early because the goal of finding the user failed in the first place
+        }
+        const userServices = await AppDataSource.manager.find(UserService, {
+            where: {
+                userId: user.id,
+            },
+        });
+        res.json({
+            message: "User services found successfully",
+            status: 200,
+            data: userServices.map((userService) => userService.data()),
+        });        
+    } catch (error) {
+        res.json({
+            message: error,
+            status: 500,
+        });
+    }
+}

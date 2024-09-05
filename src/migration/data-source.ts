@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 import { Service } from "../entity/Service";
 import { OTP } from "../entity/OTP";
 import { LinkToken } from "../entity/Token";
+import { UserService } from "../entity/UserService";
 
 dotenv.config();
 
@@ -37,7 +38,7 @@ export const AppDataSource = new DataSource({
     },
     synchronize: true,
     logging: true,
-    entities: [User, Service, Permission, Role, OTP, LinkToken],
+    entities: [User, Service, Permission, Role, OTP, LinkToken, UserService],
     subscribers: [],
     migrations: [],
 });

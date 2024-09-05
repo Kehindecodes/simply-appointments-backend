@@ -5,6 +5,7 @@ import {
     ManyToMany,
     JoinTable,
     CreateDateColumn,
+    OneToMany,
 } from "typeorm";
 import { User } from "./User";
 import {
@@ -83,9 +84,8 @@ export class Service {
     createdAt!: Date;
 
     // Add a ManyToMany relationship
-    @ManyToMany(() => User)
-    @JoinTable() // This decorator is used to define the join table
-    users?: User[];
+    @OneToMany(()=> User, (user: User) => user.role)
+    users?: User[]
 
     /**
      * data

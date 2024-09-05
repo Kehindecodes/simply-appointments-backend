@@ -21,6 +21,7 @@ app.use("/api/v1/permissions", permissionRouter);
 app.use("/api/v1/roles", roleRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/services", serviceRouter);
-app.use("/api/v1/userServices", userServiceRouter);
+app.use("/api/v1/user-services", userServiceRouter);
+
 
 export default app;

@@ -15,7 +15,6 @@ import { checkUser } from "../../middlewares/checkUser";
 import { jwtAuthentication } from "../../middlewares/jwtAuthentication";
 import { authorizeUser } from "../../middlewares/authorizeUser";
 import { checkRole } from "../../middlewares/checkRole";
-// import { createService } from '../controller/ServiceController';
 const userRouter = Router();
 
 userRouter.post("/", checkUserExists, registerUser);

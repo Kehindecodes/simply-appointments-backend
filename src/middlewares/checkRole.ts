@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
 import { Role } from "../entity/Role";
 import { AppDataSource } from "../migration/data-source";
 import { CustomRequest } from "../types/custom-express";
