@@ -4,8 +4,6 @@ import { AppDataSource } from "../migration/data-source";
 import { User } from "../entity/User";
 import { Permission } from "../entity/Permission";
 
-
-
 export const authorizeUser = (permissions: string[]) => {
  return async (req: CustomRequest, res: Response, next: NextFunction) => {
    try{ 
@@ -26,25 +24,30 @@ console.log(`Fetching user with ID: ${userId}`);
       .cache(true)
       .getOne();
 
-      if (!userWithRole || !userWithRole.role) {
-        return res.status(403).json({ message: 'Forbidden: User has no role assigned' });
-      }
+            if (!userWithRole || !userWithRole.role) {
+                return res
+                    .status(403)
+                    .json({ message: "Forbidden: User has no role assigned" });
+            }
 
+            const userPermissions = userWithRole.role?.permissions?.map(
+                (p: Permission) => p.name
+            );
 
-      const userPermissions = userWithRole.role?.permissions?.map((p: Permission) => p.name);
+            // Check if the user has all required permissions
+            const hasAllPermissions = permissions.every((permission: string) =>
+                userPermissions?.includes(permission)
+            );
 
-      // Check if the user has all required permissions
-      const hasAllPermissions = permissions.every((permission: string)  => 
-        userPermissions?.includes(permission)
-      );
-
-      if(!hasAllPermissions){
-        return res.status(403).json({ message: 'Access denied'})
-      }
-      next()
-    }catch (error) {
-        console.error('Authorization error:', error);
-        res.status(500).json({ message: 'Internal server error during authorization' });
-      }
-}
-}
+            if (!hasAllPermissions) {
+                return res.status(403).json({ message: "Access denied" });
+            }
+            next();
+        } catch (error) {
+            console.error("Authorization error:", error);
+            res.status(500).json({
+                message: "Internal server error during authorization",
+            });
+        }
+    };
+};

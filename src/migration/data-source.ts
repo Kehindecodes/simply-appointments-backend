@@ -5,8 +5,8 @@ import { Role } from "../entity/Role";
 import dotenv from "dotenv";
 import { Service } from "../entity/Service";
 import { OTP } from "../entity/OTP";
-import { Appointment } from "../entity/Appointment";
 import { LinkToken } from "../entity/Token";
+import { UserService } from "../entity/UserService";
 
 dotenv.config();
 
@@ -16,7 +16,7 @@ const {
     DB_USERNAME,
     DB_PASSWORD,
     DB_NAME,
-    DB_DATABASE,
+    DATABASE_URL,
     SSLROOTCERT,
 } = process.env;
 
@@ -38,7 +38,7 @@ export const AppDataSource = new DataSource({
     },
     synchronize: true,
     logging: true,
-    entities: [User, Service, Permission, Role, OTP, Appointment,LinkToken],
+    entities: [User, Service, Permission, Role, OTP, LinkToken, UserService],
     subscribers: [],
     migrations: [],
 });

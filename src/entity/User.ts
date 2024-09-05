@@ -9,9 +9,10 @@ import {
     IsIn,
 } from "class-validator";
 import { Role } from "./Role";
-
+import { Service } from './Service';
 @Entity()
 export class User {
+    @IsNotEmpty({ message: "ID cannot be empty" })
     @PrimaryGeneratedColumn("uuid")
     id?: string;
 
@@ -50,6 +51,10 @@ export class User {
     @JoinColumn({ name: 'roleId'})
     role?: Role
     
+    @ManyToOne(() => Service , (service: Service) => service.users, { eager: true, nullable: true })
+    @JoinColumn({ name: 'serviceId'})
+    service?: Service
+     
     public set resetPassword(password: string) {
         this.password = password;
     }
