@@ -3,9 +3,7 @@ import { SentMessageInfo } from "nodemailer";
 import transporter from "../services/nodemailer-config";
 import dotenv from "dotenv";
 import { AppDataSource } from '../migration/data-source';
-import { Token } from 'aws-sdk';
 import { LinkToken } from '../entity/Token';
-import { errorHandler } from '../httpResponse-handler/errorHandler';
 dotenv.config();
 
 

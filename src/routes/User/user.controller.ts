@@ -34,10 +34,24 @@ export const registerUser = async (
         user.address = address;
         user.userType = userType || UserType.CUSTOMER;
 
+
+          // Validate the user instance
+          const errors = await validate(user);
+
+          if (errors.length > 0) {
+              // If there are validation errors, return the first error message
+              const errorMessage = errors[0].constraints
+                  ? Object.values(errors[0].constraints)[0]
+                  : "Validation error";
+              res.status(400).json({ message: errorMessage });
+            return;
+        }
+
         // add role based on user type
         const role = await AppDataSource.manager.findOneBy(Role, {
             name: user.userType,
         });
+
 
         if (!role) {
             res.status(400).json({ message: "role not found" });
@@ -46,17 +60,7 @@ export const registerUser = async (
 
         user.role = role || undefined;
 
-        // Validate the user instance
-        const errors = await validate(user);
-
-        if (errors.length > 0) {
-            // If there are validation errors, return the first error message
-            const errorMessage = errors[0].constraints
-                ? Object.values(errors[0].constraints)[0]
-                : "Validation error";
-            res.status(400).json({ message: errorMessage });
-            return;
-        }
+      
 
         // Hash password
         const salt = await bcrypt.genSalt(10);
@@ -126,6 +130,10 @@ export const loginUser = async (
 
 export const ValidateOTP = async (req: Request, res: Response) => {
     const { email, otp } = req.body;
+
+    if (!email || !otp) {
+        return res.status(400).json({ message: "Email and OTP are required" });
+    }
 
     // Get the database timezone from the connection options
     const dbTimezone = (AppDataSource.options.extra as any)?.timezone || "UTC";

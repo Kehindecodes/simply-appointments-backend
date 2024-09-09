@@ -15,6 +15,9 @@ import { checkUser } from "../../middlewares/checkUser";
 import { jwtAuthentication } from "../../middlewares/jwtAuthentication";
 import { authorizeUser } from "../../middlewares/authorizeUser";
 import { checkRole } from "../../middlewares/checkRole";
+import { bookAppointment } from "../Apppointment/appointment.controller";
+import { passBookingLimit } from "../../middlewares/passBookingLimit";
+import { checkService } from "../../middlewares/checkService";
 const userRouter = Router();
 
 userRouter.post("/", checkUserExists, registerUser);
@@ -38,6 +41,16 @@ userRouter.patch(
     checkUser,
     checkRole,
     updateUserRole
+);
+
+userRouter.post(
+    "/:id/appointment/:appointmentId",
+    jwtAuthentication,
+    authorizeUser(["Book Appointments"]),
+    checkUser,
+    checkService,
+    passBookingLimit,
+    bookAppointment
 );
 
 export default userRouter;
