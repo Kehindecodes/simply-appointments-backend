@@ -9,35 +9,35 @@ import {
     IsIn,
 } from "class-validator";
 import { Role } from "./Role";
-
+import { Service } from './Service';
 @Entity()
 export class User {
     @PrimaryGeneratedColumn("uuid")
     id?: string;
 
-    @IsNotEmpty({ message: "Name cannot be empty" })
     @IsString()
+    @IsNotEmpty({ message: "Name cannot be empty" })
     @Column()
     name?: string;
 
-    @IsNotEmpty({ message: "Email cannot be empty" })
     @IsEmail({}, { message: "Invalid email format" })
+    @IsNotEmpty({ message: "Email cannot be empty" })
     @Column()
     email?: string;
 
-    @IsNotEmpty({ message: "Phone number cannot be empty" })
     @IsPhoneNumber("NG", { message: "Invalid phone number format" })
+    @IsNotEmpty({ message: "Phone number cannot be empty" })
     @Column()
     phoneNumber?: string;
 
-    @IsNotEmpty({ message: "Password cannot be empty" })
     @MinLength(5, { message: "Password must be at least 5 characters long" })
     @MaxLength(15, { message: "Password must not exceed 15 characters" })
+    @IsNotEmpty({ message: "Password cannot be empty" })
     @Column()
     password?: string;
 
-    @IsNotEmpty({ message: "Address cannot be empty" })
     @IsString()
+    @IsNotEmpty({ message: "Address cannot be empty" })
     @Column()
     address?: string;
 
@@ -50,6 +50,10 @@ export class User {
     @JoinColumn({ name: 'roleId'})
     role?: Role
     
+    @ManyToOne(() => Service , (service: Service) => service.users, { eager: true, nullable: true })
+    @JoinColumn({ name: 'serviceId'})
+    service?: Service
+     
     public set resetPassword(password: string) {
         this.password = password;
     }

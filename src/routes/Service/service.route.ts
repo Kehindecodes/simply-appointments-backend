@@ -5,10 +5,39 @@ import {
     deleteService,
     getService,
     getServices,
+    updateService,
 } from "./service.controller";
+import { jwtAuthentication } from "../../middlewares/jwtAuthentication";
+import { authorizeUser } from "../../middlewares/authorizeUser";
 
 export const serviceRouter = Router() as Router;
-serviceRouter.post("/:id", checkService, createService);
-serviceRouter.get("/:id", checkService, getService);
-serviceRouter.get("/", getServices);
-serviceRouter.delete("/:id", checkService, deleteService);
+serviceRouter.post(
+    "/:id",
+    jwtAuthentication,
+    authorizeUser,
+    checkService,
+    createService
+);
+serviceRouter.get(
+    "/:id",
+    jwtAuthentication,
+    authorizeUser,
+    checkService,
+    getService
+);
+serviceRouter.get("/", jwtAuthentication, authorizeUser, getServices);
+
+serviceRouter.delete(
+    "/:id",
+    jwtAuthentication,
+    authorizeUser,
+    checkService,
+    deleteService
+);
+serviceRouter.patch(
+    "/:id",
+    jwtAuthentication,
+    authorizeUser,
+    checkService,
+    updateService
+);

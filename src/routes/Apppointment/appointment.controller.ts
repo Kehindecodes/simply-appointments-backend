@@ -1,23 +1,36 @@
 import { Request, Response } from "express";
 import { Appointment } from "../../entity/Appointment";
-import { Status } from "../../enum/Status";
+import { AppointmentStatus } from "../../enum/AppointmentStatus";
 import { validate, Validate, Validator } from "class-validator";
 import { AppDataSource } from "../../migration/data-source";
 import { ResponseStatus } from "../../model/response-status";
-import { errorHandler } from '../../httpResponse-handler/errorHandler';
+import { errorHandler } from "../../httpResponse-handler/errorHandler";
+import { CustomRequest } from "../../types/custom-express";
+import { Service } from "../../entity/Service";
+import { User } from "../../entity/User";
+import { isStaffAvailable } from "../../utils/isStaffAvailable";
+import { checkIfStillInOpenHours } from "../../utils/checkIfStillInOpenHours";
+import { getAvailableStaffId } from "../../utils/getAvailableStaffId";
+import { sendBookingConfirmation } from "../../utils/notification.utils";
 
-export const createAppointment = async (req: Request, res: Response) => {
+
+
+export const bookAppointment = async (req: CustomRequest, res: Response) => {
     try {
-        const { userId, time, staffId, serviceId } = req.body;
+        const { time, staffId: requestedStaffId, serviceId, date } = req.body;
 
+        // create appointment instance
         const appointment = new Appointment();
-        appointment.userId = userId;
+        appointment.userId = req.user.id;
         appointment.time = time;
-        appointment.staffId = staffId;
+        appointment.staffId = requestedStaffId;
         appointment.serviceId = serviceId;
-        appointment.status = Status.PENDING;
+        appointment.date = date;
+        appointment.status = AppointmentStatus.PENDING;
 
+        // Validate the appointment instance
         const errors = await validate(appointment);
+
         if (errors.length > 0) {
             // If there are validation errors, return the first error message
             const errorMessage = errors[0].constraints
@@ -26,16 +39,53 @@ export const createAppointment = async (req: Request, res: Response) => {
             res.status(400).json({ message: errorMessage });
             return;
         }
+
+    // Convert date and time to a single Date object
+    const [hours, minutes] = time.split(':');
+    const appointmentDateTime = new Date(date);
+    appointmentDateTime.setHours(parseInt(hours, 10), parseInt(minutes, 10), 0, 0);
+
+
+        if (!checkIfStillInOpenHours(appointmentDateTime)) {
+            return res.status(400).json({
+                message: "Appointment time is not in open hours",
+            });
+        }
+
+        const assignedStaffId = await getAvailableStaffId(requestedStaffId, serviceId, appointmentDateTime);
+        if (!assignedStaffId) {
+            const staff = await AppDataSource.manager.findOne(User, { where: { id: requestedStaffId } });
+            return res.status(400).json({
+                message: `${staff?.name} is not available at ${time} on ${date}`,
+            });
+        }
+
+        // assign staff to the appointment
+        if (typeof assignedStaffId === 'string') {
+            appointment.staffId = assignedStaffId;
+        } else {
+            return res.status(400).json({
+                message: "Invalid staff assignment",
+            });
+        }
+
         await AppDataSource.manager.save(appointment);
+        
         res.json({
             message: "Appointment created successfully",
             success: true,
             status: ResponseStatus.SUCCESS,
         });
+        // send booking confirmation to the user
+        const user = await AppDataSource.manager.findOne(User, { where: { id: req.user.id } });
+        const service = await AppDataSource.manager.findOne(Service, { where: { id: serviceId } });
+        const staff = await AppDataSource.manager.findOne(User, { where: { id: assignedStaffId } });
+        sendBookingConfirmation(user?.name ?? "", date, time, service?.serviceName ?? "", staff?.name ?? "", user?.email ?? "");
     } catch (error) {
         res.json(errorHandler(error, res));
     }
 };
+
 
 export const getAppointment = async (req: Request, res: Response) => {
     try {
@@ -91,3 +141,4 @@ export const deleteAppointment = async (req: Request, res: Response) => {
         });
     }
 };
+

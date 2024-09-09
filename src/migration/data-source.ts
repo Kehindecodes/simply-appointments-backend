@@ -5,8 +5,9 @@ import { Role } from "../entity/Role";
 import dotenv from "dotenv";
 import { Service } from "../entity/Service";
 import { OTP } from "../entity/OTP";
-import { Appointment } from "../entity/Appointment";
 import { LinkToken } from "../entity/Token";
+import { UserService } from "../entity/UserService";
+import { Appointment } from "../entity/Appointment";
 
 dotenv.config();
 
@@ -16,13 +17,13 @@ const {
     DB_USERNAME,
     DB_PASSWORD,
     DB_NAME,
-    DB_DATABASE,
+    DATABASE_URL,
     SSLROOTCERT,
 } = process.env;
 
 export const AppDataSource = new DataSource({
     type: "postgres",
-    url: process.env.DATABASE_URL,
+    url: DATABASE_URL,
     // host: process.env.PGHOST || DB_HOST,
     // port: Number(process.env.PGPORT || DB_PORT),
     // username: process.env.PGUSER || DB_USERNAME,
@@ -38,7 +39,7 @@ export const AppDataSource = new DataSource({
     },
     synchronize: true,
     logging: true,
-    entities: [User, Service, Permission, Role, OTP, Appointment,LinkToken],
+    entities: [User, Service, Permission, Role, OTP, LinkToken, UserService, Appointment],
     subscribers: [],
     migrations: [],
 });
