@@ -18,6 +18,9 @@ import { checkRole } from "../../middlewares/checkRole";
 import { bookAppointment } from "../Apppointment/appointment.controller";
 import { passBookingLimit } from "../../middlewares/passBookingLimit";
 import { checkService } from "../../middlewares/checkService";
+import { avoidBookingSameServiceMultipleTimes} from "../../middlewares/avoidMultipleServiceBookings";
+import { passUserBookingLimit } from "../../middlewares/passUserBookingLimit";
+import { preventDoubleBooking } from "../../middlewares/preventDoubleBooking";
 const userRouter = Router();
 
 userRouter.post("/", checkUserExists, registerUser);
@@ -44,12 +47,15 @@ userRouter.patch(
 );
 
 userRouter.post(
-    "/:id/appointment/:appointmentId",
+    "/:id/appointment",
     jwtAuthentication,
     authorizeUser(["Book Appointments"]),
     checkUser,
     checkService,
     passBookingLimit,
+    avoidBookingSameServiceMultipleTimes,
+    passUserBookingLimit,
+    preventDoubleBooking,
     bookAppointment
 );
 

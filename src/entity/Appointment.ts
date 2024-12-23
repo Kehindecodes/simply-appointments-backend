@@ -1,11 +1,5 @@
 import { AppointmentStatus } from "../enum/AppointmentStatus";
-import {
-    IsDate,
-    IsEnum,
-    IsNotEmpty,
-    IsString,
-    Matches,
-} from "class-validator";
+import { IsDate, IsEnum, IsNotEmpty, IsString, Matches } from "class-validator";
 import {
     Column,
     CreateDateColumn,
@@ -14,12 +8,16 @@ import {
     PrimaryGeneratedColumn,
 } from "typeorm";
 import { Transform } from "class-transformer";
-import { registerDecorator, ValidationOptions, ValidationArguments } from 'class-validator';
+import {
+    registerDecorator,
+    ValidationOptions,
+    ValidationArguments,
+} from "class-validator";
 
 function IsNotPastDate(validationOptions?: ValidationOptions) {
     return function (object: Object, propertyName: string) {
         registerDecorator({
-            name: 'isNotPastDate',
+            name: "isNotPastDate",
             target: object.constructor,
             propertyName: propertyName,
             options: validationOptions,
@@ -31,7 +29,7 @@ function IsNotPastDate(validationOptions?: ValidationOptions) {
                     return date >= today;
                 },
                 defaultMessage(args: ValidationArguments) {
-                    return 'Appointment date cannot be in the past';
+                    return "Appointment date cannot be in the past";
                 },
             },
         });
@@ -40,7 +38,7 @@ function IsNotPastDate(validationOptions?: ValidationOptions) {
 
 @Entity()
 export class Appointment {
-    @PrimaryColumn("uuid")
+    @PrimaryGeneratedColumn("uuid")
     id?: string;
 
     @IsString()
@@ -48,11 +46,13 @@ export class Appointment {
     @Column()
     userId?: string;
 
-   
     @Matches(/^\d{2}:\d{2}$/, { message: "Invalid time format. Use HH:mm" })
     @IsNotEmpty({ message: "Appointment time is required" })
     @Column()
     time?: string;
+
+    @Column()
+    endTime?: string;
 
     @IsNotPastDate()
     @Matches(/^\d{4}-\d{2}-\d{2}$/, {
