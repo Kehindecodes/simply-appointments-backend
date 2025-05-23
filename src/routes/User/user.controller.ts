@@ -60,8 +60,6 @@ export const registerUser = async (
 
         user.role = role || undefined;
 
-      
-
         // Hash password
         const salt = await bcrypt.genSalt(10);
         user.password = await bcrypt.hash(password, salt);
@@ -167,10 +165,9 @@ export const ValidateOTP = async (req: Request, res: Response) => {
                 const token = jwt.sign(
                     { id: user.userId },
                     process.env.SECRET_KEY as string,
-                
                     {
                         algorithm: "HS256",
-                         expiresIn: "1h",
+                        //  expiresIn: "1h",
                     }
                 );
                 res.header("Authorization", `Bearer ${token}`);
@@ -217,7 +214,7 @@ export const getUserWithRole = async (
             .where("user.id = :id", { id: req.params.id })
             .leftJoinAndSelect("user.role", "role")
             .getOne();
-        
+
             if (!user) {
             res.status(404).send({
                 message: "User not found",
@@ -312,7 +309,7 @@ export const resetPassword = async (
             error: 'Error resetting password',
         });
     }
-   
+
 };
 
 export const deleteUser = async (
@@ -332,7 +329,7 @@ export const deleteUser = async (
 
 
 export const updateUserRole = async ( req: CustomRequest, res: Response) : Promise<void> => {
-     const {user, role} = req 
+     const {user, role} = req
     try{
         user.updateUserType = role?.name;
         user.updateRole = role;

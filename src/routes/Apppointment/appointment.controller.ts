@@ -8,12 +8,9 @@ import { errorHandler } from "../../httpResponse-handler/errorHandler";
 import { CustomRequest } from "../../types/custom-express";
 import { Service } from "../../entity/Service";
 import { User } from "../../entity/User";
-import { isStaffAvailable } from "../../utils/isStaffAvailable";
 import { checkIfStillInOpenHours } from "../../utils/checkIfStillInOpenHours";
 import { getAvailableStaffId } from "../../utils/getAvailableStaffId";
 import { sendBookingConfirmation } from "../../utils/notification.utils";
-
-
 
 export const bookAppointment = async (req: CustomRequest, res: Response) => {
     try {
@@ -22,12 +19,30 @@ export const bookAppointment = async (req: CustomRequest, res: Response) => {
         // create appointment instance
         const appointment = new Appointment();
         appointment.userId = req.user.id;
-        appointment.time = time;
         appointment.staffId = requestedStaffId;
         appointment.serviceId = serviceId;
         appointment.date = date;
         appointment.status = AppointmentStatus.PENDING;
 
+        // Convert date and time to a single Date object
+        const [hours, minutes] =  time?.split(":");
+        const appointmentDateTime = new Date(date);
+        appointmentDateTime.setHours(
+            parseInt(hours, 10),
+            parseInt(minutes, 10),
+            0,
+            0
+        );
+
+        const options: Intl.DateTimeFormatOptions = {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true,
+        };
+        appointment.time = appointmentDateTime.toLocaleTimeString(
+            "en-US",
+            options
+        );
         // Validate the appointment instance
         const errors = await validate(appointment);
 
@@ -40,45 +55,51 @@ export const bookAppointment = async (req: CustomRequest, res: Response) => {
             return;
         }
 
-    // Convert date and time to a single Date object
-    const [hours, minutes] = time.split(':');
-    const appointmentDateTime = new Date(date);
-    appointmentDateTime.setHours(parseInt(hours, 10), parseInt(minutes, 10), 0, 0);
 
-
-    if (!checkIfStillInOpenHours(appointmentDateTime)) {
-        return res.status(400).json({
-            message: "Appointment time is not in open hours",
-        });
-    }
-
-    const assignedStaffId = await getAvailableStaffId(requestedStaffId, serviceId, appointmentDateTime);
-    if (!assignedStaffId) {
-        const staff = await AppDataSource.manager.findOne(User, { where: { id: requestedStaffId } });
-        return res.status(400).json({
-            message: `${staff?.name} is not available at ${time} on ${date}`,
-        });
-    }
-
-    // assign staff to the appointment
-    if (typeof assignedStaffId === 'string') {
-        appointment.staffId = assignedStaffId;
-    } else {
-        return res.status(400).json({
-            message: "Invalid staff assignment",
-        });
-    }
-
-        const service = await AppDataSource.manager.findOne(Service, { where: { id: serviceId } });
-        const duration = service?.duration;
-
-
-        if (duration) {
-            const startTime = new Date();
-            startTime.setMinutes(startTime.getMinutes() + Number(duration));
-            appointment.endTime = startTime.toLocaleDateString([],{hour: '2-digit', minute: '2-digit'});
+        if (!checkIfStillInOpenHours(appointmentDateTime)) {
+            return res.status(400).json({
+                message: "Appointment time is not in open hours",
+            });
         }
 
+        const assignedStaffId = await getAvailableStaffId(
+            requestedStaffId,
+            serviceId,
+            appointmentDateTime
+        );
+        if (!assignedStaffId) {
+            const staff = await AppDataSource.manager.findOne(User, {
+                where: { id: requestedStaffId },
+            });
+            return res.status(400).json({
+                message: `${staff?.name} is not available at ${time} on ${date}`,
+            });
+        }
+
+        // assign staff to the appointment
+        if (typeof assignedStaffId === "string") {
+            appointment.staffId = assignedStaffId;
+        } else {
+            return res.status(400).json({
+                message: "Invalid staff assignment",
+            });
+        }
+
+        const service = await AppDataSource.manager.findOne(Service, {
+            where: { id: serviceId },
+        });
+        const duration = service?.duration;
+
+        if (duration) {
+            appointmentDateTime.setMinutes(
+                appointmentDateTime.getMinutes() + Number(duration)
+            );
+        }
+
+        appointment.endTime = appointmentDateTime.toLocaleTimeString(
+            "en-US",
+            options
+        );
 
         await AppDataSource.manager.save(appointment);
 
@@ -86,16 +107,26 @@ export const bookAppointment = async (req: CustomRequest, res: Response) => {
             message: "Appointment created successfully",
         });
         // send booking confirmation to the user
-        const user = await AppDataSource.manager.findOne(User, { where: { id: req.user.id } });
-        const staff = await AppDataSource.manager.findOne(User, { where: { id: assignedStaffId } });
-        sendBookingConfirmation(user?.name ?? "", date, time, service?.serviceName ?? "", staff?.name ?? "", user?.email ?? "");
+        const user = await AppDataSource.manager.findOne(User, {
+            where: { id: req.user.id },
+        });
+        const staff = await AppDataSource.manager.findOne(User, {
+            where: { id: assignedStaffId },
+        });
+        sendBookingConfirmation(
+            user?.name ?? "",
+            date,
+            time,
+            service?.serviceName ?? "",
+            staff?.name ?? "",
+            user?.email ?? ""
+        );
     } catch (error) {
         res.json(errorHandler(error, res));
     }
 };
 
-
-export const getAppointment = async (req: Request, res: Response)  =>  {
+export const getAppointment = async (req: Request, res: Response) => {
     try {
         const appointment = await AppDataSource.manager.findOne(Appointment, {
             where: { id: req.params.id },
@@ -149,4 +180,3 @@ export const deleteAppointment = async (req: Request, res: Response) => {
         });
     }
 };
-

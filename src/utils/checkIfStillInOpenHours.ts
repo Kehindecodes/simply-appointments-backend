@@ -37,7 +37,7 @@ const openHours = [
         open: "10:00 AM",
         close: "4:00 PM",
     },
-   
+
  ]
 
 
@@ -48,7 +48,7 @@ const openHours = [
  * @param time - The time to check.
  * @returns True if the time is within open hours, false otherwise.
  */
-export const checkIfStillInOpenHours = (date: Date) => {
+export const checkIfStillInOpenHours = (date: Date): boolean => {
     const day = date.getDay();
     // const openHour = openHours[day].open;
     // const closeHour = openHours[day].close;
@@ -61,7 +61,7 @@ export const checkIfStillInOpenHours = (date: Date) => {
     // }
     // return false;
     const { open, close } = openHours[day];
-    
+
     const openTime = parse(open, "h:mm a", date);
     const closeTime = parse(close, "h:mm a", date);
 

@@ -46,7 +46,7 @@ export class Appointment {
     @Column()
     userId?: string;
 
-    @Matches(/^\d{2}:\d{2}$/, { message: "Invalid time format. Use HH:mm" })
+    @Matches(/^\d{2}:\d{2} (AM|PM)}$/, { message: "Invalid time format. Use HH:mm AM/PM " })
     @IsNotEmpty({ message: "Appointment time is required" })
     @Column()
     time?: string;
