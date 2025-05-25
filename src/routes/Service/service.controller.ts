@@ -24,7 +24,6 @@ export const createService = async (
         const id = req.params.id;
 
         const service = new Service();
-        service.id = id;
         service.category = category;
         service.serviceName = serviceName;
         service.description = description;

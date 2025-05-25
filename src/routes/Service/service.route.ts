@@ -12,10 +12,9 @@ import { authorizeUser } from "../../middlewares/authorizeUser";
 
 export const serviceRouter = Router() as Router;
 serviceRouter.post(
-    "/:id",
+    "/",
     jwtAuthentication,
     authorizeUser,
-    checkService,
     createService
 );
 serviceRouter.get(
