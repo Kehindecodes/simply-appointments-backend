@@ -1,4 +1,4 @@
-import{Column, Entity, PrimaryGeneratedColumn, ManyToMany, ManyToOne, OneToMany} from "typeorm";
+ import{Column, Entity, PrimaryGeneratedColumn, ManyToMany, ManyToOne, OneToMany} from "typeorm";
 import { Permission } from "./Permission";
 import { User } from "./User";
 

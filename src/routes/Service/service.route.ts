@@ -13,23 +13,27 @@ import { authorizeUser } from "../../middlewares/authorizeUser";
 export const serviceRouter = Router() as Router;
 serviceRouter.post(
     "/",
-    jwtAuthentication,
-    authorizeUser,
+    // jwtAuthentication,
+    // authorizeUser,
     createService
 );
 serviceRouter.get(
     "/:id",
-    jwtAuthentication,
-    authorizeUser,
+    // jwtAuthentication,
+    // authorizeUser,
     checkService,
     getService
 );
-serviceRouter.get("/", jwtAuthentication, authorizeUser, getServices);
+serviceRouter.get("/",
+    //  jwtAuthentication,
+    // authorizeUser,
+    getServices
+);
 
 serviceRouter.delete(
     "/:id",
-    jwtAuthentication,
-    authorizeUser,
+    // jwtAuthentication,
+    // authorizeUser,
     checkService,
     deleteService
 );

@@ -6,8 +6,20 @@ import { authorizeUser } from "../../middlewares/authorizeUser";
 
 const roleRouter = express.Router();
 
-roleRouter.post("/", jwtAuthentication, createRole);
-roleRouter.get("/", jwtAuthentication,authorizeUser(["view Roles"]), getRoles);
-roleRouter.get("/:id", jwtAuthentication, authorizeUser(["view Roles"]), checkRole, getRole);
+roleRouter.post("/",
+    // jwtAuthentication,
+    createRole
+);
+roleRouter.get("/",
+    // jwtAuthentication,
+    // authorizeUser(["view Roles"]),
+    getRoles
+);
+roleRouter.get("/:id",
+    // jwtAuthentication,
+    // authorizeUser(["view Roles"]),
+    checkRole,
+    getRole
+);
 
 export default roleRouter;

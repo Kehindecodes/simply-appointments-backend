@@ -22,13 +22,12 @@ import { Category } from "../enum/Category";
 @Entity()
 export class Service {
     @PrimaryGeneratedColumn("uuid")
-    @IsNotEmpty({ message: "Service id is required" })
     id?: string;
 
-    @IsNotEmpty({ message: "Service name is required" })
     @MinLength(3, { message: "Service name must be at least 3 characters" })
     @MaxLength(50, { message: "Service name must be at most 50 characters" })
     @IsString({ message: "Service name must be a string" })
+    @IsNotEmpty({ message: "Service name is required" })
     @Column()
     serviceName?: string;
 
@@ -81,7 +80,6 @@ export class Service {
     @CreateDateColumn()
     createdAt!: Date;
 
-    // Add a ManyToMany relationship
     @OneToMany(()=> User, (user: User) => user.role)
     users?: User[]
 

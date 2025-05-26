@@ -189,13 +189,29 @@ export const getUsersWithRole = async (
     req: Request,
     res: Response
 ): Promise<void> => {
+     const {userType} = req.query
     try {
+        if(userType){
+            if(userType !== UserType.ADMIN && userType !== UserType.CUSTOMER && userType !== UserType.STAFF){
+                res.status(400).json({ message: "Invalid user type" });
+                return;
+            }
         const users = await AppDataSource.getRepository(User)
+            .createQueryBuilder("user")
+            .leftJoinAndSelect("user.role", "role")
+            .where("user.userType = :userType", { userType: userType })
+            .getMany();
+
+        res.status(200).json(users);
+        }
+        else{
+            const users = await AppDataSource.getRepository(User)
             .createQueryBuilder("user")
             .leftJoinAndSelect("user.role", "role")
             .getMany();
 
         res.status(200).json(users);
+        }
     } catch (err: any) {
         res.status(500).send({
             message: "Error getting users",
