@@ -48,7 +48,13 @@ export const authService = {
         return new ApiSuccessResponse(201, "");
     },
 
-     loginUser : async (email: string, password: string, req: Request, res: Response, next: NextFunction): Promise<ApiSuccessResponse> => {
+     loginUser : async (
+        email: string,
+        password: string,
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<ApiSuccessResponse> => {
 
                   if (!email || !password) {
                       throw new ApiErrorResponse(400, "Email and password are required");
