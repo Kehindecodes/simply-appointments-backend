@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 import { SentMessageInfo } from "nodemailer";
-import transporter from "../services/nodemailer-config";
+import transporter from "../config/nodemailer-config";
 import dotenv from "dotenv";
 import { AppDataSource } from '../migration/data-source';
 import { LinkToken } from '../entity/Token';
@@ -10,7 +10,7 @@ dotenv.config();
 export function generateToken() {
     const token = crypto.randomBytes(16).toString('hex');
     const expiresAt = new Date( Date.now() + (30 * 60 * 1000)); // 30 minutes
-  
+
     return { token, expiresAt };
   }
 
@@ -40,10 +40,10 @@ export async function sendPasswordResetLink(email: string): Promise<SentMessageI
             message: error
         });
     }
-  
 
 
-    
+
+
 }
 
 export async function verifyToken(token: string): Promise<boolean> {
@@ -61,7 +61,7 @@ export async function verifyToken(token: string): Promise<boolean> {
         status: 500,
         message: error
     });
-    return false; 
+    return false;
   }
-    
+
   }

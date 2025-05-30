@@ -3,7 +3,7 @@ import cors from "cors";
 import roleRouter from "./routes/Role/role.route";
 import userRouter from "./routes/User/user.route";
 import passport from "passport";
-import { localStrategy } from "./services/passport-config";
+import {localStrategy} from "./config";
 import permissionRouter from "./routes/Permission/permission.route";
 import { serviceRouter } from "./routes/Service/service.route";
 import { userServiceRouter } from "./routes/UserService/userService.route";

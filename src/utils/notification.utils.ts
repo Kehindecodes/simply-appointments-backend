@@ -1,5 +1,5 @@
 import { SentMessageInfo } from "nodemailer";
-import transporter from "../services/nodemailer-config";
+import {transporter} from "../config";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -45,5 +45,5 @@ export const sendBookingConfirmation = async (userName: string, date: Date, time
     } catch (error) {
         console.error("Error sending appointment confirmation: ", error);
     }
-    
+
 }

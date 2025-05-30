@@ -3,7 +3,7 @@ import { User } from "../entity/User";
 import bcrypt from "bcrypt";
 import { AppDataSource } from "../migration/data-source";
 
-export const localStrategy = new LocalStrategy({
+const localStrategy = new LocalStrategy({
     usernameField: "email",
     passwordField: "password",
     // passReqToCallback: true,
@@ -31,3 +31,7 @@ export const localStrategy = new LocalStrategy({
     }
 
 })
+
+export {
+    localStrategy
+};

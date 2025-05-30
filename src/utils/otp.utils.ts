@@ -1,5 +1,5 @@
 import { SentMessageInfo } from "nodemailer";
-import transporter from "../services/nodemailer-config";
+import {transporter} from "../config";
 import dotenv from "dotenv";
 dotenv.config();
 
