@@ -1,12 +1,12 @@
 import { NextFunction, Response } from "express";
 import { CustomRequest } from "../types/custom-express";
-import { AppDataSource } from "../migration/data-source";
-import { User } from "../entity/User";
-import { Permission } from "../entity/Permission";
+import { AppDataSource } from "../database/migration/data-source";
+import { User } from "../database/entity/User";
+import { Permission } from "../database/entity/Permission";
 
 export const authorizeUser = (permissions: string[]) => {
  return async (req: CustomRequest, res: Response, next: NextFunction) => {
-   try{ 
+   try{
     const userId = req.userId
     if (!userId) {
         res.status(401).send({

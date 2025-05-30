@@ -1,5 +1,5 @@
-import { AppDataSource } from "../migration/data-source";
-import { Appointment } from "../entity/Appointment";
+import { AppDataSource } from "../database/migration/data-source";
+import { Appointment } from "../database/entity/Appointment";
 import { format, parse } from 'date-fns';
 
 /**
@@ -17,8 +17,8 @@ export const isStaffAvailable = async (staffId: string, appointmentDateTime: Dat
 
 
     const appointment = await AppDataSource.manager.findOne(Appointment, {
-        where: { 
-            staffId: staffId, 
+        where: {
+            staffId: staffId,
             time: time,
             date: parsedDate
         },

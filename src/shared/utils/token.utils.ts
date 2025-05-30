@@ -2,8 +2,8 @@ import crypto from 'crypto';
 import { SentMessageInfo } from "nodemailer";
 import transporter from "../config/nodemailer-config";
 import dotenv from "dotenv";
-import { AppDataSource } from '../migration/data-source';
-import { LinkToken } from '../entity/Token';
+import { AppDataSource } from '../database/migration/data-source';
+import { LinkToken } from '../database/entity/Token';
 dotenv.config();
 
 

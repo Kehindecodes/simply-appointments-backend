@@ -1,8 +1,8 @@
 import { Router } from "express";
 import { addServiceToUser, getUsersService } from "./userService.controller";
-import { checkUserService } from "../../middlewares/checkUserService";
-import { checkUser } from "../../middlewares/checkUser";
-import { checkService } from "../../middlewares/checkService";
+import { checkUserService } from "../../shared/middlewares/checkUserService";
+import { checkUser } from "../../shared/middlewares/checkUser";
+import { checkService } from "../../shared/middlewares/checkService";
 
 export const userServiceRouter = Router();
 

@@ -1,7 +1,7 @@
 const LocalStrategy = require("passport-local").Strategy;
-import { User } from "../entity/User";
+import { User } from "../../entity/User";
 import bcrypt from "bcrypt";
-import { AppDataSource } from "../migration/data-source";
+import { AppDataSource } from "../database/migration/data-source";
 
 const localStrategy = new LocalStrategy({
     usernameField: "email",

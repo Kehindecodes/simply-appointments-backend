@@ -1,16 +1,16 @@
 import { Request, Response } from "express";
 import { Appointment } from "../../entity/Appointment";
-import { AppointmentStatus } from "../../enum/AppointmentStatus";
+import { AppointmentStatus } from "../../shared/config/enums/AppointmentStatus";
 import { validate, Validate, Validator } from "class-validator";
-import { AppDataSource } from "../../migration/data-source";
+import { AppDataSource } from "../../shared/database/migration/data-source";
 import { ResponseStatus } from "../../model/response-status";
 import { errorHandler } from "../../httpResponse-handler/errorHandler";
-import { CustomRequest } from "../../types/custom-express";
+import { CustomRequest } from "../../shared/types/custom-express";
 import { Service } from "../../entity/Service";
 import { User } from "../../entity/User";
-import { checkIfStillInOpenHours } from "../../utils/checkIfStillInOpenHours";
-import { getAvailableStaffId } from "../../utils/getAvailableStaffId";
-import { sendBookingConfirmation } from "../../utils/notification.utils";
+import { checkIfStillInOpenHours } from "../../shared/utils/checkIfStillInOpenHours";
+import { getAvailableStaffId } from "../../shared/utils/getAvailableStaffId";
+import { sendBookingConfirmation } from "../../shared/utils/notification.utils";
 
 export const bookAppointment = async (req: CustomRequest, res: Response) => {
     try {

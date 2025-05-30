@@ -19,7 +19,7 @@ export const jwtAuthentication = (req: CustomRequest, res: Response, next: NextF
         });
       }
       if (typeof decoded === 'object' && 'id' in decoded) {
-        req.userId = decoded.id; 
+        req.userId = decoded.id;
       } else {
         return res.status(401).send({
           message: "Invalid token payload"

@@ -1,12 +1,12 @@
 import { NextFunction, Request, Response } from "express";
-import { AppDataSource } from "../../migration/data-source";
+import { AppDataSource } from "../../shared/database/migration/data-source";
 import { User } from "../../entity/User";
 import bcrypt from "bcrypt";
 import { validate } from "class-validator";
-import { UserType } from "../../enum/userTypes.enum";
+import { UserType } from "../../shared/config/enums/userTypes.enum";
 import passport from "passport";
-import { generateOTP, sendOTP } from "../../utils/otp.utils";
-import { CustomRequest } from "../../types/custom-express";
+import { generateOTP, sendOTP } from "../../shared/utils/otp.utils";
+import { CustomRequest } from "../../shared/types/custom-express";
 import { OTP } from "../../entity/OTP";
 import jwt from "jsonwebtoken";
 import { LessThan, MoreThan } from "typeorm";
@@ -14,7 +14,7 @@ import moment from "moment-timezone";
 import { Role } from "../../entity/Role";
 import {
     sendPasswordResetLink,
-} from "../../utils/token.utils";
+} from "../../shared/utils/token.utils";
 import { LinkToken } from "../../entity/Token";
 
 export const registerUser = async (

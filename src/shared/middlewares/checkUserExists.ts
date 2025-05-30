@@ -1,7 +1,7 @@
 import {Request, Response, NextFunction} from "express";
-import { AppDataSource } from "../migration/data-source";
+import { AppDataSource } from "../database/migration/data-source";
 import { CustomRequest } from "../types/custom-express";
-import { User } from "../entity/User";
+import { User } from "../database/entity/User";
 
 
 export const checkUserExists = async (req: CustomRequest, res: Response, next: NextFunction) => {

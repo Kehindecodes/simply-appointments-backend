@@ -1,6 +1,6 @@
 import { Response, NextFunction } from "express";
-import { Role } from "../entity/Role";
-import { AppDataSource } from "../migration/data-source";
+import { Role } from "../database/entity/Role";
+import { AppDataSource } from "../database/migration/data-source";
 import { CustomRequest } from "../types/custom-express";
 
 export const checkRole = async (
@@ -11,7 +11,7 @@ export const checkRole = async (
     try {
         // check if role exists in the route
         let roleId = Number(req.params.roleId);
-        // check the request body 
+        // check the request body
         if (!roleId) {
             const reqBody = req.body;
             if (!reqBody.roleId) {

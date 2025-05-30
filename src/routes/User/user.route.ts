@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { checkUserExists } from "../../middlewares/checkUserExists";
+import { checkUserExists } from "../../shared/middlewares/checkUserExists";
 import {
     registerUser,
     loginUser,
@@ -11,16 +11,16 @@ import {
     deleteUser,
     updateUserRole,
 } from "./user.controller";
-import { checkUser } from "../../middlewares/checkUser";
-import { jwtAuthentication } from "../../middlewares/jwtAuthentication";
-import { authorizeUser } from "../../middlewares/authorizeUser";
-import { checkRole } from "../../middlewares/checkRole";
+import { checkUser } from "../../shared/middlewares/checkUser";
+import { jwtAuthentication } from "../../shared/middlewares/jwtAuthentication";
+import { authorizeUser } from "../../shared/middlewares/authorizeUser";
+import { checkRole } from "../../shared/middlewares/checkRole";
 import { bookAppointment } from "../Apppointment/appointment.controller";
-import { passBookingLimit } from "../../middlewares/passBookingLimit";
-import { checkService } from "../../middlewares/checkService";
-import { avoidBookingSameServiceMultipleTimes} from "../../middlewares/avoidMultipleServiceBookings";
-import { passUserBookingLimit } from "../../middlewares/passUserBookingLimit";
-import { preventDoubleBooking } from "../../middlewares/preventDoubleBooking";
+import { passBookingLimit } from "../../shared/middlewares/passBookingLimit";
+import { checkService } from "../../shared/middlewares/checkService";
+import { avoidBookingSameServiceMultipleTimes} from "../../shared/middlewares/avoidMultipleServiceBookings";
+import { passUserBookingLimit } from "../../shared/middlewares/passUserBookingLimit";
+import { preventDoubleBooking } from "../../shared/middlewares/preventDoubleBooking";
 const userRouter = Router();
 
 userRouter.post("/", checkUserExists, registerUser);

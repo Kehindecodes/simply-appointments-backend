@@ -1,4 +1,4 @@
-import { AppDataSource } from "../migration/data-source";
+import { AppDataSource } from "../shared/database/migration/data-source";
 import { Role } from "../entity/Role";
 import { getMockReq, getMockRes } from "@jest-mock/express";
 import { createRole, getRole } from "../routes/Role/role.controller";

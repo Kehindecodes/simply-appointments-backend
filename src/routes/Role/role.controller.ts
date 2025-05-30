@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { Role } from "../../entity/Role";
-import { AppDataSource } from "../../migration/data-source";
-import { CustomRequest } from "../../types/custom-express";
+import { AppDataSource } from "../../shared/database/migration/data-source";
+import { CustomRequest } from "../../shared/types/custom-express";
 
 export const createRole = async (
     req: Request,

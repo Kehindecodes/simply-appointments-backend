@@ -1,13 +1,13 @@
 import {Request, Response, NextFunction} from "express";
-import { AppDataSource } from "../migration/data-source";
+import { AppDataSource } from "../database/migration/data-source";
 import { CustomRequest } from "../types/custom-express";
-import { User } from "../entity/User";
+import { User } from "../database/entity/User";
 
 export const checkUser = async (req: CustomRequest, res: Response, next: NextFunction) => {
     try{
         // check if user exists in the route
         let userId = req.params.id;
-        // check the request body 
+        // check the request body
         if (!userId) {
            const reqBody = req.body
            if(!reqBody.userId) {

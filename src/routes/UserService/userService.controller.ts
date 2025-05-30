@@ -1,5 +1,5 @@
 import { UserService } from "../../entity/UserService";
-import { AppDataSource } from "../../migration/data-source";
+import { AppDataSource } from "../../shared/database/migration/data-source";
 import { User } from "../../entity/User";
 import { Service } from "../../entity/Service";
 import { Request, Response } from "express";

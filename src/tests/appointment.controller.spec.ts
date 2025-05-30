@@ -1,8 +1,8 @@
 import { getMockReq, getMockRes } from "@jest-mock/express";
-import { AppDataSource } from "../migration/data-source";
+import { AppDataSource } from "../shared/database/migration/data-source";
 import { bookAppointment } from "../routes/Apppointment/appointment.controller";
 import { Appointment } from "../entity/Appointment";
-import { AppointmentStatus } from "../enum/AppointmentStatus";
+import { AppointmentStatus } from "../shared/config/enums/AppointmentStatus";
 
 
 

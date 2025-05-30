@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import { AppDataSource } from "../migration/data-source";
+import { AppDataSource } from "../database/migration/data-source";
 import { CustomRequest } from "../types/custom-express";
-import { Appointment } from "../entity/Appointment";
+import { Appointment } from "../database/entity/Appointment";
 
 export const passUserBookingLimit = async (
     req: CustomRequest,
@@ -17,13 +17,13 @@ export const passUserBookingLimit = async (
                 date: date,
             },
         });
-    
+
         if (appointments.length >= maxBookingPerDay) {
            return res.status(400).json({
                 message: "You have reached the booking limit for the day",
             });
         }
-    
+
         next();
     }catch(error)
     {
@@ -33,5 +33,5 @@ export const passUserBookingLimit = async (
         });
     }
 
-   
+
 };

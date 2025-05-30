@@ -1,6 +1,6 @@
 import { format } from "date-fns";
-import { User } from "../entity/User";
-import { AppDataSource } from "../migration/data-source";
+import { User } from "../database/entity/User";
+import { AppDataSource } from "../database/migration/data-source";
 import { assignAvailableStaff } from "./assignAvailableStaff";
 import { isStaffAvailable } from "./isStaffAvailable";
 

@@ -1,7 +1,7 @@
 import { NextFunction, Response } from "express";
 import { CustomRequest } from "../types/custom-express";
-import { AppDataSource } from "../migration/data-source";
-import { Appointment } from "../entity/Appointment";
+import { AppDataSource } from "../database/migration/data-source";
+import { Appointment } from "../database/entity/Appointment";
 
 export const preventDoubleBooking = async (req: CustomRequest, res: Response, next: NextFunction) => {
         const {time,date} = req.body;
@@ -23,5 +23,5 @@ export const preventDoubleBooking = async (req: CustomRequest, res: Response, ne
                 message: "Internal server error during booking process",
             });
         }
-       
+
     }

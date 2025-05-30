@@ -1,6 +1,6 @@
 import { Request } from "express";
-import { Role } from "../entity/Role";
-import { Service } from "../entity/Service";
+import { Role } from "../database/entity/Role";
+import { Service } from "../database/entity/Service";
 
 export interface CustomRequest extends Request {
     role?: Role;

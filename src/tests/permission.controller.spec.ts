@@ -1,4 +1,4 @@
-import { AppDataSource } from "../migration/data-source";
+import { AppDataSource } from "../shared/database/migration/data-source";
 import { createPermission } from "../routes/Permission/permission.controller";
 import { Role } from "../entity/Role";
 import { Permission } from "../entity/Permission";

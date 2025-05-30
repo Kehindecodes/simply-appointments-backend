@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { Permission } from "../../entity/Permission";
-import { AppDataSource } from "../../migration/data-source";
+import { AppDataSource } from "../../shared/database/migration/data-source";
 import { Role } from "../../entity/Role";
 import { In } from "typeorm";
 
@@ -54,7 +54,7 @@ export const getPermission = async (
         }
         res.status(200).json(data);
     } catch (err: any) {
-        res.status(500).send({  
+        res.status(500).send({
             message: "Error creating permission",
             error: err.message,
         });

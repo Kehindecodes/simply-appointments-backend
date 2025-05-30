@@ -1,8 +1,8 @@
 import express from "express";
 import { createRole, getRoles, getRole } from "./role.controller";
-import { checkRole } from "../../middlewares/checkRole";
-import { jwtAuthentication } from "../../middlewares/jwtAuthentication";
-import { authorizeUser } from "../../middlewares/authorizeUser";
+import { checkRole } from "../../shared/middlewares/checkRole";
+import { jwtAuthentication } from "../../shared/middlewares/jwtAuthentication";
+import { authorizeUser } from "../../shared/middlewares/authorizeUser";
 
 const roleRouter = express.Router();
 

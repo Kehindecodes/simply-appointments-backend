@@ -1,6 +1,6 @@
-import { AppDataSource } from "../migration/data-source";
-import { Service } from "../entity/Service";
-import { User } from "../entity/User";
+import { AppDataSource } from "../database/migration/data-source";
+import { Service } from "../database/entity/Service";
+import { User } from "../database/entity/User";
 import { isStaffAvailable } from "./isStaffAvailable";
 
 /**

@@ -1,9 +1,9 @@
-import { AppDataSource } from "./../../migration/data-source";
+import { AppDataSource } from "../../shared/database/migration/data-source";
 import { Service } from "./../../entity/Service";
 import { ResponseStatus } from "./../../model/response-status";
 import { validate } from "class-validator";
 import { Request, Response } from "express";
-import { Category } from "../../enum/Category";
+import { Category } from "../../shared/config/enums/Category";
 
 export const createService = async (
     req: Request,

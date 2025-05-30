@@ -1,7 +1,7 @@
 import { NextFunction, Response } from "express";
 import { CustomRequest } from "../types/custom-express";
-import { AppDataSource } from "../migration/data-source";
-import { Service } from "../entity/Service";
+import { AppDataSource } from "../database/migration/data-source";
+import { Service } from "../database/entity/Service";
 
 export const checkService = async (
     req: CustomRequest,

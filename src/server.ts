@@ -1,6 +1,6 @@
 import http from "http";
-import { init, AppDataSource } from "./migration/data-source";
-import app from "./index";
+import { init, AppDataSource } from "./shared/database/migration/data-source";
+import app from "./app";
 import dotenv from "dotenv";
 import "reflect-metadata";
 
