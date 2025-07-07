@@ -1,13 +1,7 @@
 import { Router } from "express";
 import { checkUserExists } from "../../shared/middlewares/checkUserExists";
 import {
-    registerUser,
-    loginUser,
-    ValidateOTP,
     getUsersWithRole,
-    forgotPassword,
-    allowPasswordReset,
-    resetPassword,
     deleteUser,
     updateUserRole,
 } from "./user.controller";
@@ -23,13 +17,13 @@ import { passUserBookingLimit } from "../../shared/middlewares/passUserBookingLi
 import { preventDoubleBooking } from "../../shared/middlewares/preventDoubleBooking";
 const userRouter = Router();
 
-userRouter.post("/", checkUserExists, registerUser);
-userRouter.post("/login", loginUser);
-userRouter.post("/validate-otp", ValidateOTP);
+// userRouter.post("/", checkUserExists, registerUser);
+// userRouter.post("/login", loginUser);
+// userRouter.post("/validate-otp", ValidateOTP);
 userRouter.get("/", getUsersWithRole);
-userRouter.post("/forgot-password", forgotPassword);
-userRouter.post("/reset-password", resetPassword);
-userRouter.get("/reset-password/:token", allowPasswordReset);
+// userRouter.post("/forgot-password", forgotPassword);
+// userRouter.post("/reset-password", resetPassword);
+// userRouter.get("/reset-password/:token", allowPasswordReset);
 userRouter.delete(
     "/:id",
     jwtAuthentication,

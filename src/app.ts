@@ -7,6 +7,7 @@ import {localStrategy} from "./shared/config";
 import permissionRouter from "./routes/Permission/permission.route";
 import { serviceRouter } from "./routes/Service/service.route";
 import { userServiceRouter } from "./routes/UserService/userService.route";
+import authRouter from "./modules/auth/auth.routes";
 
 const app = express();
 
@@ -21,7 +22,8 @@ app.use("/api/v1/permissions", permissionRouter);
 app.use("/api/v1/roles", roleRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/services", serviceRouter);
-app.use("/api/v1/user-services", userServiceRouter);
+// app.use("/api/v1/user-services", userServiceRouter);
+app.use("/api/v1/auth", authRouter);
 
 
 export default app;

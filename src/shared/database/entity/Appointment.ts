@@ -1,18 +1,16 @@
-import { AppointmentStatus } from "../enum/AppointmentStatus";
-import { IsDate, IsEnum, IsNotEmpty, IsString, Matches } from "class-validator";
+import { IsEnum, IsNotEmpty, IsString, Matches } from "class-validator";
 import {
     Column,
     CreateDateColumn,
     Entity,
-    PrimaryColumn,
     PrimaryGeneratedColumn,
 } from "typeorm";
-import { Transform } from "class-transformer";
 import {
     registerDecorator,
     ValidationOptions,
     ValidationArguments,
 } from "class-validator";
+import { AppointmentStatus } from "../../config/enums/AppointmentStatus";
 
 function IsNotPastDate(validationOptions?: ValidationOptions) {
     return function (object: Object, propertyName: string) {
