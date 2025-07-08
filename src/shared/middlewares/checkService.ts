@@ -21,7 +21,7 @@ export const checkService = async (
             serviceId = post.serviceId;
         }
 
-        const service = AppDataSource.getRepository(Service).findOneBy({
+        const service = await AppDataSource.getRepository(Service).findOneBy({
             id: serviceId,
         });
         if (!service) {

@@ -25,9 +25,9 @@ export const checkUser = async (req: CustomRequest, res: Response, next: NextFun
         req.user = user;
         next();
     } catch (err: any) {
-        console.error(`Error getting user.json file: ${err}`);
+        console.error(`Error validating user: ${err}`);
         res.status(500).send({
-            message: "Error creating users",
+            message: "Error validating user",
             error: err.message,
         });
     }

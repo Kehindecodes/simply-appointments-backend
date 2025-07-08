@@ -10,6 +10,9 @@ import bcrypt from "bcrypt";
 import { generateOTP, sendOTP } from "../../shared/utils/otp.utils";
 import { OTP } from "../../shared/database/entity/OTP";
 import { NextFunction, Request, Response } from "express";
+import { otpRepository } from "../otp/otp.repository";
+import jwt from "jsonwebtoken";
+import { userRepository } from "../user/user.repository";
 
 interface UserData {
     name: string;
@@ -81,66 +84,42 @@ export const authService = {
                       }
                   )(req, res, next);
                   });
-     }
+     },
 
-    //  validateOTP : async (req: Request, res: Response)
-    //  {
-    //         const { email, otp } = req.body;
+    validateOTP : async (email: string, otp: string, res: Response): Promise<ApiSuccessResponse | ApiErrorResponse> => {
+            if (!email || !otp) {
+                return new ApiErrorResponse(400, "Email and OTP are required");
+            }
+            try {
+                const otpData = await otpRepository.getLatestOtp(email);
 
-    //         if (!email || !otp) {
-    //             return res.status(400).json({ message: "Email and OTP are required" });
-    //         }
+                if (!otpData) {
+                    return new ApiErrorResponse(400, "Invalid OTP");
+                }
 
-    //         // Get the database timezone from the connection options
-    //         const dbTimezone = (AppDataSource.options.extra as any)?.timezone || "UTC";
+                const DbOtp = otpData.getOtp;
 
-    //         // Calculate 5 minutes ago in the database's timezone
-    //         const fiveMinutesAgo = moment()
-    //             .tz(dbTimezone)
-    //             .subtract(5, "minutes")
-    //             .toDate();
-    //         try {
-    //             // find the latest unexpired OTP for the email
-    //             const otpData = await AppDataSource.manager.findOne(OTP, {
-    //                 where: {
-    //                     email,
-    //                     createdAt: LessThan(fiveMinutesAgo),
-    //                 },
-    //                 order: { createdAt: "DESC" },
-    //             });
+                const user = await userRepository.getUserByEmail(email);
 
-    //             if (!otpData) {
-    //                 return res.status(400).json({ message: "Invalid OTP" });
-    //             }
+                if (user) {
+                    if (otp === DbOtp) {
+                        const token = jwt.sign(
+                            { id: user.userId },
+                            process.env.SECRET_KEY as string,
+                            {
+                                algorithm: "HS256",
+                                expiresIn: "1h",
+                            }
+                        );
+                        res.header("Authorization", `Bearer ${token}`);
+                        return new ApiSuccessResponse(200, "OTP validated successfully");
+                    }
+                    return new ApiErrorResponse(400, "Invalid OTP");
+                }
+                return new ApiErrorResponse(404, "No user found");
+            } catch (err: any) {
+                return new ApiErrorResponse(500, "Error validating OTP");
+            }
 
-    //             const DbOtp = otpData.getOtp;
-
-    //             const user = await getUserByEmail(email);
-
-    //             if (user) {
-    //                 if (otp === DbOtp) {
-    //                     // Generate JWT token
-    //                     const token = jwt.sign(
-    //                         { id: user.userId },
-    //                         process.env.SECRET_KEY as string,
-    //                         {
-    //                             algorithm: "HS256",
-    //                             //  expiresIn: "1h",
-    //                         }
-    //                     );
-    //                     res.header("Authorization", `Bearer ${token}`);
-    //                     return res
-    //                         .status(200)
-    //                         .json({ message: "OTP validated successfully" });
-    //                 }
-    //                 return res.status(400).json({ message: "Invalid OTP" });
-    //             }
-    //             return res.status(404).json({ message: "No user found" });
-    //         } catch (err: any) {
-    //             res.status(500).send({
-    //                 message: "Error validating OTP",
-    //             });
-    //         }
-    //     };
-    //  }
+    }
 }

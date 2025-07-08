@@ -1,20 +1,18 @@
-import { Entity, PrimaryColumn, Column, ManyToMany, JoinTable } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable } from "typeorm";
 import { Role } from "./Role";
 
 @Entity()
 export class Permission {
-    @PrimaryColumn()
+    @PrimaryGeneratedColumn()
     id?: number;
 
-    @Column()
+    @Column({ unique: true })
     name?: string;
 
-    @Column()
+    @Column({ nullable: true })
     description?: string;
 
-    @ManyToMany((type) => Role, (role) => role.permissions,{
-        cascade: true
-    })
+    @ManyToMany(() => Role, (role) => role.permissions)
     @JoinTable()
-    roles?: Role[]
+    roles?: Role[];
 }

@@ -31,7 +31,7 @@ export class User {
     phoneNumber?: string;
 
     @MinLength(5, { message: "Password must be at least 5 characters long" })
-    @MaxLength(15, { message: "Password must not exceed 15 characters" })
+    @MaxLength(100, { message: "Password must not exceed 100 characters" })
     @IsNotEmpty({ message: "Password cannot be empty" })
     @Column()
     password?: string;
@@ -49,24 +49,24 @@ export class User {
     @ManyToOne(() => Role , (role: Role) => role.users, { eager: true, nullable: true })
     @JoinColumn({ name: 'roleId'})
     role?: Role
-    
+
     @ManyToOne(() => Service , (service: Service) => service.users, { eager: true, nullable: true })
     @JoinColumn({ name: 'serviceId'})
     service?: Service
-     
-    public set resetPassword(password: string) {
+
+    set resetPassword(password: string) {
         this.password = password;
     }
 
-    public get userId() : string | undefined {
+    get userId() : string | undefined {
         return this.id;
     }
 
-    public set updateUserType(userType: string) {
+    set updateUserType(userType: string) {
         this.userType = userType;
     }
 
-    public set updateRole(role: Role) {
+    set updateRole(role: Role) {
         this.role = role;
     }
 }

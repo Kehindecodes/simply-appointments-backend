@@ -1,6 +1,7 @@
+jest.mock("../shared/database/migration/data-source");
 import { getMockReq, getMockRes } from "@jest-mock/express";
-import { registerUser } from "../routes/User/user.controller";
-import { User } from "../entity/User";
+import { registerUser } from "../modules/user/user.controller";
+import { User } from "../shared/database/entity/User";
 import { AppDataSource } from "../shared/database/migration/data-source";
 
 interface UserInput {
@@ -32,10 +33,6 @@ const testRegisterUserValidation = (
 
 
   describe("/users", () => {
-    beforeAll(async () => {
-      jest.mock("../migration/data-source");
-    });
-
     it("should create a new user", async () => {
       const mockSave = jest.fn().mockImplementation((user) => {
         console.log("mockSave called with:", user);

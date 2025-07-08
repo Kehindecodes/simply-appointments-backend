@@ -31,13 +31,13 @@ export const AppDataSource = new DataSource({
     // database: process.env.PGDATABASE || DB_DATABASE,
     extra: {
         ssl: {
-            rejectUnauthorized: false,
+            rejectUnauthorized: false, // set to true in production
             sslmode: "require",
             sslrootcert: SSLROOTCERT,
         },
         timezone: "UTC",
     },
-    synchronize: true,
+    synchronize: process.env.NODE_ENV !== 'production',
     logging: true,
     entities: [User, Service, Permission, Role, OTP, LinkToken, UserService, Appointment],
     subscribers: [],

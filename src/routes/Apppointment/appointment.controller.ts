@@ -39,15 +39,13 @@ export const bookAppointment = async (req: CustomRequest, res: Response) => {
             minute: "2-digit",
             hour12: true,
         };
-        appointment.time = appointmentDateTime.toLocaleTimeString(
-            "en-US",
-            options
-        );
+        // Format time to match entity validation pattern (HH:mm AM/PM)
+        const formattedTime = appointmentDateTime.toLocaleTimeString("en-US", options);
+        appointment.time = formattedTime.replace(/^(\d):/, '0$1:'); // Ensure 2-digit hours
         // Validate the appointment instance
         const errors = await validate(appointment);
 
         if (errors.length > 0) {
-            // If there are validation errors, return the first error message
             const errorMessage = errors[0].constraints
                 ? Object.values(errors[0].constraints)[0]
                 : "Validation error";

@@ -1,27 +1,22 @@
 import {Request, Response, NextFunction} from "express";
-import { AppDataSource } from "../database/migration/data-source";
 import { CustomRequest } from "../types/custom-express";
-import { User } from "../database/entity/User";
+import { userRepository } from "../../modules/user/user.repository";
+import { ApiErrorResponse } from "../utils/ApiErrorResponse";
 
 
-export const checkUserExists = async (req: CustomRequest, res: Response, next: NextFunction) => {
+export const checkUserExists = async (req: CustomRequest, res: Response, next: NextFunction): Promise<void> => {
     try{
         const email = req.body.email
         if(!email) {
-            res.status(400).json({message: "email is required"});
-            return;
+            throw new ApiErrorResponse(400, "Email is required");
         }
-        const user = await AppDataSource.manager.findOneBy(User, {email: email});
+        const user = await userRepository.getUserByEmail(email);
         if (user) {
-            res.status(400).json({ message: "User with this email already exists" });
-            return;
+            throw new ApiErrorResponse(400, "User with this email already exists");
         }
         next();
     } catch (err: any) {
-        console.error(`Error getting user.json file: ${err}`);
-        res.status(500).send({
-            message: "Error creating users",
-            error: err.message,
-        });
+        console.error(`Error checking user existence: ${err}`);
+        throw new ApiErrorResponse(500, "Error checking user existence");
     }
 }

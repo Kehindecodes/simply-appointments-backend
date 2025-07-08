@@ -14,13 +14,17 @@ export const assignAvailableStaff = async (
     serviceId: string,
     appointmentDateTime: Date
 ): Promise<User | null> => {
-    const service = await AppDataSource.getRepository(Service)
-        .createQueryBuilder("service")
-        .leftJoinAndSelect("service.users", "user")
-        .where("service.id = :id", { id: serviceId })
-        .getOne();
+    try {
+        const service = await AppDataSource.getRepository(Service)
+            .createQueryBuilder("service")
+            .leftJoinAndSelect("service.users", "user")
+            .where("service.id = :id", { id: serviceId })
+            .getOne();
+    if (!service) {
+        return null;
+    }
 
-    const staffs = service?.users;
+    const staffs = service.users;
     if (staffs) {
         for (const staff of staffs) {
             // return any staff that is available
@@ -36,4 +40,8 @@ export const assignAvailableStaff = async (
         }
     }
     return null;
+    } catch (error) {
+        console.error("Error assigning available staff:", error);
+        return null;
+    }
 };

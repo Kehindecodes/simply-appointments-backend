@@ -44,7 +44,7 @@ export class Appointment {
     @Column()
     userId?: string;
 
-    @Matches(/^\d{2}:\d{2} (AM|PM)}$/, { message: "Invalid time format. Use HH:mm AM/PM " })
+    @Matches(/^\d{2}:\d{2} (AM|PM)$/, { message: "Invalid time format. Use HH:mm AM/PM " })
     @IsNotEmpty({ message: "Appointment time is required" })
     @Column()
     time?: string;
@@ -70,16 +70,9 @@ export class Appointment {
     @Column()
     serviceId?: string;
 
-    @IsEnum({
-        pending: AppointmentStatus.PENDING,
-        cancelled: AppointmentStatus.CANCELLED,
-        completed: AppointmentStatus.COMPLETED,
-        confirmed: AppointmentStatus.CONFIRMED,
-        paid: AppointmentStatus.PAID,
-        rejected: AppointmentStatus.REJECTED,
-    })
+    @IsEnum(AppointmentStatus)
     @Column()
-    status?: string;
+    status?: AppointmentStatus;
 
     @CreateDateColumn()
     createdAt!: Date;

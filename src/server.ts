@@ -17,8 +17,10 @@ const server = http.createServer(app);
 async function startServer(): Promise<void> {
     try {
         await init();
-        // syn model schema to db
-        await AppDataSource.synchronize();
+        // only auto-sync schema in non-production environments
+        if (process.env.NODE_ENV !== "production") {
+            await AppDataSource.synchronize();
+        }
         server.listen(PORT, () => {
             console.log(`Server is running on port ${PORT}`);
         });

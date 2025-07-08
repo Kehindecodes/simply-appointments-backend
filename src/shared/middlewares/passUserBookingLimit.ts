@@ -9,6 +9,11 @@ export const passUserBookingLimit = async (
     next: NextFunction
 ) => {
     const { date } = req.body;
+    if (!date) {
+        return res.status(400).json({
+            message: "Date is required",
+        });
+    }
     const maxBookingPerDay = 2;
     try{
         const appointments = await AppDataSource.manager.find(Appointment, {
@@ -25,7 +30,7 @@ export const passUserBookingLimit = async (
         }
 
         next();
-    }catch(error)
+    } catch(error)
     {
         console.error(" Database error:", error);
         res.status(500).json({

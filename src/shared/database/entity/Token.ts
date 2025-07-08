@@ -9,12 +9,13 @@ export class  LinkToken {
     token?: string;
 
     @Column()
+    @Index()
     email?: string;
 
-    @Column()
-    expiresAt?: Date;
+    @Column({ nullable: false })
+    expiresAt!: Date;
 
-    public get getExpiresAt() : Date {
-        return  this.expiresAt || new Date();
+    public get isExpired(): boolean {
+        return this.expiresAt < new Date();
     }
 }

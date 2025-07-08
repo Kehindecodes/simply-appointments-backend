@@ -38,12 +38,12 @@ export const sendBookingConfirmation = async (userName: string, date: Date, time
         </html>
         `,
     };
-    try{
+    try {
         const info = await transporter.sendMail(mailOptions);
         console.log(`Appointment confirmation sent to ${email}`);
         return info;
     } catch (error) {
         console.error("Error sending appointment confirmation: ", error);
+        throw new Error(`Failed to send booking confirmation: ${error}`);
     }
-
 }

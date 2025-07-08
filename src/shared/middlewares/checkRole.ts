@@ -33,7 +33,7 @@ export const checkRole = async (
     } catch (err: any) {
         console.error(`Error getting role.json file: ${err}`);
         res.status(500).send({
-            message: "Error creating roles",
+            message: "Error retrieving role",
             error: err.message,
         });
     }

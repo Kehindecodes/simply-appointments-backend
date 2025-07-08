@@ -17,12 +17,12 @@ export function generateToken() {
 
 export async function sendPasswordResetLink(email: string): Promise<SentMessageInfo> {
  const {token, expiresAt} = generateToken();
- const restPasswordLink = `http://localhost:5050/api/v1/users/reset-password/${token}`;
-    const mailOptions = {
+ const resetPasswordLink = `${process.env.BASE_URL || 'http://localhost:5050'}/api/v1/users/reset-password/${token}`;
+ const mailOptions = {
       from: process.env.EMAIL_USER,
       to: email,
       subject: 'Password Reset Link',
-      text: `Please click on the following link to reset your password: ${restPasswordLink}`,
+      text: `Please click on the following link to reset your password: ${resetPasswordLink}`,
     };
     try{
   // save Token to database
@@ -39,22 +39,23 @@ export async function sendPasswordResetLink(email: string): Promise<SentMessageI
             status: 500,
             message: error
         });
+        return error;
     }
 
 
 
 
 }
-
 export async function verifyToken(token: string): Promise<boolean> {
   try{
     const tokenData = await AppDataSource.manager.findOne(LinkToken, { where: { token } });
-    if (tokenData){
-      if (Date.now() > tokenData.getExpiresAt?.getTime()) {
-        return false; ;
-      }
+    if (tokenData) {
+      if (tokenData.isExpired) {
+        return false;
     }
-    return true;
+      return true;
+    }
+    return false;
   } catch (error) {
     console.error({
         success: false,
@@ -63,5 +64,4 @@ export async function verifyToken(token: string): Promise<boolean> {
     });
     return false;
   }
-
-  }
+}

@@ -40,10 +40,9 @@ export class Service {
     @Column()
     price?: number;
 
-    @IsOptional({ message: "Description is required" })
+    @IsOptional()
     @MinLength(3, { message: "Description must be at least 3 characters" })
     @MaxLength(50, { message: "Description must be at most 50 characters" })
-    @IsNotEmpty({ message: "Description is required" })
     @IsString({ message: "Description must be a string" })
     @Column({
         nullable: true,
@@ -63,11 +62,14 @@ export class Service {
     })
     duration!: string;
 
-    @IsOptional()
     @IsBoolean({ message: "Availability must be a boolean" })
     @IsNotEmpty({ message: "Availability is required" })
-    @Column()
-    availability?: boolean;
+    @Column(
+        {
+            default: true,
+        }
+    )
+    availability!: boolean;
 
     @IsNotEmpty({ message: "Category is required" })
     @IsIn([...Object.values(Category)]) // Use IsIn to validate against the Category enum
@@ -80,7 +82,7 @@ export class Service {
     @CreateDateColumn()
     createdAt!: Date;
 
-    @OneToMany(()=> User, (user: User) => user.role)
+    @OneToMany(() => User, (user: User) => user.service)
     users?: User[]
 
     /**
@@ -100,4 +102,5 @@ export class Service {
             createdAt: createdAtFormatted,
         };
     }
+}
 }

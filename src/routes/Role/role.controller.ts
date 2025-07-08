@@ -12,6 +12,7 @@ export const createRole = async (
         role.name = req.body.name;
         if (!role.name) {
             res.status(400).json({ message: "Role name is required" });
+            return;
         }
         await AppDataSource.manager.save(role);
         res.status(201).json(role);
@@ -64,6 +65,10 @@ export const deleteRole = async (
 ): Promise<void> => {
     try{
         const role = req.role;
+        if (!role) {
+            res.status(404).json({ message: "Role not found" });
+            return;
+        }
         await AppDataSource.manager.remove(role);
         res.status(200);
     } catch (err: any) {

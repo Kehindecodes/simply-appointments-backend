@@ -11,18 +11,22 @@ export const generateOTP = (): string => {
   };
 
 
-  export const sendOTP = async (otp: string, email: string): Promise<SentMessageInfo> => {
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: email,
-      subject: "OTP Verification",
-      text: `Your OTP is ${otp}`,
-    };
-    try{
-         const info =  await transporter.sendMail(mailOptions);
-        console.log(`OTP sent successfully to ${email}`);
-        return info;
-    } catch (error) {
-        console.error("Error sending OTP: ", error);
-    }
-    }
+export const sendOTP = async (otp: string, email: string): Promise<SentMessageInfo> => {
+  if (!process.env.EMAIL_USER) {
+    throw new Error("sender email not found");
+  }
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: "OTP Verification",
+    text: `Your OTP is ${otp}`,
+  };
+  try{
+       const info =  await transporter.sendMail(mailOptions);
+      console.log(`OTP sent successfully to ${email}`);
+      return info;
+  } catch (error) {
+      console.error("Error sending OTP: ", error);
+      throw error;
+  }
+}

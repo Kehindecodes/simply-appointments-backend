@@ -11,7 +11,7 @@ export const checkUserService = async (
     try {
         let userServiceId = req.params.userServiceId;
         if (!userServiceId) {
-            const userServiceId = req.body.userServiceId;
+            userServiceId = req.body.userServiceId;
         } else {
             return res.json({
                 status: 400,

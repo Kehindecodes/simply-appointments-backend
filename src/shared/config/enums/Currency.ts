@@ -1,4 +1,4 @@
-export enum currency {
+export enum Currency {
     NGN = "NGN",
     USD = "USD",
     EUR = "EUR",
