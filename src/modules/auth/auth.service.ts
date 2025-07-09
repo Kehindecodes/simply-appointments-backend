@@ -10,11 +10,11 @@ import bcrypt from "bcrypt";
 import { generateOTP, sendOTP } from "../../shared/utils/otp.utils";
 import { OTP } from "../../shared/database/entity/OTP";
 import { NextFunction, Request, Response } from "express";
-import { otpRepository } from "../otp/otp.repository";
 import jwt from "jsonwebtoken";
 import { userRepository } from "../user/user.repository";
 import { sendPasswordResetLink } from "../../shared/utils/token.utils";
 import { linkTokenRepository } from "../link-token";
+import { otpRepository } from "../otp";
 
 interface UserData {
     name: string;

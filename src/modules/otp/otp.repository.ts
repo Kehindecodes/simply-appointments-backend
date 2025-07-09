@@ -8,7 +8,17 @@ const dbTimezone = (AppDataSource.options.extra as any)?.timezone || "UTC";
 
 // Calculate 5 minutes ago in the database's timezone
 const fiveMinutesAgo = moment().tz(dbTimezone).subtract(5, "minutes").toDate();
+
 export const otpRepository = {
+  // TODO: automate this process
+  deleteExpiredTokens: async (): Promise<void> => {
+    await AppDataSource.manager
+      .createQueryBuilder()
+      .delete()
+      .from(OTP)
+      .where("createdAt < :now", { now: new Date() })
+      .execute();
+  },
   async getLatestOtp(email: string): Promise<OTP | null> {
    try {
     const otp = await AppDataSource.manager.findOne(OTP, {

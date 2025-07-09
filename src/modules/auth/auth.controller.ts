@@ -23,6 +23,6 @@ export const authController = {
         await authService.allowPasswordReset(req.body.token, res);
     },
     resetPassword: async (req: CustomRequest, res: Response): Promise<void> => {
-        await authService.resetPassword(req.body.email, req.body.password, req.body.confirmPassword, res);
+        await authService.resetPassword(req.body.email, req.body.password, req.body.confirmPassword);
     }
 }

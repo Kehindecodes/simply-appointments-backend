@@ -1,1 +1,1 @@
-
+export * from "./otp.repository";

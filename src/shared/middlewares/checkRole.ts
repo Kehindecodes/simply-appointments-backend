@@ -2,6 +2,8 @@ import { Response, NextFunction } from "express";
 import { Role } from "../database/entity/Role";
 import { AppDataSource } from "../database/migration/data-source";
 import { CustomRequest } from "../types/custom-express";
+import roleService from "../../modules/role/role.service";
+import { roleRepository } from "../../modules/role/role.repository";
 
 export const checkRole = async (
     req: CustomRequest,
@@ -20,9 +22,7 @@ export const checkRole = async (
             }
             roleId = Number(reqBody.roleId);
         }
-        const role = await AppDataSource.manager.findOneBy(Role, {
-            id: roleId,
-        });
+        const role = await roleRepositoryory.getRoleById(roleId);
         if (!role) {
             res.status(404).json({ message: "Role not found" });
             return;

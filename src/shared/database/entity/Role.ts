@@ -11,7 +11,6 @@ export class Role {
     @IsNotEmpty()
     @Column()
     name?: string;
-// src/shared/database/entity/Role.ts
     @ManyToMany(() => Permission, (permission : Permission) => permission.roles)
     permissions?: Permission[]
   @JoinTable({
