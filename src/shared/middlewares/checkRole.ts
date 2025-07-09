@@ -4,6 +4,9 @@ import { AppDataSource } from "../database/migration/data-source";
 import { CustomRequest } from "../types/custom-express";
 import roleService from "../../modules/role/role.service";
 import { roleRepository } from "../../modules/role/role.repository";
+import { AppValidationError } from "../../errors/AppValidationError";
+import { NotFoundError } from "../../errors/NotFoundError";
+import { DatabaseError } from "../../errors/DatabaseError";
 
 export const checkRole = async (
     req: CustomRequest,
@@ -17,24 +20,19 @@ export const checkRole = async (
         if (!roleId) {
             const reqBody = req.body;
             if (!reqBody.roleId) {
-                res.status(400).json({ message: "role is required" });
-                return;
+                throw new AppValidationError("role is required");
             }
             roleId = Number(reqBody.roleId);
         }
-        const role = await roleRepositoryory.getRoleById(roleId);
+        const role = await roleRepository.getRoleById(roleId);
         if (!role) {
-            res.status(404).json({ message: "Role not found" });
-            return;
+            throw new NotFoundError("Role not found");
         }
         // set the role in the request
         req.role = role;
         next();
     } catch (err: any) {
         console.error(`Error getting role.json file: ${err}`);
-        res.status(500).send({
-            message: "Error retrieving role",
-            error: err.message,
-        });
+        throw new DatabaseError("Error retrieving role");
     }
 };

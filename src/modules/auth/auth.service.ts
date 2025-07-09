@@ -15,6 +15,10 @@ import { userRepository } from "../user/user.repository";
 import { sendPasswordResetLink } from "../../shared/utils/token.utils";
 import { linkTokenRepository } from "../link-token";
 import { otpRepository } from "../otp";
+import { NotFoundError } from "../../errors/NotFoundError";
+import { ValidationError } from "class-validator";
+import { AppValidationError } from "../../errors/AppValidationError";
+import { OtpError } from "../../errors/OtpError";
 
 interface UserData {
     name: string;
@@ -42,7 +46,7 @@ export const authService = {
         const role = await roleRepository.getRoleByName(userType || UserType.CUSTOMER);
 
         if (!role) {
-            throw new ApiErrorResponse(400, "role not found");
+            throw new NotFoundError("role not found");
         }
         user.role = role || undefined;
 
@@ -61,7 +65,7 @@ export const authService = {
     ): Promise<ApiSuccessResponse> => {
 
                   if (!email || !password) {
-                      throw new ApiErrorResponse(400, "Email and password are required");
+                      throw new AppValidationError("Email and password are required");
                   }
                   return new Promise((resolve, reject) => {
                   passport.authenticate(
@@ -83,7 +87,7 @@ export const authService = {
                           await repository.save(otpEntity);
                           const infoMail = await sendOTP(otp, email);
                           if (!infoMail) {
-                              return reject(new ApiErrorResponse(500, "Error sending OTP"));
+                              return reject(new OtpError("Error sending OTP"));
                           }
                           return resolve(new ApiSuccessResponse(200, "User logged in successfully. Please check your email for OTP"));
                       }
@@ -91,15 +95,15 @@ export const authService = {
                   });
      },
 
-    validateOTP : async (email: string, otp: string, res: Response): Promise<ApiSuccessResponse | ApiErrorResponse> => {
+    validateOTP : async (email: string, otp: string, res: Response): Promise<void> => {
             if (!email || !otp) {
-                return new ApiErrorResponse(400, "Email and OTP are required");
+                throw new AppValidationError("Email and OTP are required");
             }
-            try {
+
                 const otpData = await otpRepository.getLatestOtp(email);
 
                 if (!otpData) {
-                    return new ApiErrorResponse(400, "Invalid OTP");
+                    throw new AppValidationError("Invalid OTP");
                 }
 
                 const DbOtp = otpData.getOtp;
@@ -117,83 +121,59 @@ export const authService = {
                             }
                         );
                         res.header("Authorization", `Bearer ${token}`);
-                        return new ApiSuccessResponse(200, "OTP validated successfully");
+                        return;
                     }
-                    return new ApiErrorResponse(400, "Invalid OTP");
+                    throw new AppValidationError("Invalid OTP");
                 }
-                return new ApiErrorResponse(404, "No user found");
-            } catch (err: any) {
-                return new ApiErrorResponse(500, "Error validating OTP");
-            }
+                throw new NotFoundError("No user found");
+
 
     },
     forgotPassword : async (
         email: string,
-        res: Response
     ): Promise<void> => {
         if (!email) {
-            res.status(400).json({ message: "Email is required" });
-            return;
+            throw new AppValidationError("Email is required");
         }
-        try {
             await sendPasswordResetLink(email);
-            res.status(200).json({
-                message: "Reset password link sent successfully",
-            });
-        } catch (error) {
-            console.error(error);
-            res.status(500).json({
-                message: "Error sending reset password link",
-                error: error,
-            });
-        }
+            return;
     },
 
     allowPasswordReset : async (
         token: string,
-        res: Response
     ): Promise<void> => {
-        try {
             const storedToken = await linkTokenRepository.validateToken(token);
             if (!storedToken) {
-                throw new ApiErrorResponse(401, "Invalid or expired token. Please request a new token");
+                throw new AppValidationError("Invalid or expired token. Please request a new token");
             }
-            res.status(200).json({});
-        } catch (err: any) {
-            throw new ApiErrorResponse(500, "Error validating token");
-        }
+            return;
     },
 
     resetPassword : async (
         email: string,
         password: string,
         confirmPassword: string,
-    ): Promise<ApiSuccessResponse | ApiErrorResponse> => {
+    ): Promise<void> => {
         if (!password || !confirmPassword || !email) {
-            throw new ApiErrorResponse(400, "All fields are required");
+            throw new AppValidationError("All fields are required");
         }
         if (password !== confirmPassword) {
-            throw new ApiErrorResponse(400, "Passwords do not match");
+            throw new AppValidationError("Passwords do not match");
         }
-        try{
             const user = await userRepository.getUserByEmail(email);
             if (!user) {
-                throw new ApiErrorResponse(400, "wrong email");
+                throw new AppValidationError("wrong email");
             }
             if (!user.password) {
-                throw new ApiErrorResponse(400, "No password set for this account");
+                throw new AppValidationError("No password set for this account");
             }
 
             const isSamePassword = await bcrypt.compare(password, user.password);
             if (isSamePassword) {
-            throw new ApiErrorResponse(400, "New password cannot be the same as current password");
+            throw new AppValidationError("New password cannot be the same as current password");
         }
             const hashedPassword = await bcrypt.hash(password, 10);
-            const updatedUser = await userRepository.updateUserPassword(email, hashedPassword);
-            return new ApiSuccessResponse(200, "Password reset successfully");
-        }catch(err: any){
-            throw new ApiErrorResponse(500, "Error resetting password");
-        }
-
+            await userRepository.updateUserPassword(email, hashedPassword);
+            return;
     },
 }

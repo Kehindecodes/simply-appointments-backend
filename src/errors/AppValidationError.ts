@@ -1,6 +1,6 @@
 import { BaseError } from "./BaseError";
 
-export class ValidationError extends BaseError {
+export class AppValidationError extends BaseError {
     statusCode = 400;
     isOperational = true;
 }
