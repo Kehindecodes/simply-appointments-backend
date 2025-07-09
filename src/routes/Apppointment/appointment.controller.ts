@@ -1,13 +1,12 @@
 import { Request, Response } from "express";
-import { Appointment } from "../../entity/Appointment";
+import { Appointment } from "../../shared/database/entity/Appointment";
 import { AppointmentStatus } from "../../shared/config/enums/AppointmentStatus";
-import { validate, Validate, Validator } from "class-validator";
+import { validate } from "class-validator";
 import { AppDataSource } from "../../shared/database/migration/data-source";
-import { ResponseStatus } from "../../model/response-status";
-import { errorHandler } from "../../httpResponse-handler/errorHandler";
+import { errorHandler } from "../../shared/middlewares/errorHandler";
 import { CustomRequest } from "../../shared/types/custom-express";
-import { Service } from "../../entity/Service";
-import { User } from "../../entity/User";
+import { Service } from "../../shared/database/entity/Service";
+import { User } from "../../shared/database/entity/User";
 import { checkIfStillInOpenHours } from "../../shared/utils/checkIfStillInOpenHours";
 import { getAvailableStaffId } from "../../shared/utils/getAvailableStaffId";
 import { sendBookingConfirmation } from "../../shared/utils/notification.utils";
@@ -16,6 +15,13 @@ export const bookAppointment = async (req: CustomRequest, res: Response) => {
     try {
         const { time, staffId: requestedStaffId, serviceId, date } = req.body;
 
+        if (!req.user) {
+            return res.status(401).json({
+                success: false,
+                status: 401,
+                message: "Unauthorized",
+            });
+        }
         // create appointment instance
         const appointment = new Appointment();
         appointment.userId = req.user.id;
@@ -120,7 +126,10 @@ export const bookAppointment = async (req: CustomRequest, res: Response) => {
             user?.email ?? ""
         );
     } catch (error) {
-        res.json(errorHandler(error, res));
+        res.json({
+            message: error,
+            status: 500,
+        });
     }
 };
 
@@ -130,11 +139,18 @@ export const getAppointment = async (req: Request, res: Response) => {
             where: { id: req.params.id },
         });
         if (!appointment) {
-            res.json(ResponseStatus.NOT_FOUND);
+            res.json({
+                success: false,
+                status: 404,
+                message: "Appointment not found",
+            });
         }
         res.status(200).json(appointment!.data());
     } catch (error) {
-        res.json(errorHandler(error, res));
+        res.json({
+            message: error,
+            status: 500,
+        });
     }
 };
 
@@ -145,7 +161,11 @@ export const getAppointments = async (req: Request, res: Response) => {
             take: 10,
         });
         if (!appointment) {
-            res.json(ResponseStatus.NOT_FOUND);
+            res.json({
+                success: false,
+                status: 404,
+                message: "Appointment not found",
+            });
         }
         res.status(200).json({
             totalRecords: appointment.length,

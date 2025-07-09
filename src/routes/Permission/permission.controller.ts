@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { Permission } from "../../entity/Permission";
+import { Permission } from "../../shared/database/entity/Permission";
 import { AppDataSource } from "../../shared/database/migration/data-source";
-import { Role } from "../../entity/Role";
+import { Role } from "../../shared/database/entity/Role";
 import { In } from "typeorm";
 
 

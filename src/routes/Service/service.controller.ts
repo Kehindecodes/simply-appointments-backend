@@ -1,6 +1,5 @@
 import { AppDataSource } from "../../shared/database/migration/data-source";
-import { Service } from "./../../entity/Service";
-import { ResponseStatus } from "./../../model/response-status";
+import { Service } from "../../shared/database/entity/Service";
 import { validate } from "class-validator";
 import { Request, Response } from "express";
 import { Category } from "../../shared/config/enums/Category";
@@ -65,7 +64,11 @@ export const getService = async (req: Request, res: Response) => {
             where: { id: req.params.id },
         });
         if (!service) {
-            res.json(ResponseStatus.NOT_FOUND);
+            res.json({
+                success: false,
+                status: 404,
+                message: "Service not found",
+            });
         }
         res.status(200).json(service!.data());
     } catch (error) {
@@ -84,7 +87,11 @@ export const getServices = async (req: Request, res: Response) => {
             take: 10,
         });
         if (!service) {
-            res.json(ResponseStatus.NOT_FOUND);
+            res.json({
+                success: false,
+                status: 404,
+                message: "Service not found",
+            });
         }
         res.status(200).json({
             totalRecords: service.length,
@@ -93,6 +100,10 @@ export const getServices = async (req: Request, res: Response) => {
         return;
     } catch (error) {
         console.error(error);
+        res.json({
+            message: error,
+            status: 500,
+        });
     }
 };
 

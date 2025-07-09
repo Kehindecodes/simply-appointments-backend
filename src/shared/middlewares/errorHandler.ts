@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import { BaseError } from '../../errors/BaseError';
 
 export const errorHandler = (err: Error, req: Request, res: Response, next: NextFunction) => {
     // Handle your custom errors
@@ -12,10 +13,6 @@ export const errorHandler = (err: Error, req: Request, res: Response, next: Next
     // Handle known third-party errors
     if (err.name === 'ValidationError') {
         return res.status(400).json({ message: err.message });
-    }
-
-    if (err.code === 'ECONNREFUSED') {
-        return res.status(503).json({ message: 'Database connection failed' });
     }
 
     // Unknown errors

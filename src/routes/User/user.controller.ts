@@ -341,17 +341,17 @@ export const deleteUser = async (
 };
 
 
-export const updateUserRole = async ( req: CustomRequest, res: Response) : Promise<void> => {
-     const {user, role} = req
-    try{
-        user.updateUserType = role?.name;
-        user.updateRole = role;
-        await AppDataSource.manager.save(user)
-        res.status(200).json({message: "User updated successfully"});
-    }catch(err: any){
-        res.status(500).send({
-            message: "Error updating user",
-            error: err.message,
-        });
-    }
-}
+// export const updateUserRole = async ( req: CustomRequest, res: Response) : Promise<void> => {
+//      const {user, role} = req
+//     try{
+//         user.updateUserType = role?.name;
+//         user.updateRole = role;
+//         await AppDataSource.manager.save(user)
+//         res.status(200).json({message: "User updated successfully"});
+//     }catch(err: any){
+//         res.status(500).send({
+//             message: "Error updating user",
+//             error: err.message,
+//         });
+//     }
+// }
