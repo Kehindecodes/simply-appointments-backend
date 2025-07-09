@@ -1,7 +1,7 @@
 import { AppDataSource } from "../shared/database/migration/data-source";
-import { Role } from "../entity/Role";
 import { getMockReq, getMockRes } from "@jest-mock/express";
-import { createRole, getRole } from "../routes/Role/role.controller";
+import { roleController } from "../modules/role/role.controller";
+import { Role } from "../shared/database/entity/Role";
 
 describe("/roles", () => {
     beforeAll(async () => {
@@ -23,7 +23,7 @@ describe("/roles", () => {
         const res = getMockRes().res;
 
         // Call the function
-        await createRole(req, res);
+        await roleController.addNewRole(req, res);
 
         // Assertions
         expect(mockSave).toHaveBeenCalledWith(expect.any(Role)); // Check if role is saved
@@ -41,7 +41,7 @@ describe("/roles", () => {
         const res = getMockRes().res;
 
         // Call the function
-        await getRole(req, res);
+        await roleController.getRole(req, res);
 
         // Assertions
         expect(res.status).toHaveBeenCalledWith(200); // Check response status
@@ -61,7 +61,7 @@ describe("/roles", () => {
         const res = getMockRes().res;
 
         // Call the function
-        await getRole(req, res);
+        await roleController.getRole(req, res);
 
         // Assertions
         expect(res.status).toHaveBeenCalledWith(404); // Check response status
@@ -79,7 +79,7 @@ describe("/roles", () => {
         const res = getMockRes().res.status(500).send("Internal Server Error");
 
         // Call the function
-        await getRole(req, res);
+        await roleController.getRole(req, res);
 
         // Assertions
         expect(res.status).toHaveBeenCalledWith(500); // Check response status
