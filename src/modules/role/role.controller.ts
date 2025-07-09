@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import roleService from "./role.service";
-import { ApiErrorResponse } from "../../shared/utils/ApiErrorResponse";
 import { ApiSuccessResponse } from "../../shared/utils/ApiSuccessResponse";
 import { CustomRequest } from "../../shared/types/custom-express";
 import { roleRepository } from "./role.repository";
+import { NotFoundError } from "../../errors/NotFoundError";
 
 export const roleController = {
 
@@ -20,8 +20,7 @@ export const roleController = {
     async getRole(req: CustomRequest, res: Response): Promise<void> {
         const role = req.role
         if (!role) {
-            res.status(404).json(new ApiErrorResponse(404, "Role not found"));
-            return;
+            throw new NotFoundError("Role not found");
         }
         res.status(200).json(new ApiSuccessResponse(200, "Role fetched successfully", role));
     },
@@ -29,8 +28,7 @@ export const roleController = {
     async deleteRole(req: CustomRequest, res: Response): Promise<void> {
         const role = req.role
         if (!role) {
-            res.status(404).json(new ApiErrorResponse(404, "Role not found"));
-            return;
+            throw new NotFoundError("Role not found");
         }
         await roleRepository.deleteRole(role);
         res.status(200).json(new ApiSuccessResponse(200, "Role deleted successfully"));

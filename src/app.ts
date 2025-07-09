@@ -7,6 +7,7 @@ import {localStrategy} from "./shared/config";
 import permissionRouter from "./routes/Permission/permission.route";
 import { serviceRouter } from "./routes/Service/service.route";
 import authRouter from "./modules/auth/auth.routes";
+import { errorHandler } from "./shared/middlewares/errorHandler";
 
 const app = express();
 
@@ -29,13 +30,8 @@ app.use("/api/v1/users", userRouter);
 app.use("/api/v1/services", serviceRouter);
 app.use("/api/v1/auth", authRouter);
 
-// Global error handling middleware
-app.use((error: Error, req: Request, res: Response) => {
-   console.error('Unhandled error:', error);
-   res.status(500).json({
-     message: 'Internal server error',
-     status: 500
-   });
-});
+// Error handling middleware
+app.use(errorHandler);
+
 
 export default app;
