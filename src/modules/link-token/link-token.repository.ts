@@ -20,7 +20,7 @@ export const linkTokenRepository = {
   },
 
   deleteToken: async (token: string): Promise<void> => {
-    await AppDataSource.manager.delete(LinkToken, { token });
+    await AppDataSource.manager.delete(LinkToken, { token }); // automatically handles the deletion of the token
   },
 
   deleteExpiredTokens: async (): Promise<void> => {
