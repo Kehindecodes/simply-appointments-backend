@@ -12,7 +12,8 @@ export const checkUserService = async (
         let userServiceId = req.params.userServiceId;
         if (!userServiceId) {
             userServiceId = req.body.userServiceId;
-        } else {
+        }
+        if (!userServiceId) {
             return res.json({
                 status: 400,
                 message: "user service id is required",
@@ -24,8 +25,7 @@ export const checkUserService = async (
             id: userServiceId,
         });
         if (!userService) {
-            return res.json({
-                status: 404,
+            return res.status(404).json({
                 message: "user service not found",
             });
         }

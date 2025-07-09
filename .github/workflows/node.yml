@@ -1,7 +1,7 @@
 name: Simply Appointments CI
 on:
   push:
-    branches: [develop]
+    branches: [develop, main, feature/*]
   pull_request:
     branches: [main]
 jobs:

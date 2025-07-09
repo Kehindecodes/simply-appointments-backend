@@ -1,6 +1,6 @@
 import { AppDataSource } from "../database/migration/data-source";
 
-import { DeepPartial, SaveOptions } from "typeorm";
+import { SaveOptions } from "typeorm";
 
 export const repository = {
     async save(entity: any, options?: SaveOptions): Promise<void> {

@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 
-export const sendBookingConfirmation = async (userName: string, date: Date, time: Date, serviceName: string, staffName: string, email: string): Promise<SentMessageInfo> => {
+export const sendBookingConfirmation = async (userName: string, date: string, time: string, serviceName: string, staffName: string, email: string): Promise<SentMessageInfo> => {
     const mailOptions = {
         from: process.env.EMAIL_USER,
         to: email,

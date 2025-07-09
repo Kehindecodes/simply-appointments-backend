@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import { AppDataSource } from '../database/migration/data-source';
 import { LinkToken } from '../database/entity/Token';
 import { transporter } from '../config';
+import { linkTokenRepository } from '../../modules/link-token/link-token.repository';
 dotenv.config();
 
 
@@ -25,12 +26,12 @@ export async function sendPasswordResetLink(email: string): Promise<SentMessageI
       text: `Please click on the following link to reset your password: ${resetPasswordLink}`,
     };
     try{
-  // save Token to database
-  const tokenData = new LinkToken();
-  tokenData.token = token;
-  tokenData.email = email;
-  tokenData.expiresAt = expiresAt;
-  await AppDataSource.manager.save(tokenData);
+
+  await linkTokenRepository.create({
+    token,
+    email,
+    expiresAt
+  });
   return transporter.sendMail(mailOptions);
 
     } catch (error) {

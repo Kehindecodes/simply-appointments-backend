@@ -53,20 +53,4 @@ export class User {
     @ManyToOne(() => Service , (service: Service) => service.users, { eager: true, nullable: true })
     @JoinColumn({ name: 'serviceId'})
     service?: Service
-
-    set resetPassword(password: string) {
-        this.password = password;
-    }
-
-    get userId() : string | undefined {
-        return this.id;
-    }
-
-    set updateUserType(userType: string) {
-        this.userType = userType;
-    }
-
-    set updateRole(role: Role) {
-        this.role = role;
-    }
 }

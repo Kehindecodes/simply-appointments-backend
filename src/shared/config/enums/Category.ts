@@ -1,8 +1,8 @@
 // service category
 export enum Category {
-    Hair = "Hair",
-    Beauty = "Beauty",
-    Skin = "Skin",
-    Nails = "Nails",
-    Waxing = "Waxing",
+    HAIR = "Hair",
+    BEAUTY = "Beauty",
+    SKIN = "Skin",
+    NAILS = "Nails",
+    WAXING = "Waxing",
 }

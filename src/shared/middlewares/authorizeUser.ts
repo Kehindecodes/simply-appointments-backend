@@ -6,7 +6,7 @@ import { Permission } from "../database/entity/Permission";
 import { ApiErrorResponse } from "../utils/ApiErrorResponse";
 
 export const authorizeUser = (permissions: string[]) => {
- return async (req: CustomRequest, next: NextFunction) => {
+ return async (req: CustomRequest, res: Response, next: NextFunction) => {
    try{
     const userId = req.userId
     if (!userId) {
@@ -42,7 +42,7 @@ console.log(`Fetching user with ID: ${userId}`);
             next();
         } catch (error) {
             console.error("Authorization error:", error);
-            throw new ApiErrorResponse(500, "Internal server error during authorization");
+            return res.status(500).json({ message: "Internal server error during authorization" });
         }
     };
 };

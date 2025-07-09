@@ -242,88 +242,88 @@ export const getUserWithRole = async (
         });
     }
 };
-export const forgotPassword = async (
-    req: Request,
-    res: Response
-): Promise<void> => {
-    const { email } = req.body;
-    if (!email) {
-        res.status(400).json({ message: "Email is required" });
-        return;
-    }
-    try {
-        await sendPasswordResetLink(email);
-        res.status(200).json({
-            message: "Reset password link sent successfully",
-        });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({
-            message: "Error sending reset password link",
-            error: error,
-        });
-    }
-};
+// export const forgotPassword = async (
+//     req: Request,
+//     res: Response
+// ): Promise<void> => {
+//     const { email } = req.body;
+//     if (!email) {
+//         res.status(400).json({ message: "Email is required" });
+//         return;
+//     }
+//     try {
+//         await sendPasswordResetLink(email);
+//         res.status(200).json({
+//             message: "Reset password link sent successfully",
+//         });
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({
+//             message: "Error sending reset password link",
+//             error: error,
+//         });
+//     }
+// };
 
-export const allowPasswordReset = async (
-    req: Request,
-    res: Response
-): Promise<void> => {
-    const { token } = req.params;
-    try {
-        const storedToken = await AppDataSource.manager.findOne(LinkToken, {
-            where: { token },
-        });
-        if (!storedToken) {
-            res.status(401).json({
-                message: "Invalid or expired token. Please request a new token",
-            });
-        }
-        res.status(200).json({ message: "Enter new password" });
-    } catch (err: any) {
-        res.status(500).send({
-            message: err.message,
-            error: err,
-        });
-    }
-};
+// export const allowPasswordReset = async (
+//     req: Request,
+//     res: Response
+// ): Promise<void> => {
+//     const { token } = req.params;
+//     try {
+//         const storedToken = await AppDataSource.manager.findOne(LinkToken, {
+//             where: { token },
+//         });
+//         if (!storedToken) {
+//             res.status(401).json({
+//                 message: "Invalid or expired token. Please request a new token",
+//             });
+//         }
+//         res.status(200).json({ message: "Enter new password" });
+//     } catch (err: any) {
+//         res.status(500).send({
+//             message: err.message,
+//             error: err,
+//         });
+//     }
+// };
 
-export const resetPassword = async (
-    req: Request,
-    res: Response
-): Promise<Response> => {
-    const { password, confirmPassword, email } = req.body;
-    if (!password || !confirmPassword || !email) {
-        return res.status(400).json({ message: "All fields are required" });
-    }
-    if (password !== confirmPassword) {
-        return res.status(400).json({ message: "Passwords do not match" });
-    }
-    try{
-        const user = await AppDataSource.manager.findOne(User, {
-            where: { email },
-        });
-        if (!user) {
-            return res.status(400).json({ message: "wrong email" });
-        }
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const updatedUser = await AppDataSource.manager.update(
-            User,
-            { email },
-            { password: hashedPassword }
-        );
-        return res.status(200).json({
-            message: "Password reset successfully",
-            updatedUser: updatedUser,
-        });
-    }catch(err: any){
-        return res.status(500).json({
-            message: err.message,
-            error: 'Error resetting password',
-        });
-    }
+// export const resetPassword = async (
+//     req: Request,
+//     res: Response
+// ): Promise<Response> => {
+//     const { password, confirmPassword, email } = req.body;
+//     if (!password || !confirmPassword || !email) {
+//         return res.status(400).json({ message: "All fields are required" });
+//     }
+//     if (password !== confirmPassword) {
+//         return res.status(400).json({ message: "Passwords do not match" });
+//     }
+//     try{
+//         const user = await AppDataSource.manager.findOne(User, {
+//             where: { email },
+//         });
+//         if (!user) {
+//             return res.status(400).json({ message: "wrong email" });
+//         }
+//         const hashedPassword = await bcrypt.hash(password, 10);
+//         const updatedUser = await AppDataSource.manager.update(
+//             User,
+//             { email },
+//             { password: hashedPassword }
+//         );
+//         return res.status(200).json({
+//             message: "Password reset successfully",
+//             updatedUser: updatedUser,
+//         });
+//     }catch(err: any){
+//         return res.status(500).json({
+//             message: err.message,
+//             error: 'Error resetting password',
+//         });
+//     }
 
-};
+// };
 
 export const deleteUser = async (
     req: CustomRequest,

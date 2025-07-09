@@ -16,9 +16,37 @@ export const userRepository = {
             });
             return user;
         } catch (err: any) {
-            // Use proper logging instead of console.error
             throw new Error(`Failed to retrieve user by email: ${err.message}`);
         }
     },
+
+    updateUserPassword: async (email: string, password: string): Promise<void> => {
+        try {
+            await AppDataSource.manager.update(
+                User,
+                { email },
+                { password: password }
+            );
+        } catch (err: any) {
+            throw new Error(`Failed to update user password: ${err.message}`);
+        }
+    },
+
+    getUserById: async (id: string): Promise<User | null> => {
+        if (!id || typeof id !== 'string') {
+            throw new Error('Invalid id parameter');
+        }
+
+        try {
+            const user = await AppDataSource.manager.findOne(User, {
+                where: {
+                    id,
+                },
+            });
+            return user;
+        } catch (err: any) {
+            throw new Error(`Failed to retrieve user by id: ${err.message}`);
+        }
+    }
 }
 
