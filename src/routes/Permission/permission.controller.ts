@@ -24,7 +24,6 @@ export const createPermission = async (
 
         if (roles.length === 0) {
              throw new Error(`No roles found with IDs ${roleIds.join(", ")}`);
-
         }
 
         // Associate the permission with the existing roles
