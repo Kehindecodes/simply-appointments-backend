@@ -1,8 +1,8 @@
-import { UserService } from "../../entity/UserService";
+import { UserService } from "../../shared/database/entity/UserService";
 import { AppDataSource } from "../../shared/database/migration/data-source";
-import { User } from "../../entity/User";
-import { Service } from "../../entity/Service";
+import { User } from "../../shared/database/entity/User";
 import { Request, Response } from "express";
+import { Service } from "../../shared/database/entity/Service";
 
 export const addServiceToUser = async (
     req: Request,
