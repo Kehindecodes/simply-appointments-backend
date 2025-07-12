@@ -3,7 +3,7 @@ import cors from "cors";
 // import userRouter from "./routes/User/user.route";
 import passport from "passport";
 import {localStrategy} from "./shared/config";
-import permissionRouter from "./routes/Permission/permission.route";
+// import permissionRouter from "./routes/Permission/permission.route";
 import { serviceRouter } from "./routes/Service/service.route";
 import authRouter from "./modules/auth/auth.routes";
 import { errorHandler } from "./shared/middlewares/errorHandler";
@@ -24,7 +24,7 @@ app.use(cors());
 passport.use("local", localStrategy);
 
 //routes
-app.use("/api/v1/permissions", permissionRouter);
+// app.use("/api/v1/permissions", permissionRouter);
 app.use("/api/v1/roles", roleRouter);
 // app.use("/api/v1/users", userRouter);
 app.use("/api/v1/services", serviceRouter);
