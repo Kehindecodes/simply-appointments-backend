@@ -5,7 +5,7 @@ import { Role } from "../shared/database/entity/Role";
 
 describe("/roles", () => {
     beforeAll(async () => {
-        jest.mock("../migration/data-source"); // Mock the ORM datasource
+        jest.mock("../shared/database/migration/data-source"); // Mock the ORM datasource
     });
     it("should create a new role", async () => {
         // Mock AppDataSource methods

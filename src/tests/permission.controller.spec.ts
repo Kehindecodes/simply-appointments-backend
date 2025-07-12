@@ -6,7 +6,7 @@ import { PermissionController } from "../modules/permission/permission.controlle
 
 describe("Post /permissions", () => {
     beforeEach(() => {
-        jest.mock("../migration/data-source"); // Mock the ORM datasource
+        jest.mock("../shared/database/migration/data-source"); // Mock the ORM datasource
     });
     it("creates permission with valid data", async () => {
         // Mock AppDataSource methods

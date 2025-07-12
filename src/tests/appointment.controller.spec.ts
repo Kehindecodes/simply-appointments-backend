@@ -7,7 +7,7 @@ import { AppointmentStatus } from "../shared/config/enums/AppointmentStatus";
 
 describe("appointments", () => {
     beforeAll(async () => {
-        jest.mock("../migration/data-source");
+        jest.mock("../shared/database/migration/data-source");
     });
 
     it("should create a new appointment", async () => {
