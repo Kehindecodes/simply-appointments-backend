@@ -1,3 +1,4 @@
+import { In } from "typeorm";
 import { Role } from "../../shared/database/entity/Role";
 import { AppDataSource } from "../../shared/database/migration/data-source";
 import { ApiErrorResponse } from "../../shared/utils/ApiErrorResponse";
@@ -36,6 +37,14 @@ export const roleRepository = {
         return role;
     },
 
+    async getRolesByIds(roleIds: number[]): Promise<Role[]> {
+       const roles = await AppDataSource.manager.find(Role, {
+            where: {
+                id: In(roleIds as number[]),
+            },
+        });
+        return roles;
+    },
 
     async deleteRole(role: Role): Promise<void> {
         if (!role) {

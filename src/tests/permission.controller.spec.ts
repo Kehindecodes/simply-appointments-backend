@@ -1,8 +1,8 @@
 import { AppDataSource } from "../shared/database/migration/data-source";
-import { createPermission } from "../routes/Permission/permission.controller";
-import { Role } from "../entity/Role";
-import { Permission } from "../entity/Permission";
+import { Role } from "../shared/database/entity/Role";
+import { Permission } from "../shared/database/entity/Permission";
 import { getMockReq, getMockRes } from "@jest-mock/express";
+import { PermissionController } from "../modules/permission/permission.controller";
 
 describe("Post /permissions", () => {
     beforeEach(() => {
@@ -29,7 +29,7 @@ describe("Post /permissions", () => {
         const res = getMockRes().res.status(201).json(Permission);
 
         // Call the function
-        await createPermission(req, res);
+        await PermissionController.createPermission(req, res);
 
         // Assertions
         expect(mockFind).toHaveBeenCalledWith(
@@ -58,7 +58,7 @@ describe("Post /permissions", () => {
         const res = getMockRes()
             .res.status(500)
             .send("Error creating permission");
-        await createPermission(req, res);
+        await PermissionController.createPermission(req, res);
         expect(res.status).toHaveBeenCalledWith(500);
         expect(res.send).toHaveBeenCalledWith("Error creating permission");
     });
