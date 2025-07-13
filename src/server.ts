@@ -1,6 +1,6 @@
 import http from "http";
-import { init, AppDataSource } from "./migration/data-source";
-import app from "./index";
+import { init, AppDataSource } from "./shared/database/migration/data-source";
+import app from "./app";
 import dotenv from "dotenv";
 import "reflect-metadata";
 
@@ -17,8 +17,10 @@ const server = http.createServer(app);
 async function startServer(): Promise<void> {
     try {
         await init();
-        // syn model schema to db
-        await AppDataSource.synchronize();
+        // only auto-sync schema in non-production environments
+        if (process.env.NODE_ENV !== "production") {
+            await AppDataSource.synchronize();
+        }
         server.listen(PORT, () => {
             console.log(`Server is running on port ${PORT}`);
         });

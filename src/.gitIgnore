@@ -103,3 +103,5 @@ dist
 .svelte-kit
 postgres-data/
 .env
+
+permission.json

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { checkService } from "../../middlewares/checkService";
+import { checkService } from "../../shared/middlewares/checkService";
 import {
     createService,
     deleteService,
@@ -7,30 +7,33 @@ import {
     getServices,
     updateService,
 } from "./service.controller";
-import { jwtAuthentication } from "../../middlewares/jwtAuthentication";
-import { authorizeUser } from "../../middlewares/authorizeUser";
+import { jwtAuthentication } from "../../shared/middlewares/jwtAuthentication";
+import { authorizeUser } from "../../shared/middlewares/authorizeUser";
 
 export const serviceRouter = Router() as Router;
 serviceRouter.post(
-    "/:id",
-    jwtAuthentication,
-    authorizeUser,
-    checkService,
+    "/",
+    // jwtAuthentication,
+    // authorizeUser,
     createService
 );
 serviceRouter.get(
     "/:id",
-    jwtAuthentication,
-    authorizeUser,
+    // jwtAuthentication,
+    // authorizeUser,
     checkService,
     getService
 );
-serviceRouter.get("/", jwtAuthentication, authorizeUser, getServices);
+serviceRouter.get("/",
+    //  jwtAuthentication,
+    // authorizeUser,
+    getServices
+);
 
 serviceRouter.delete(
     "/:id",
-    jwtAuthentication,
-    authorizeUser,
+    // jwtAuthentication,
+    // authorizeUser,
     checkService,
     deleteService
 );

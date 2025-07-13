@@ -1,49 +1,63 @@
 import { Request, Response } from "express";
-import { Appointment } from "../../entity/Appointment";
-import { AppointmentStatus } from "../../enum/AppointmentStatus";
-import { validate, Validate, Validator } from "class-validator";
-import { AppDataSource } from "../../migration/data-source";
-import { ResponseStatus } from "../../model/response-status";
-import { errorHandler } from "../../httpResponse-handler/errorHandler";
-import { CustomRequest } from "../../types/custom-express";
-import { Service } from "../../entity/Service";
-import { User } from "../../entity/User";
-import { isStaffAvailable } from "../../utils/isStaffAvailable";
-import { checkIfStillInOpenHours } from "../../utils/checkIfStillInOpenHours";
-import { getAvailableStaffId } from "../../utils/getAvailableStaffId";
-import { sendBookingConfirmation } from "../../utils/notification.utils";
-
-
+import { Appointment } from "../../shared/database/entity/Appointment";
+import { AppointmentStatus } from "../../shared/config/enums/AppointmentStatus";
+import { validate } from "class-validator";
+import { AppDataSource } from "../../shared/database/migration/data-source";
+import { errorHandler } from "../../shared/middlewares/errorHandler";
+import { CustomRequest } from "../../shared/types/custom-express";
+import { Service } from "../../shared/database/entity/Service";
+import { User } from "../../shared/database/entity/User";
+import { checkIfStillInOpenHours } from "../../shared/utils/checkIfStillInOpenHours";
+import { getAvailableStaffId } from "../../shared/utils/getAvailableStaffId";
+import { sendBookingConfirmation } from "../../shared/utils/notification.utils";
 
 export const bookAppointment = async (req: CustomRequest, res: Response) => {
     try {
         const { time, staffId: requestedStaffId, serviceId, date } = req.body;
 
+        if (!req.user) {
+            return res.status(401).json({
+                success: false,
+                status: 401,
+                message: "Unauthorized",
+            });
+        }
         // create appointment instance
         const appointment = new Appointment();
         appointment.userId = req.user.id;
-        appointment.time = time;
         appointment.staffId = requestedStaffId;
         appointment.serviceId = serviceId;
         appointment.date = date;
         appointment.status = AppointmentStatus.PENDING;
 
+        // Convert date and time to a single Date object
+        const [hours, minutes] =  time?.split(":");
+        const appointmentDateTime = new Date(date);
+        appointmentDateTime.setHours(
+            parseInt(hours, 10),
+            parseInt(minutes, 10),
+            0,
+            0
+        );
+
+        const options: Intl.DateTimeFormatOptions = {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true,
+        };
+        // Format time to match entity validation pattern (HH:mm AM/PM)
+        const formattedTime = appointmentDateTime.toLocaleTimeString("en-US", options);
+        appointment.time = formattedTime.replace(/^(\d):/, '0$1:'); // Ensure 2-digit hours
         // Validate the appointment instance
         const errors = await validate(appointment);
 
         if (errors.length > 0) {
-            // If there are validation errors, return the first error message
             const errorMessage = errors[0].constraints
                 ? Object.values(errors[0].constraints)[0]
                 : "Validation error";
             res.status(400).json({ message: errorMessage });
             return;
         }
-
-    // Convert date and time to a single Date object
-    const [hours, minutes] = time.split(':');
-    const appointmentDateTime = new Date(date);
-    appointmentDateTime.setHours(parseInt(hours, 10), parseInt(minutes, 10), 0, 0);
 
 
         if (!checkIfStillInOpenHours(appointmentDateTime)) {
@@ -52,16 +66,22 @@ export const bookAppointment = async (req: CustomRequest, res: Response) => {
             });
         }
 
-        const assignedStaffId = await getAvailableStaffId(requestedStaffId, serviceId, appointmentDateTime);
+        const assignedStaffId = await getAvailableStaffId(
+            requestedStaffId,
+            serviceId,
+            appointmentDateTime
+        );
         if (!assignedStaffId) {
-            const staff = await AppDataSource.manager.findOne(User, { where: { id: requestedStaffId } });
+            const staff = await AppDataSource.manager.findOne(User, {
+                where: { id: requestedStaffId },
+            });
             return res.status(400).json({
                 message: `${staff?.name} is not available at ${time} on ${date}`,
             });
         }
 
         // assign staff to the appointment
-        if (typeof assignedStaffId === 'string') {
+        if (typeof assignedStaffId === "string") {
             appointment.staffId = assignedStaffId;
         } else {
             return res.status(400).json({
@@ -69,23 +89,49 @@ export const bookAppointment = async (req: CustomRequest, res: Response) => {
             });
         }
 
+        const service = await AppDataSource.manager.findOne(Service, {
+            where: { id: serviceId },
+        });
+        const duration = service?.duration;
+
+        if (duration) {
+            appointmentDateTime.setMinutes(
+                appointmentDateTime.getMinutes() + Number(duration)
+            );
+        }
+
+        appointment.endTime = appointmentDateTime.toLocaleTimeString(
+            "en-US",
+            options
+        );
+
         await AppDataSource.manager.save(appointment);
-        
-        res.json({
+
+        res.status(201).json({
             message: "Appointment created successfully",
-            success: true,
-            status: ResponseStatus.SUCCESS,
         });
         // send booking confirmation to the user
-        const user = await AppDataSource.manager.findOne(User, { where: { id: req.user.id } });
-        const service = await AppDataSource.manager.findOne(Service, { where: { id: serviceId } });
-        const staff = await AppDataSource.manager.findOne(User, { where: { id: assignedStaffId } });
-        sendBookingConfirmation(user?.name ?? "", date, time, service?.serviceName ?? "", staff?.name ?? "", user?.email ?? "");
+        const user = await AppDataSource.manager.findOne(User, {
+            where: { id: req.user.id },
+        });
+        const staff = await AppDataSource.manager.findOne(User, {
+            where: { id: assignedStaffId },
+        });
+        sendBookingConfirmation(
+            user?.name ?? "",
+            date,
+            time,
+            service?.serviceName ?? "",
+            staff?.name ?? "",
+            user?.email ?? ""
+        );
     } catch (error) {
-        res.json(errorHandler(error, res));
+        res.json({
+            message: error,
+            status: 500,
+        });
     }
 };
-
 
 export const getAppointment = async (req: Request, res: Response) => {
     try {
@@ -93,11 +139,18 @@ export const getAppointment = async (req: Request, res: Response) => {
             where: { id: req.params.id },
         });
         if (!appointment) {
-            res.json(ResponseStatus.NOT_FOUND);
+            res.json({
+                success: false,
+                status: 404,
+                message: "Appointment not found",
+            });
         }
         res.status(200).json(appointment!.data());
     } catch (error) {
-        res.json(errorHandler(error, res));
+        res.json({
+            message: error,
+            status: 500,
+        });
     }
 };
 
@@ -108,7 +161,11 @@ export const getAppointments = async (req: Request, res: Response) => {
             take: 10,
         });
         if (!appointment) {
-            res.json(ResponseStatus.NOT_FOUND);
+            res.json({
+                success: false,
+                status: 404,
+                message: "Appointment not found",
+            });
         }
         res.status(200).json({
             totalRecords: appointment.length,
@@ -141,4 +198,3 @@ export const deleteAppointment = async (req: Request, res: Response) => {
         });
     }
 };
-

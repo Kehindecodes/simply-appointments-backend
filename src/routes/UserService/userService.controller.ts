@@ -1,8 +1,8 @@
-import { UserService } from "../../entity/UserService";
-import { AppDataSource } from "../../migration/data-source";
-import { User } from "../../entity/User";
-import { Service } from "../../entity/Service";
+import { UserService } from "../../shared/database/entity/UserService";
+import { AppDataSource } from "../../shared/database/migration/data-source";
+import { User } from "../../shared/database/entity/User";
 import { Request, Response } from "express";
+import { Service } from "../../shared/database/entity/Service";
 
 export const addServiceToUser = async (
     req: Request,
@@ -19,9 +19,8 @@ export const addServiceToUser = async (
                 message: "User not found",
                 status: 404,
             });
-            return; // this exit the function early because the goal of finding the user failed in the first place
+            return;
         }
-
         const service = await AppDataSource.manager.findOneBy(Service, {
             id: serviceId,
         });
@@ -30,9 +29,8 @@ export const addServiceToUser = async (
                 message: "Service not found",
                 status: 404,
             });
-            return; // this exit the function early because the goal of finding the service failed in the first place
+            return;
         }
-
         const userService = new UserService();
         userService.userId = user.id;
         userService.serviceId = service.id;
@@ -63,7 +61,7 @@ export const getUsersService = async (
                 message: "User not found",
                 status: 404,
             });
-            return; // this exit the function early because the goal of finding the user failed in the first place
+            return;
         }
         const userServices = await AppDataSource.manager.find(UserService, {
             where: {
@@ -74,7 +72,7 @@ export const getUsersService = async (
             message: "User services found successfully",
             status: 200,
             data: userServices.map((userService) => userService.data()),
-        });        
+        });
     } catch (error) {
         res.json({
             message: error,

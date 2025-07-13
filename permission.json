@@ -156,3 +156,96 @@
       "roleIds": [1]
   }
 ]
+
+[
+  {
+      "userId": "user1",
+      "time": "10:00",
+      "endTime": "11:00",
+      "date": "2023-11-01",
+      "staffId": "staff1",
+      "serviceId": "service1",
+      "status": "pending"
+  },
+  {
+      "userId": "user2",
+      "time": "12:00",
+      "endTime": "13:00",
+      "date": "2023-11-02",
+      "staffId": "staff2",
+      "serviceId": "service2",
+      "status": "confirmed"
+  },
+  {
+      "userId": "user3",
+      "time": "14:00",
+      "endTime": "15:00",
+      "date": "2023-11-03",
+      "staffId": "staff3",
+      "serviceId": "service3",
+      "status": "completed"
+  },
+  {
+      "userId": "user4",
+      "time": "16:00",
+      "endTime": "17:00",
+      "date": "2023-11-04",
+      "staffId": "staff4",
+      "serviceId": "service4",
+      "status": "cancelled"
+  },
+  {
+      "userId": "user5",
+      "time": "18:00",
+      "endTime": "19:00",
+      "date": "2023-11-05",
+      "staffId": "staff5",
+      "serviceId": "service5",
+      "status": "paid"
+  },
+  {
+      "userId": "user6",
+      "time": "09:00",
+      "endTime": "10:00",
+      "date": "2023-11-06",
+      "staffId": "staff6",
+      "serviceId": "service6",
+      "status": "rejected"
+  },
+  {
+      "userId": "user7",
+      "time": "11:00",
+      "endTime": "12:00",
+      "date": "2023-11-07",
+      "staffId": "staff7",
+      "serviceId": "service7",
+      "status": "pending"
+  },
+  {
+      "userId": "user8",
+      "time": "13:00",
+      "endTime": "14:00",
+      "date": "2023-11-08",
+      "staffId": "staff8",
+      "serviceId": "service8",
+      "status": "confirmed"
+  },
+  {
+      "userId": "user9",
+      "time": "15:00",
+      "endTime": "16:00",
+      "date": "2023-11-09",
+      "staffId": "staff9",
+      "serviceId": "service9",
+      "status": "completed"
+  },
+  {
+      "userId": "user10",
+      "time": "17:00",
+      "endTime": "18:00",
+      "date": "2023-11-10",
+      "staffId": "staff10",
+      "serviceId": "service10",
+      "status": "cancelled"
+  }
+]

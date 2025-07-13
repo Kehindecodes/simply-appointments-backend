@@ -36,6 +36,8 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
+    "@types/mongoose": "^5.11.96",
+    "@types/multer": "^1.4.12",
     "@xata.io/client": "^0.0.0-next.v64f10283eb9a098c575590d3ea17600e350321c9",
     "aws-sdk": "^2.1598.0",
     "bcrypt": "^5.1.1",
