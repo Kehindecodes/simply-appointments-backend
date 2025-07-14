@@ -4,7 +4,7 @@ import { User } from "../database/entity/User";
 import { isStaffAvailable } from "./isStaffAvailable";
 
 /**
- * Assigns an available staff member for a given service at a specific time and date.
+ * Assigns an available staff member to a given service at a specific time and date.
  * @param serviceId - The ID of the service.
  * @param time - The time of the service.
  * @param date - The date of the service.

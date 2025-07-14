@@ -1,5 +1,5 @@
 import passport from "passport";
-import { UserType } from "../../shared/config/enums/userTypes.enum";
+import { UserType } from "../../shared/config/enums/UserType";
 import { User } from "../../shared/database/entity/User";
 import { ApiErrorResponse } from "../../shared/utils/ApiErrorResponse";
 import { ApiSuccessResponse } from "../../shared/utils/ApiSuccessResponse";

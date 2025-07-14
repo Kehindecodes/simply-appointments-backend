@@ -40,7 +40,7 @@ export const userRepository = {
         try {
             const user = await AppDataSource.manager.findOne(User, {
                 where: {
-                    id,
+                    id
                 },
             });
             return user;

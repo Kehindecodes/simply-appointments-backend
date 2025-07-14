@@ -10,6 +10,7 @@ import {
 } from "class-validator";
 import { Role } from "./Role";
 import { Service } from './Service';
+import { UserType } from "../../config/enums/UserType";
 @Entity()
 export class User {
     @PrimaryGeneratedColumn("uuid")
@@ -42,9 +43,12 @@ export class User {
     address?: string;
 
     @IsNotEmpty({ message: "User type cannot be empty" })
-    @IsIn(["Customer", "Staff", "Admin"], { message: "Invalid user type" })
-    @Column()
-    userType?: string;
+    @IsIn([...Object.values(UserType)], { message: "Invalid user type" })
+    @Column({
+        type: "enum",
+        enum: UserType
+    })
+    userType?: UserType;
 
     @ManyToOne(() => Role , (role: Role) => role.users, { eager: true, nullable: true })
     @JoinColumn({ name: 'roleId'})

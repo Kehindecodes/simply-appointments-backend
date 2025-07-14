@@ -3,7 +3,7 @@ import { AppDataSource } from "../../shared/database/migration/data-source";
 import { User } from "../../shared/database/entity/User";
 import bcrypt from "bcrypt";
 import { validate } from "class-validator";
-import { UserType } from "../../shared/config/enums/userTypes.enum";
+import { UserType } from "../../shared/config/enums/UserType";
 import passport from "passport";
 import { generateOTP, sendOTP } from "../../shared/utils/otp.utils";
 import { CustomRequest } from "../../shared/types/custom-express";
