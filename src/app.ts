@@ -8,7 +8,7 @@ import { serviceRouter } from "./routes/Service/service.route";
 import authRouter from "./modules/auth/auth.routes";
 import { errorHandler } from "./shared/middlewares/errorHandler";
 import roleRouter from "./modules/role/role.routes";
-
+import appointmentRouter  from "./modules/appointment/appointment.routes";
 const app = express();
 
 // middlewares
@@ -26,6 +26,7 @@ passport.use("local", localStrategy);
 //routes
 // app.use("/api/v1/permissions", permissionRouter);
 app.use("/api/v1/roles", roleRouter);
+app.use("/api/v1/appointments", appointmentRouter);
 // app.use("/api/v1/users", userRouter);
 app.use("/api/v1/services", serviceRouter);
 app.use("/api/v1/auth", authRouter);
