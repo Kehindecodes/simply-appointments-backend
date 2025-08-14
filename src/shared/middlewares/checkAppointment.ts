@@ -1,9 +1,9 @@
 import { Response, NextFunction } from "express";
 import { CustomRequest } from "../types/custom-express";
-import { roleRepository } from "../../modules/role/role.repository";
 import { AppValidationError } from "../../errors/AppValidationError";
 import { NotFoundError } from "../../errors/NotFoundError";
 import { DatabaseError } from "../../errors/DatabaseError";
+import { appointmentRepository } from "../../modules/appointment/appointment.repository";
 
 export const checkRole = async (
     req: CustomRequest,
@@ -11,22 +11,19 @@ export const checkRole = async (
     next: NextFunction
 ) => {
     try {
-        // check if role exists in the route
-        let roleId = Number(req.params.roleId);
-        // check the request body
-        if (!roleId) {
+        let appointmentId = req.params.appointmentId;
+        if (!appointmentId) {
             const reqBody = req.body;
-            if (!reqBody.roleId) {
-                throw new AppValidationError("role is required");
+            if (!reqBody.appointmentId) {
+                throw new AppValidationError("appointment is required");
             }
-            roleId = Number(reqBody.roleId);
+            appointmentId = reqBody.appointmentId;
         }
-        const role = await roleRepository.getRoleById(roleId);
-        if (!role) {
-            throw new NotFoundError("Role not found");
+        const appointment = await appointmentRepository.getAppointmentById(appointmentId);
+        if (!appointment) {
+            throw new NotFoundError("Appointment not found");
         }
-        // set the role in the request
-        req.role = role;
+        req.appointment = appointment;
         next();
     } catch (err: any) {
         console.error(`Error getting role.json file: ${err}`);

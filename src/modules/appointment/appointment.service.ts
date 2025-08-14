@@ -3,6 +3,7 @@ import { appointmentRepository } from "./appointment.repository";
 import { AppointmentError } from "../../errors/AppointmentError";
 import { format, parse } from 'date-fns';
 import { userService } from "../user/user.service";
+import { userRepository } from "../user/user.repository";
 
 
 export const appointmentService = {
@@ -29,7 +30,13 @@ export const appointmentService = {
                     throw new AppointmentError("Appointment time is not in open hours");
                 }
 
-        const appointment = await appointmentRepository.createAppointment(time, staffId, serviceId, date);
+        const availableStaffId = await appointmentService.getAvailableStaffId(staffId, serviceId, appointmentDateTime);
+        if (!availableStaffId) {
+            const staff = await userRepository.getUserById(staffId);
+            throw new AppointmentError(`${staff?.name} is not available at ${time} on ${date}`);
+        }
+
+        await appointmentRepository.createAppointment(time, availableStaffId, serviceId, date);
     },
 
     /**
