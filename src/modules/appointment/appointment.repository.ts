@@ -1,29 +1,28 @@
 import { AppDataSource } from "../../shared/database/migration/data-source";
 import { Appointment } from "../../shared/database/entity/Appointment";
-import { validate, ValidationError } from "class-validator";
-import { AppValidationError } from "../../errors/AppValidationError";
+import { validateEntity } from "../../shared/utils/validateData";
+import { AppointmentStatus } from "../../shared/config/enums/AppointmentStatus";
 export const appointmentRepository = {
   createAppointment: async (
     time: string,
     staffId: string,
     serviceId: string,
-    date: string
+    date: string,
+    endTime: string,
+    userId: string,
+    status: AppointmentStatus
   ) => {
     const appointment = AppDataSource.manager.create(Appointment, {
       time,
       staffId,
       serviceId,
       date,
+      userId,
+      status,
+      endTime,
     });
 
-     const errors = await validate(appointment);
-
-            if (errors.length > 0) {
-                const errorMessage = errors[0].constraints
-                    ? Object.values(errors[0].constraints)[0]
-                    : "Validation error";
-                throw new AppValidationError(errorMessage);
-            }
+    await validateEntity(appointment);
     await AppDataSource.manager.save(appointment);
     return appointment;
   },
@@ -41,16 +40,13 @@ export const appointmentRepository = {
   },
 
   deleteAppointment: async (appointment: Appointment) => {
-
     await AppDataSource.manager.remove(appointment!);
     return appointment;
   },
 
-  updateAppointment: async (id: string, data: any) => {
-    const appointment = await AppDataSource.manager.findOne(Appointment, {
-      where: { id },
-    });
-    await AppDataSource.manager.update(Appointment, id, data);
+  updateAppointment: async (appointment: Appointment) => {
+    await validateEntity(appointment);
+    await AppDataSource.manager.update(Appointment, appointment.id, appointment);
     return appointment;
   },
 

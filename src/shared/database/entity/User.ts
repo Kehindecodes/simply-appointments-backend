@@ -53,8 +53,4 @@ export class User {
     @ManyToOne(() => Role , (role: Role) => role.users, { eager: true, nullable: true })
     @JoinColumn({ name: 'roleId'})
     role?: Role
-
-    @ManyToOne(() => Service , (service: Service) => service.users, { eager: true, nullable: true })
-    @JoinColumn({ name: 'serviceId'})
-    service?: Service
 }

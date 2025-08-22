@@ -4,6 +4,8 @@ import {
     Column,
     CreateDateColumn,
     OneToMany,
+    ManyToMany,
+    JoinTable,
 } from "typeorm";
 import { User } from "./User";
 import {
@@ -18,6 +20,7 @@ import {
     MinLength,
 } from "class-validator";
 import { Category } from "../../config/enums/Category";
+import { Staff } from "./Staff";
 
 @Entity()
 export class Service {
@@ -82,8 +85,9 @@ export class Service {
     @CreateDateColumn()
     createdAt!: Date;
 
-    @OneToMany(() => User, (user: User) => user.service)
-    users?: User[]
+    @ManyToMany(() => Staff, (staff: Staff) => staff.services)
+    @JoinTable()
+    staffs?: Staff[]
 
     /**
      * data

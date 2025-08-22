@@ -1,6 +1,7 @@
 import { NotFoundError } from "../../errors/NotFoundError";
 import { Permission } from "../../shared/database/entity/Permission";
 import { AppDataSource } from "../../shared/database/migration/data-source";
+import { validateEntity } from "../../shared/utils/validateData";
 import { roleRepository } from "../role";
 
 export const permissionRepository = {
@@ -29,7 +30,7 @@ export const permissionRepository = {
         description,
         roles,
      });
-
+     await validateEntity(permission);
      await AppDataSource.manager.save(permission);
    },
 

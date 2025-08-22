@@ -4,49 +4,64 @@ import { AppDataSource } from "../../shared/database/migration/data-source";
 
 export const userRepository = {
     getUserByEmail: async (email: string): Promise<User | null> => {
-        if (!email || typeof email !== 'string') {
-            throw new Error('Invalid email parameter');
-        }
-
-        try {
             const user = await AppDataSource.manager.findOne(User, {
                 where: {
                     email,
                 },
             });
             return user;
-        } catch (err: any) {
-            throw new Error(`Failed to retrieve user by email: ${err.message}`);
-        }
+
     },
 
     updateUserPassword: async (email: string, password: string): Promise<void> => {
-        try {
-            await AppDataSource.manager.update(
-                User,
-                { email },
-                { password: password }
-            );
-        } catch (err: any) {
-            throw new Error(`Failed to update user password: ${err.message}`);
-        }
+        await AppDataSource.manager.update(
+            User,
+            { email },
+            { password: password }
+        );
     },
 
     getUserById: async (id: string): Promise<User | null> => {
-        if (!id || typeof id !== 'string') {
-            throw new Error('Invalid id parameter');
-        }
-
-        try {
             const user = await AppDataSource.manager.findOne(User, {
                 where: {
                     id
                 },
             });
             return user;
-        } catch (err: any) {
-            throw new Error(`Failed to retrieve user by id: ${err.message}`);
-        }
+    },
+
+    updateUser: async (user: User): Promise<void> => {
+        await AppDataSource.manager.update(User, { id: user.id }, user);
+    },
+
+    getUsersWithRoleByUserType: async (userType: string): Promise<User[] | null> => {
+            const users = await AppDataSource.getRepository(User)
+                .createQueryBuilder("user")
+                .leftJoinAndSelect("user.role", "role")
+                .where("user.userType = :userType", { userType: userType })
+                .getMany();
+            return users;
+    },
+
+    // getUserWithRole: async (id: string): Promise<User | null> => {
+    //         const user = await AppDataSource.getRepository(User)
+    //             .createQueryBuilder("user")
+    //             .leftJoinAndSelect("user.role", "role")
+    //             .where("user.id = :id", { id: id })
+    //             .getOne();
+    //         return user;
+    // },
+
+    deleteUser: async (user: User): Promise<void> => {
+        await AppDataSource.manager.remove(user);
+    },
+    getUsers: async (filters: any): Promise<User[] | null> => {
+        const users = await AppDataSource.manager.find(User, {
+            where: {
+                ...filters
+            }
+        });
+        return users;
     }
 }
 

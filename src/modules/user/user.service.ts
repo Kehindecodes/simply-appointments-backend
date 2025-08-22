@@ -1,6 +1,7 @@
 import { User } from "../../shared/database/entity/User";
 import { appointmentService } from "../appointment/appointment.service";
 import { serviceRepository } from "../service/service.repository";
+import { userRepository } from "./user.repository";
 
 export const userService = {
 
@@ -34,5 +35,22 @@ export const userService = {
             console.error("Error assigning available staff:", error);
             return null;
         }
+    },
+
+    getAllUsers: async (query: any): Promise<User[] | null> => {
+        const filters : {userType?: string} = {};
+        if (query.userType) {
+            filters.userType = query.userType;
+        }
+        const users = await userRepository.getUsers(filters);
+        if (!users) {
+            return [];
+        }
+        let data = [];
+        for (const user of users) {
+            data.push(user);
+        }
+        return data;
     }
+
 }

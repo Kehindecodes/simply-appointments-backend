@@ -7,7 +7,8 @@ import { userRepository } from "../user/user.repository";
 
 
 export const appointmentService = {
-    bookAppointment: async (time: string, staffId: string, serviceId: string, date: string) => {
+    bookAppointment: async (appointmentData: any) => {
+        let { time, staffId, serviceId, date, userId } = appointmentData;
         const [hours, minutes] =  time?.split(":");
         const appointmentDateTime = new Date(date);
         appointmentDateTime.setHours(
