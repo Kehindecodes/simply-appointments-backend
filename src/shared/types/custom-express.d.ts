@@ -13,4 +13,5 @@ export interface CustomRequest extends Request {
     // permissions?: string[];
     service?: Service;
     appointment?: Appointment;
+    staff?: User
 }
