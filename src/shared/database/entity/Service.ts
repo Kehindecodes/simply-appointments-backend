@@ -20,7 +20,6 @@ import {
     MinLength,
 } from "class-validator";
 import { Category } from "../../config/enums/Category";
-import { Staff } from "./Staff";
 
 @Entity()
 export class Service {
@@ -85,9 +84,9 @@ export class Service {
     @CreateDateColumn()
     createdAt!: Date;
 
-    @ManyToMany(() => Staff, (staff: Staff) => staff.services)
+    @ManyToMany(() => User, (user: User) => user.services)
     @JoinTable()
-    staffs?: Staff[]
+    users?: User[]
 
     /**
      * data
@@ -107,4 +106,3 @@ export class Service {
         };
     }
 }
-

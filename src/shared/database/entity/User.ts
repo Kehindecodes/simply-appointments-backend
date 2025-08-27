@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, ManyToMany, JoinTable } from "typeorm";
 import {
     IsEmail,
     MinLength,
@@ -53,4 +53,16 @@ export class User {
     @ManyToOne(() => Role , (role: Role) => role.users, { eager: true, nullable: true })
     @JoinColumn({ name: 'roleId'})
     role?: Role
+
+    @ManyToMany(() => Service , (service: Service) => service.staffs)
+        services?: Service[]
+        @JoinTable({ name: 'staff_service' ,
+            joinColumn: { name: 'staff_id', referencedColumnName: 'id' },
+            inverseJoinColumn: { name: 'service_id', referencedColumnName: 'id' },
+
+        })
+        service?: Service
+
+    @Column({default: true})
+    isAvailable?: boolean;
 }
