@@ -42,27 +42,27 @@ export class Service {
     @Column()
     price?: number;
 
-    @IsOptional()
     @MinLength(3, { message: "Description must be at least 3 characters" })
     @MaxLength(50, { message: "Description must be at most 50 characters" })
     @IsString({ message: "Description must be a string" })
+    @IsOptional()
     @Column({
         nullable: true,
     })
     description?: string;
 
-    @IsOptional()
-    @IsBoolean({ message: "Is active must be a boolean" })
-    @IsNotEmpty({ message: "Is active is required" })
-    @Column()
-    isActive!: boolean;
+    // @IsBoolean({ message: "Is active must be a boolean" })
+    // @IsNotEmpty({ message: "Is active is required" })
+    // @IsOptional()
+    // @Column()
+    // isActive?: boolean;
 
-    @IsNotEmpty({ message: "Duration is required" })
     @IsString({ message: "Duration must be a string" })
+    @IsOptional()
     @Column({
         nullable: true,
     })
-    duration!: string;
+    duration?: string;
 
     @IsBoolean({ message: "Availability must be a boolean" })
     @IsNotEmpty({ message: "Availability is required" })
@@ -88,6 +88,11 @@ export class Service {
     @JoinTable()
     users?: User[]
 
+    @Column({
+        default: false,
+    })
+    isDeleted?: boolean;
+
     /**
      * data
      */
@@ -98,7 +103,7 @@ export class Service {
             serviceName: this.serviceName,
             price: this.price,
             description: this.description,
-            isActive: this.isActive,
+            // isActive: this.isActive,
             duration: this.duration,
             availability: this.availability,
             category: this.category,

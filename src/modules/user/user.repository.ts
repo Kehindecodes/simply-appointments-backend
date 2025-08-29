@@ -53,7 +53,8 @@ export const userRepository = {
     // },
 
     deleteUser: async (user: User): Promise<void> => {
-        await AppDataSource.manager.remove(user);
+        user.isDeleted = true;
+        await AppDataSource.manager.update(User, { id: user.id }, user);
     },
     getUsers: async (filters: any): Promise<User[] | null> => {
         const users = await AppDataSource.manager.find(User, {

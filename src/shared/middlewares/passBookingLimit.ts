@@ -3,6 +3,7 @@ import { AppDataSource } from "../database/migration/data-source";
 import { CustomRequest } from "../types/custom-express";
 import { Appointment } from "../database/entity/Appointment";
 import { User } from "../database/entity/User";
+import { userRepository } from "../../modules/user/user.repository";
 
 export const passBookingLimit = async (
     req: CustomRequest,
@@ -20,9 +21,7 @@ export const passBookingLimit = async (
         });
 
         if (appointments.length >= maxBookingPerDay) {
-            const staff = await AppDataSource.manager.findOne(User, {
-                where: { id: staffId },
-            });
+            const staff = await userRepository.getUserById(staffId);
             return res.status(400).json({
                 message: `${staff?.name} has reached the booking limit for the day`,
             });

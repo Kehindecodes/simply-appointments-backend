@@ -3,12 +3,13 @@ import { appointmentRepository } from "./appointment.repository";
 import { AppointmentError } from "../../errors/AppointmentError";
 import { format, parse } from 'date-fns';
 import { userService } from "../user/user.service";
-import { userRepository } from "../user/user.repository";
+import { AppointmentStatus } from "../../shared/config/enums/AppointmentStatus";
+import { notifyStaff, sendBookingConfirmation } from "../../shared/utils/notification.utils";
 
 
 export const appointmentService = {
     bookAppointment: async (appointmentData: any) => {
-        let { time, staffId, serviceId, date, userId } = appointmentData;
+        let { time, staff, service, date, user, } = appointmentData;
         const [hours, minutes] =  time?.split(":");
         const appointmentDateTime = new Date(date);
         appointmentDateTime.setHours(
@@ -31,13 +32,19 @@ export const appointmentService = {
                     throw new AppointmentError("Appointment time is not in open hours");
                 }
 
-        const availableStaffId = await appointmentService.getAvailableStaffId(staffId, serviceId, appointmentDateTime);
+        const availableStaffId = await appointmentService.getAvailableStaffId(staff.id, service.id, appointmentDateTime);
         if (!availableStaffId) {
-            const staff = await userRepository.getUserById(staffId);
             throw new AppointmentError(`${staff?.name} is not available at ${time} on ${date}`);
         }
+         const serviceDuration = service.duration;
+         const appointmentEndtime = new Date(appointmentDateTime.getTime() + serviceDuration * 60000);
 
-        await appointmentRepository.createAppointment(time, availableStaffId, serviceId, date);
+        const appointment = await appointmentRepository.createAppointment(time, availableStaffId, service.id, date, appointmentEndtime.toISOString(), user.id, AppointmentStatus.PENDING);
+
+        await notifyStaff (date, time, service.serviceName, staff.name, staff.email);
+        await sendBookingConfirmation(user.name, date, time, service.serviceName, staff.name, user.email);
+        appointment.status = AppointmentStatus.CONFIRMED;
+        await appointmentRepository.updateAppointment(appointment);
     },
 
     /**

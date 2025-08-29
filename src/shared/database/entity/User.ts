@@ -54,10 +54,10 @@ export class User {
     @JoinColumn({ name: 'roleId'})
     role?: Role
 
-    @ManyToMany(() => Service , (service: Service) => service.staffs)
+    @ManyToMany(() => Service , (service: Service) => service.users)
         services?: Service[]
-        @JoinTable({ name: 'staff_service' ,
-            joinColumn: { name: 'staff_id', referencedColumnName: 'id' },
+        @JoinTable({ name: 'user_service' ,
+            joinColumn: { name: 'user_id', referencedColumnName: 'id' },
             inverseJoinColumn: { name: 'service_id', referencedColumnName: 'id' },
 
         })
@@ -65,4 +65,9 @@ export class User {
 
     @Column({default: true})
     isAvailable?: boolean;
+
+    @Column({
+        default: false,
+    })
+    isDeleted?: boolean;
 }

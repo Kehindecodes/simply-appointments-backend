@@ -1,7 +1,9 @@
 import { NextFunction, Response } from "express";
-import { CustomRequest } from "../types/custom-express";
 import { AppDataSource } from "../database/migration/data-source";
 import { Service } from "../database/entity/Service";
+import { serviceRepository } from "../../modules/service/service.repository";
+import { ApiErrorResponse } from "../utils/ApiErrorResponse";
+import { CustomRequest } from "../types/custom-express";
 
 export const checkService = async (
     req: CustomRequest,
@@ -21,18 +23,17 @@ export const checkService = async (
             serviceId = post.serviceId;
         }
 
-        const service = await AppDataSource.getRepository(Service).findOneBy({
-            id: serviceId,
-        });
+        const service = await serviceRepository.getserviceById(serviceId);
         if (!service) {
-            res.status(404).json({ message: "Service not found" });
+            res.status(404).json(new ApiErrorResponse(404, "Service not found"));
             return;
         }
+        req.service = service;
         next();
     } catch (error) {
-        res.json({
-            message: error,
-            status: 500,
-        });
+        console.error(error)
+        res.json(
+            new ApiErrorResponse(500, "Internal server error")
+        );
     }
 };

@@ -9,6 +9,12 @@ getServiceWithAssignedStaff: async(serviceId: string): Promise<Service | null> =
             .leftJoinAndSelect("service.users", "user")
             .where("service.id = :id", { id: serviceId })
             .getOne();
-    }
+    },
+
+    getServiceById: async(serviceId: string): Promise<Service | null> => {
+        return AppDataSource.manager.findOne(Service, {where: {id: serviceId}})
+
+    },
+
 
 }

@@ -77,6 +77,11 @@ export class Appointment {
     @CreateDateColumn()
     createdAt!: Date;
 
+    @Column({
+        default: false,
+    })
+    isDeleted?: boolean;
+
     public data() {
         // const createdAtFormatted = this.createdAt.toISOString().split("T")[0];
         return {

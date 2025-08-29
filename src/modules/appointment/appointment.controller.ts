@@ -5,11 +5,10 @@ import { appointmentService } from "./appointment.service";
 import { Request, Response } from "express";
 
 export const appointmentController = {
-   //  bookAppointment: async (req: Request, res: Response) => {
-   //          const { time, staffId, serviceId, date } = req.body;
-   //          await appointmentService.bookAppointment(time, staffId, serviceId, date);
-   //          res.status(201).json(new ApiSuccessResponse(201, "Appointment created successfully"));
-   //  },
+    bookAppointment: async (req: CustomRequest, res: Response) => {
+            await appointmentService.bookAppointment(req);
+            res.status(201).json(new ApiSuccessResponse(201, "Appointment created successfully"));
+    },
     getAppointment: async (req: CustomRequest, res: Response) => {
        const appointment = req.appointment;
        res.status(200).json(new ApiSuccessResponse(200, "", appointment));
