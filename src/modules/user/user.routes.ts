@@ -28,20 +28,20 @@ userRouter.post("/:id/appointments",
 
 userRouter.get("/:id",
     jwtAuthentication,
-    authorizeUser(["get user"]),
+    authorizeUser(["View Users"]),
     checkUser,
     asyncHandler(userController.getUser)
 )
 
 userRouter.get("/",
     jwtAuthentication,
-    authorizeUser(["get user"]),
+    authorizeUser(["View Users"]),
     asyncHandler(userController.getAllUsers)
 )
 
 userRouter.patch("/:id",
     jwtAuthentication,
-    authorizeUser(["update user"]),
+    authorizeUser(["Update user"]),
     checkUser,
     asyncHandler(userController.updateUser)
 )
@@ -51,6 +51,13 @@ userRouter.delete("/:id",
     authorizeUser(["delete user"]),
     checkUser,
     asyncHandler(userController.deleteUser)
+)
+
+userRouter.get("/:id/appointments",
+    jwtAuthentication,
+    authorizeUser(["View Appointments"]),
+    checkUser,
+    asyncHandler(userController.getUserAppointments)
 )
 
 export default userRouter;

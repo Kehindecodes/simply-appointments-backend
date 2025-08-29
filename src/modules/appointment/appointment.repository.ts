@@ -2,6 +2,7 @@ import { AppDataSource } from "../../shared/database/migration/data-source";
 import { Appointment } from "../../shared/database/entity/Appointment";
 import { validateEntity } from "../../shared/utils/validateData";
 import { AppointmentStatus } from "../../shared/config/enums/AppointmentStatus";
+import { User } from "../../shared/database/entity/User";
 export const appointmentRepository = {
   createAppointment: async (
     time: string,
@@ -59,5 +60,12 @@ export const appointmentRepository = {
         },
     });
     return appointment;
-  }
+  },
+
+  getAppointmentsByUserId: async (user: User) => {
+    const appointments = await AppDataSource.manager.find(Appointment, {
+      where: { userId: user.id },
+    });
+    return appointments;
+  },
 };

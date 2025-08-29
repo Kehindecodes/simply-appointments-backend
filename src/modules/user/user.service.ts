@@ -1,4 +1,5 @@
 import { User } from "../../shared/database/entity/User";
+import { appointmentRepository } from "../appointment/appointment.repository";
 import { appointmentService } from "../appointment/appointment.service";
 import { serviceRepository } from "../service/service.repository";
 import { userRepository } from "./user.repository";

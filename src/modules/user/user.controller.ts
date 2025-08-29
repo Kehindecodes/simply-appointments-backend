@@ -4,6 +4,7 @@ import { CustomRequest } from "../../shared/types/custom-express";
 import { ApiSuccessResponse } from "../../shared/utils/ApiSuccessResponse";
 import { userService } from "./user.service";
 import { appointmentService } from "../appointment/appointment.service";
+import { appointmentRepository } from "../appointment/appointment.repository";
 
 export const userController = {
 
@@ -36,6 +37,11 @@ export const userController = {
     const user = req.user
     await userRepository.deleteUser(user!)
     res.status(200).json(new ApiSuccessResponse(200, "", ""))
+   },
+   getUserAppointments: async (req: CustomRequest, res: Response): Promise<void> => {
+    const user = req.user
+    const appointments = await appointmentRepository.getAppointmentsByUserId(user!)
+    res.status(200).json(new ApiSuccessResponse(200, "", appointments))
    }
 
 }
