@@ -23,5 +23,15 @@ export const appointmentController = {
     const appointment = req.appointment;
     await appointmentRepository.deleteAppointment(appointment!);
     res.status(200).json(new ApiSuccessResponse(200, "", appointment));
+   },
+
+   updateAppointment: async (req: CustomRequest, res: Response) => {
+    const appointment = req.appointment;
+    const { time, staffId, serviceId } = req.body;
+    appointment!.time = time;
+    appointment!.staffId = staffId;
+    appointment!.serviceId = serviceId;
+    await appointmentRepository.updateAppointment(appointment!);
+    res.status(200).json(new ApiSuccessResponse(200, "", appointment));
    }
 }

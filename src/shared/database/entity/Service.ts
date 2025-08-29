@@ -51,35 +51,10 @@ export class Service {
     })
     description?: string;
 
-    // @IsBoolean({ message: "Is active must be a boolean" })
-    // @IsNotEmpty({ message: "Is active is required" })
-    // @IsOptional()
-    // @Column()
-    // isActive?: boolean;
-
     @IsString({ message: "Duration must be a string" })
-    @IsOptional()
-    @Column({
-        nullable: true,
-    })
+    @IsNotEmpty({ message: "Duration is required" })
+    @Column()
     duration?: string;
-
-    @IsBoolean({ message: "Availability must be a boolean" })
-    @IsNotEmpty({ message: "Availability is required" })
-    @Column(
-        {
-            default: true,
-        }
-    )
-    availability!: boolean;
-
-    @IsNotEmpty({ message: "Category is required" })
-    @IsIn([...Object.values(Category)]) // Use IsIn to validate against the Category enum
-    @Column({
-        type: "enum",
-        enum: Category,
-    })
-    category!: Category;
 
     @CreateDateColumn()
     createdAt!: Date;
@@ -103,10 +78,7 @@ export class Service {
             serviceName: this.serviceName,
             price: this.price,
             description: this.description,
-            // isActive: this.isActive,
             duration: this.duration,
-            availability: this.availability,
-            category: this.category,
             createdAt: createdAtFormatted,
         };
     }
