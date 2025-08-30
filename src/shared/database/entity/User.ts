@@ -46,7 +46,8 @@ export class User {
     @IsIn([...Object.values(UserType)], { message: "Invalid user type" })
     @Column({
         type: "enum",
-        enum: UserType
+        enum: UserType,
+        default: UserType.CUSTOMER
     })
     userType?: UserType;
 

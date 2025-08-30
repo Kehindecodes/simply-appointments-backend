@@ -23,7 +23,7 @@ export const checkService = async (
             serviceId = post.serviceId;
         }
 
-        const service = await serviceRepository.getserviceById(serviceId);
+        const service = await serviceRepository.getServiceById(serviceId);
         if (!service) {
             res.status(404).json(new ApiErrorResponse(404, "Service not found"));
             return;

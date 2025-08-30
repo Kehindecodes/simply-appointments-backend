@@ -34,3 +34,6 @@ serviceRouter.patch("/:id",
     authorizeUser(["Update Service"]),
     checkService,
     asyncHandler(serviceController.updateService));
+
+
+export default serviceRouter;

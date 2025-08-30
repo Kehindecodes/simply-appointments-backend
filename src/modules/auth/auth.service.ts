@@ -26,7 +26,7 @@ interface UserData {
     phoneNumber: string;
     password: string;
     address: string;
-    userType: string;
+    userType: UserType;
 }
 
 export const authService = {

@@ -34,8 +34,8 @@ userRouter.get("/:id",
 )
 
 userRouter.get("/",
-    jwtAuthentication,
-    authorizeUser(["View Users"]),
+    // jwtAuthentication,
+    // authorizeUser(["View Users"]),
     asyncHandler(userController.getAllUsers)
 )
 

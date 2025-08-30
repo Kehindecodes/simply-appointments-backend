@@ -4,12 +4,12 @@ import cors from "cors";
 import passport from "passport";
 import {localStrategy} from "./shared/config";
 // import permissionRouter from "./routes/Permission/permission.route";
-import { serviceRouter } from "./routes/Service/service.route";
 import authRouter from "./modules/auth/auth.routes";
 import { errorHandler } from "./shared/middlewares/errorHandler";
 import roleRouter from "./modules/role/role.routes";
 import appointmentRouter  from "./modules/appointment/appointment.routes";
 import userRouter from "./modules/user/user.routes";
+import serviceRouter from "./modules/service/service.routes";
 const app = express();
 
 // middlewares

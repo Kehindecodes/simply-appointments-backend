@@ -5,5 +5,8 @@ export class ApiSuccessResponse extends Response {
         public data?: any
     ) {
         super();
+        this.status = status;
+        this.message = message;
+        this.data = data;
     }
 }

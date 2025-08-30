@@ -19,7 +19,6 @@ import {
     MaxLength,
     MinLength,
 } from "class-validator";
-import { Category } from "../../config/enums/Category";
 
 @Entity()
 export class Service {
