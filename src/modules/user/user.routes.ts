@@ -60,4 +60,26 @@ userRouter.get("/:id/appointments",
     asyncHandler(userController.getUserAppointments)
 )
 
+userRouter.get("/:staffId/services/:serviceId",
+    jwtAuthentication,
+    authorizeUser(["Add Staff Service "]),
+    checkService,
+    checkStaff,
+    asyncHandler(userController.addServiceToUser)
+)
+
+userRouter.get("/:staffId/services",
+    jwtAuthentication,
+    authorizeUser(["View Staff Services"]),
+    checkStaff,
+    asyncHandler(userController.getUserServices)
+)
+
+userRouter.delete("/:staffId/services/:serviceId",
+    jwtAuthentication,
+    authorizeUser(["Delete staff service"]),
+    checkStaff,
+    asyncHandler(userController.deleteUserService)
+)
+
 export default userRouter;

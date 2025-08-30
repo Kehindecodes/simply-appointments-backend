@@ -1,3 +1,4 @@
+import { Service } from "../../shared/database/entity/Service";
 import { User } from "../../shared/database/entity/User";
 import { AppDataSource } from "../../shared/database/migration/data-source";
 
@@ -63,6 +64,27 @@ export const userRepository = {
             }
         });
         return users;
+    },
+
+    addServiceToUser: async (user: User, service: Service): Promise<void> => {
+       user.services = [service];
+       await AppDataSource.manager.save(user);
+
+    },
+    getUserServices: async (user: User): Promise<User[] | null> =>  {
+        const userService = await AppDataSource.manager.createQueryBuilder(User,"user")
+        .leftJoinAndSelect("user.services", "service")
+        .where("user.id = :userId", { userId: user.id })
+        .getMany();
+        return userService
+    },
+    deleteUserService: async (user: User) => {
+        const userServices = await AppDataSource.manager.findOne(User, {
+            relations: {services: true},
+            where: {id: user.id}});
+        userServices!.services = userServices!.services!.filter((service) => service.id !== service.id);
+        await AppDataSource.manager.save(userServices);
     }
+
 }
 

@@ -37,7 +37,7 @@
   },
   {
     "id": 7,
-    "name": "view Users",
+    "name": "View Users",
     "description": "Permission to view users",
     "roles": [1]
   },
@@ -154,6 +154,12 @@
       "name": "Delete staff service",
       "description": "Permission to delete staff service",
       "roleIds": [1]
+  },
+  {
+    "id": 27,
+    "name": "Update user",
+    "description": "Permission to update user",
+    "roleIds": [1]
   }
 ]
 

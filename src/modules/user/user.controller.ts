@@ -42,6 +42,21 @@ export const userController = {
     const user = req.user
     const appointments = await appointmentRepository.getAppointmentsByUserId(user!)
     res.status(200).json(new ApiSuccessResponse(200, "", appointments))
+   },
+   addServiceToUser: async (req: CustomRequest, res: Response): Promise<void> => {
+    const {user, service} = req
+    await userRepository.addServiceToUser(user!, service!)
+    res.status(200).json(new ApiSuccessResponse(200, "", ""))
+   },
+   getUserServices: async (req: CustomRequest, res: Response): Promise<void> => {
+    const user = req.user
+    const services = await userRepository.getUserServices(user!)
+    res.status(200).json(new ApiSuccessResponse(200, "", services))
+   },
+   deleteUserService: async (req: CustomRequest, res: Response): Promise<void> => {
+    const {user} = req
+    await userRepository.deleteUserService(user!)
+    res.status(200).json(new ApiSuccessResponse(200, "", ""))
    }
 
 }

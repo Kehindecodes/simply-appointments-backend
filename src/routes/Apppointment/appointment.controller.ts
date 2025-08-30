@@ -3,13 +3,12 @@ import { Appointment } from "../../shared/database/entity/Appointment";
 import { AppointmentStatus } from "../../shared/config/enums/AppointmentStatus";
 import { validate } from "class-validator";
 import { AppDataSource } from "../../shared/database/migration/data-source";
-import { errorHandler } from "../../shared/middlewares/errorHandler";
 import { CustomRequest } from "../../shared/types/custom-express";
 import { Service } from "../../shared/database/entity/Service";
 import { User } from "../../shared/database/entity/User";
 import { checkIfStillInOpenHours } from "../../shared/utils/checkIfStillInOpenHours";
-import { getAvailableStaffId } from "../../shared/utils/getAvailableStaffId";
 import { sendBookingConfirmation } from "../../shared/utils/notification.utils";
+import { appointmentService } from "../../modules/appointment/appointment.service";
 
 export const bookAppointment = async (req: CustomRequest, res: Response) => {
     try {
@@ -66,7 +65,7 @@ export const bookAppointment = async (req: CustomRequest, res: Response) => {
             });
         }
 
-        const assignedStaffId = await getAvailableStaffId(
+        const assignedStaffId = await appointmentService.getAvailableStaffId(
             requestedStaffId,
             serviceId,
             appointmentDateTime
