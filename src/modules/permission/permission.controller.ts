@@ -1,5 +1,4 @@
 import { NotFoundError } from "../../errors/NotFoundError";
-import { ApiSuccessResponse } from "../../shared/utils/ApiSuccessResponse";
 import { permissionRepository } from "./permission.repository";
 import { Request, Response } from "express";
 
@@ -8,7 +7,7 @@ export const PermissionController = {
     createPermission: async (req: Request, res: Response): Promise<void> => {
         const { id, name, description, roleIds } = req.body;
         await permissionRepository.create(id, name, description, roleIds);
-        res.status(201).json(new ApiSuccessResponse(201, "Permission created successfully"));
+        res.status(201).json();
     },
     getPermissions: async (req: Request, res: Response): Promise<void> => {
         const permissions = await permissionRepository.getPermissions();
@@ -23,7 +22,7 @@ export const PermissionController = {
                 roles: permission.roles,
             };
         });
-        res.status(200).json(new ApiSuccessResponse(200, "Permissions fetched successfully", data));
+        res.status(200).json(data);
     },
     getRoleWithPermission: async (req: Request, res: Response): Promise<void> => {
         const permissionId = req.params.id;
@@ -31,6 +30,6 @@ export const PermissionController = {
         if (!permission) {
             throw new NotFoundError(`Permission not found with ID ${permissionId}`);
         }
-        res.status(200).json(new ApiSuccessResponse(200, "", permission));
+        res.status(200).json(permission);
     },
 }

@@ -2,7 +2,6 @@ import passport from "passport";
 import { UserType } from "../../shared/config/enums/UserType";
 import { User } from "../../shared/database/entity/User";
 import { ApiErrorResponse } from "../../shared/utils/ApiErrorResponse";
-import { ApiSuccessResponse } from "../../shared/utils/ApiSuccessResponse";
 import { repository} from "../../shared/utils/repository";
 import { validateEntity } from "../../shared/utils/validateData";
 import { roleRepository } from "../role/role.repository";
@@ -16,7 +15,6 @@ import { sendPasswordResetLink } from "../../shared/utils/token.utils";
 import { linkTokenRepository } from "../link-token";
 import { otpRepository } from "../otp";
 import { NotFoundError } from "../../errors/NotFoundError";
-import { ValidationError } from "class-validator";
 import { AppValidationError } from "../../errors/AppValidationError";
 import { OtpError } from "../../errors/OtpError";
 
@@ -62,7 +60,7 @@ export const authService = {
         req: Request,
         res: Response,
         next: NextFunction
-    ): Promise<ApiSuccessResponse> => {
+    ): Promise<void> => {
 
                   if (!email || !password) {
                       throw new AppValidationError("Email and password are required");
@@ -89,7 +87,7 @@ export const authService = {
                           if (!infoMail) {
                               return reject(new OtpError("Error sending OTP"));
                           }
-                          return resolve(new ApiSuccessResponse(200, "User logged in successfully. Please check your email for OTP"));
+                          return resolve();
                       }
                   )(req, res, next);
                   });

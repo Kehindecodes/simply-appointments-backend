@@ -1,12 +1,11 @@
 import { Request, Response, NextFunction } from "express";
 import { authService } from "./auth.service";
-import { ApiSuccessResponse } from "../../shared/utils/ApiSuccessResponse";
 import { CustomRequest } from "../../shared/types/custom-express";
 
 export const authController = {
   registerUser: async (req: CustomRequest, res: Response): Promise<void> => {
     await authService.registerUser(req.body);
-    res.json(new ApiSuccessResponse(201, "User registered successfully"));
+    res.status(201).json();
   },
   loginUser: async (
     req: CustomRequest,
@@ -23,20 +22,18 @@ export const authController = {
   },
   validateOTP: async (req: CustomRequest, res: Response): Promise<void> => {
     await authService.validateOTP(req.body.email, req.body.otp, res);
-    res.json(new ApiSuccessResponse(200, "OTP validated successfully"));
+    res.status(200).json();
   },
   forgotPassword: async (req: CustomRequest, res: Response): Promise<void> => {
     await authService.forgotPassword(req.body.email);
-    res.json(
-      new ApiSuccessResponse(200, "Password reset link sent successfully")
-    );
+    res.status(200).json();
   },
   allowPasswordReset: async (
     req: CustomRequest,
     res: Response
   ): Promise<void> => {
     await authService.allowPasswordReset(req.body.token);
-    res.json(new ApiSuccessResponse(200, ""));
+    res.status(200).json();
   },
   resetPassword: async (req: CustomRequest, res: Response): Promise<void> => {
     await authService.resetPassword(
@@ -44,6 +41,6 @@ export const authController = {
       req.body.password,
       req.body.confirmPassword
     );
-    res.json(new ApiSuccessResponse(200, "Password reset successfully"));
+    res.status(200).json();
   },
 };

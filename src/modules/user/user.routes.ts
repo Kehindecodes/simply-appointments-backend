@@ -27,8 +27,8 @@ userRouter.post("/:id/appointments",
 );
 
 userRouter.get("/:id",
-    jwtAuthentication,
-    authorizeUser(["View Users"]),
+    // jwtAuthentication,
+    // authorizeUser(["View Users"]),
     checkUser,
     asyncHandler(userController.getUser)
 )
