@@ -7,6 +7,7 @@ import {
     IsPhoneNumber,
     IsString,
     IsIn,
+    IsOptional,
 } from "class-validator";
 import { Role } from "./Role";
 import { Service } from './Service';
@@ -63,8 +64,10 @@ export class User {
 
         })
         service?: Service
-
-    @Column({default: true})
+    @IsOptional()
+    @Column(
+        {nullable:true}
+    )
     isAvailable?: boolean;
 
     @Column({
