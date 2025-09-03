@@ -1,11 +1,11 @@
 import express from "express";
 import { PermissionController } from "./permission.controller";
-import { asyncHandler } from "../../shared/utils/asyncHandler";
+import { asyncHandlerAsyncAwait } from "../../shared/utils/asyncHandlerAsyncAwait";
 
 const permissionRouter = express.Router();
 
-permissionRouter.post("/", asyncHandler(PermissionController.createPermission));
-permissionRouter.get("/", asyncHandler(PermissionController.getPermissions));
-permissionRouter.get("/role/:id", asyncHandler(PermissionController.getRoleWithPermission));
+permissionRouter.post("/", asyncHandlerAsyncAwait(PermissionController.createPermission));
+permissionRouter.get("/", asyncHandlerAsyncAwait(PermissionController.getPermissions));
+permissionRouter.get("/role/:id", asyncHandlerAsyncAwait(PermissionController.getRoleWithPermission));
 
 export default permissionRouter;

@@ -5,7 +5,7 @@ import { jwtAuthentication } from "../../shared/middlewares/jwtAuthentication";
 import { authorizeUser } from "../../shared/middlewares/authorizeUser";
 import { checkStaff } from "../../shared/middlewares/checkStaff";
 import { checkService } from "../../shared/middlewares/checkService";
-import { asyncHandler } from "../../shared/utils/asyncHandler";
+import { asyncHandlerAsyncAwait } from "../../shared/utils/asyncHandlerAsyncAwait";
 import { passBookingLimit } from "../../shared/middlewares/passBookingLimit";
 import { avoidBookingSameServiceMultipleTimes } from "../../shared/middlewares/avoidMultipleServiceBookings";
 import { passUserBookingLimit } from "../../shared/middlewares/passUserBookingLimit";
@@ -23,41 +23,41 @@ userRouter.post("/:id/appointments",
     avoidBookingSameServiceMultipleTimes,
     passUserBookingLimit,
     preventDoubleBooking,
-    asyncHandler(userController.bookAppointment)
+    asyncHandlerAsyncAwait(userController.bookAppointment)
 );
 
 userRouter.get("/:id",
     // jwtAuthentication,
     // authorizeUser(["View Users"]),
     checkUser,
-    asyncHandler(userController.getUser)
+    asyncHandlerAsyncAwait(userController.getUser)
 )
 
 userRouter.get("/",
     // jwtAuthentication,
     // authorizeUser(["View Users"]),
-    asyncHandler(userController.getAllUsers)
+    asyncHandlerAsyncAwait(userController.getAllUsers)
 )
 
 userRouter.patch("/:id",
     jwtAuthentication,
     authorizeUser(["Update user"]),
     checkUser,
-    asyncHandler(userController.updateUser)
+    asyncHandlerAsyncAwait(userController.updateUser)
 )
 
 userRouter.delete("/:id",
     jwtAuthentication,
     authorizeUser(["delete user"]),
     checkUser,
-    asyncHandler(userController.deleteUser)
+    asyncHandlerAsyncAwait(userController.deleteUser)
 )
 
 userRouter.get("/:id/appointments",
     jwtAuthentication,
     authorizeUser(["View Appointments"]),
     checkUser,
-    asyncHandler(userController.getUserAppointments)
+    asyncHandlerAsyncAwait(userController.getUserAppointments)
 )
 
 userRouter.get("/:staffId/services/:serviceId",
@@ -65,21 +65,21 @@ userRouter.get("/:staffId/services/:serviceId",
     authorizeUser(["Add Staff Service "]),
     checkService,
     checkStaff,
-    asyncHandler(userController.addServiceToUser)
+    asyncHandlerAsyncAwait(userController.addServiceToUser)
 )
 
 userRouter.get("/:staffId/services",
     jwtAuthentication,
     authorizeUser(["View Staff Services"]),
     checkStaff,
-    asyncHandler(userController.getUserServices)
+    asyncHandlerAsyncAwait(userController.getUserServices)
 )
 
 userRouter.delete("/:staffId/services/:serviceId",
     jwtAuthentication,
     authorizeUser(["Delete staff service"]),
     checkStaff,
-    asyncHandler(userController.deleteUserService)
+    asyncHandlerAsyncAwait(userController.deleteUserService)
 )
 
 export default userRouter;

@@ -2,6 +2,7 @@ const LocalStrategy = require("passport-local").Strategy;
 import bcrypt from "bcrypt";
 import { AppDataSource } from "../database/migration/data-source";
 import { User } from "../database/entity/User";
+import { AppValidationError } from "../../errors/AppValidationError";
 
 const localStrategy = new LocalStrategy({
     usernameField: "email",
@@ -16,7 +17,7 @@ const localStrategy = new LocalStrategy({
         }
 
         if (!user.password){
-            return done(null, false, {message: "Password not set"});
+            return done(null, false, {message: new AppValidationError("Password not set")});
         }
 
         const isMatch = await bcrypt.compare(password, user.password);

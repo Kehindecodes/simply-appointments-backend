@@ -1,13 +1,13 @@
 import express from "express";
-import { asyncHandler } from "../../shared/utils/asyncHandler";
+import { asyncHandlerAsyncAwait } from "../../shared/utils/asyncHandlerAsyncAwait";
 import { appointmentController } from "./appointment.controller";
 
 const appointmentRouter = express.Router();
 
-// appointmentRouter.post("/:id", asyncHandler(appointmentController.bookAppointment));
-appointmentRouter.get("/:id", asyncHandler(appointmentController.getAppointment));
-appointmentRouter.get("/", asyncHandler(appointmentController.getAllAppointments));
-appointmentRouter.delete("/:id", asyncHandler(appointmentController.deleteAppointment));
+// appointmentRouter.post("/:id", asyncHandlerAsyncAwait(appointmentController.bookAppointment));
+appointmentRouter.get("/:id", asyncHandlerAsyncAwait(appointmentController.getAppointment));
+appointmentRouter.get("/", asyncHandlerAsyncAwait(appointmentController.getAllAppointments));
+appointmentRouter.delete("/:id", asyncHandlerAsyncAwait(appointmentController.deleteAppointment));
 
 export default appointmentRouter;
 

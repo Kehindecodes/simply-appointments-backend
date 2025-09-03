@@ -1,15 +1,15 @@
 import { Router } from "express";
 import { checkUserExists } from "../../shared/middlewares/checkUserExists";
 import { authController } from "./auth.controller";
-import { asyncHandler } from "../../shared/utils/asyncHandler";
+import { asyncHandlerAsyncAwait } from "../../shared/utils/asyncHandlerAsyncAwait";
 
 const authRouter = Router();
 
-authRouter.post("/", checkUserExists, asyncHandler(authController.registerUser));
-authRouter.post("/login", asyncHandler(authController.loginUser));
-authRouter.post("/validate-otp", asyncHandler(authController.validateOTP));
-authRouter.post("/forgot-password", asyncHandler(authController.forgotPassword));
-authRouter.post("/reset-password", asyncHandler(authController.resetPassword));
-authRouter.get("/reset-password/:token", asyncHandler(authController.allowPasswordReset));
+authRouter.post("/", checkUserExists, asyncHandlerAsyncAwait(authController.registerUser));
+authRouter.post("/login", asyncHandlerAsyncAwait(authController.loginUser));
+authRouter.post("/validate-otp", asyncHandlerAsyncAwait(authController.validateOTP));
+authRouter.post("/forgot-password", asyncHandlerAsyncAwait(authController.forgotPassword));
+authRouter.post("/reset-password", asyncHandlerAsyncAwait(authController.resetPassword));
+authRouter.get("/reset-password/:token", asyncHandlerAsyncAwait(authController.allowPasswordReset));
 
 export default authRouter;

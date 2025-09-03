@@ -3,25 +3,25 @@ import { checkRole } from "../../shared/middlewares/checkRole";
 import { jwtAuthentication } from "../../shared/middlewares/jwtAuthentication";
 import { authorizeUser } from "../../shared/middlewares/authorizeUser";
 import { roleController } from "./role.controller";
-import { asyncHandler } from "../../shared/utils/asyncHandler";
+import { asyncHandlerAsyncAwait } from "../../shared/utils/asyncHandlerAsyncAwait";
 
 
 const roleRouter = express.Router();
 
 roleRouter.post("/",
     // jwtAuthentication,
-   asyncHandler(roleController.addNewRole)
+   asyncHandlerAsyncAwait(roleController.addNewRole)
 );
 roleRouter.get("/",
     // jwtAuthentication,
     // authorizeUser(["view Roles"]),
-    asyncHandler(roleController.getRoles)
+    asyncHandlerAsyncAwait(roleController.getRoles)
 );
 roleRouter.get("/:id",
     // jwtAuthentication,
     // authorizeUser(["view Roles"]),
     checkRole,
-    asyncHandler(roleController.getRole)
+    asyncHandlerAsyncAwait(roleController.getRole)
 );
 
 export default roleRouter;

@@ -33,7 +33,7 @@ export const authController = {
     res: Response
   ): Promise<void> => {
     await authService.allowPasswordReset(req.body.token);
-    res.status(200).json();
+    res.status(200).json({message: "You can now reset your password"});
   },
   resetPassword: async (req: CustomRequest, res: Response): Promise<void> => {
     await authService.resetPassword(

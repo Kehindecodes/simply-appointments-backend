@@ -18,7 +18,7 @@ export function generateToken() {
 
 export async function sendPasswordResetLink(email: string): Promise<SentMessageInfo> {
  const {token, expiresAt} = generateToken();
- const resetPasswordLink = `${process.env.BASE_URL || 'http://localhost:5050'}/api/v1/users/reset-password/${token}`;
+ const resetPasswordLink = `${process.env.BASE_URL || 'http://localhost:5050'}/api/v1/auth/reset-password/${token}`;
  const mailOptions = {
       from: process.env.EMAIL_USER,
       to: email,

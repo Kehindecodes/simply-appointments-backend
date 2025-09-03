@@ -62,36 +62,56 @@ export const authService = {
         next: NextFunction
     ): Promise<void> => {
 
-                  if (!email || !password) {
-                      throw new AppValidationError("Email and password are required");
-                  }
-                  return new Promise((resolve, reject) => {
-                  passport.authenticate(
-                      "local",
-                      async (err: any, user: User, info: any) => {
-                          if (err) {
-                              return reject(new ApiErrorResponse(500, err.message));
-                          }
-                          if (!user) {
-                              return reject(new ApiErrorResponse(401, info.message));
-                          }
-                          const otp = generateOTP();
-                          if (!otp) {
-                              return reject(new ApiErrorResponse(500, "Error generating OTP"));
-                          }
-                          const otpEntity = new OTP();
-                          otpEntity.otp = otp;
-                          otpEntity.email = email;
-                          await repository.save(otpEntity);
-                          const infoMail = await sendOTP(otp, email);
-                          if (!infoMail) {
-                              return reject(new OtpError("Error sending OTP"));
-                          }
-                          return resolve();
-                      }
-                  )(req, res, next);
-                  });
+        const promisifyPassportAuthenticate = (req: Request, res: Response, next: NextFunction): Promise<any> => {
+            return new Promise((resolve, reject) => {
+                passport.authenticate('local', (err: any, user: any, info: any) => {
+                    if (err) {
+                        return reject(err);
+                    }
+                    if (!user) {
+                        const errorMessage = info?.message || 'Authentication failed';
+                        return reject(new AppValidationError(errorMessage));
+                    }
+                    resolve(user);
+                })(req, res, next);
+            });
+        };
+
+        try {
+            if (!email || !password) {
+                throw new AppValidationError("Email and password are required");
+            }
+
+            const user = await promisifyPassportAuthenticate(req, res, next);
+
+            // At this point, the user is successfully authenticated
+            const otp = generateOTP();
+            if (!otp) {
+                throw new OtpError("Error generating OTP");
+            }
+
+            const otpEntity = new OTP();
+            otpEntity.otp = otp;
+            otpEntity.email = email;
+            await repository.save(otpEntity);
+
+            const infoMail = await sendOTP(otp, email);
+            if (!infoMail) {
+                throw new OtpError("Error sending OTP");
+            }
+            res.status(200).json({ message: 'OTP sent successfully' });
+
+        } catch (err: any) {
+            if (err instanceof AppValidationError || err instanceof OtpError || err instanceof ApiErrorResponse) {
+                return next(err);
+            }
+            console.error(err);
+            return next(new ApiErrorResponse(500, 'An unexpected error occurred.'));
+        }
      },
+
+
+
 
     validateOTP : async (email: string, otp: string, res: Response): Promise<void> => {
             if (!email || !otp) {
