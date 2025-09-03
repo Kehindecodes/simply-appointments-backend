@@ -7,7 +7,6 @@ import { validateEntity } from "../../shared/utils/validateData";
 import { roleRepository } from "../role/role.repository";
 import bcrypt from "bcrypt";
 import { generateOTP, sendOTP } from "../../shared/utils/otp.utils";
-import { OTP } from "../../shared/database/entity/OTP";
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { userRepository } from "../user/user.repository";
@@ -90,10 +89,13 @@ export const authService = {
                 throw new OtpError("Error generating OTP");
             }
 
-            const otpEntity = new OTP();
-            otpEntity.otp = otp;
-            otpEntity.email = email;
-            await repository.save(otpEntity);
+            const existingOtp = await otpRepository.getOTPByEmail(email);
+
+            if (existingOtp) {
+                await otpRepository.deleteOldOTPByEmail(email);
+            }
+
+            await otpRepository.createOTP(email, otp);
 
             const infoMail = await sendOTP(otp, email);
             if (!infoMail) {
@@ -113,12 +115,12 @@ export const authService = {
 
 
 
-    validateOTP : async (email: string, otp: string, res: Response): Promise<void> => {
+    validateOTP : async (email: string, otp: number, res: Response): Promise<void> => {
             if (!email || !otp) {
                 throw new AppValidationError("Email and OTP are required");
             }
 
-                const otpData = await otpRepository.getLatestOtp(email);
+                const otpData = await otpRepository.getOTPByEmail(email);
 
                 if (!otpData) {
                     throw new AppValidationError("Invalid OTP");

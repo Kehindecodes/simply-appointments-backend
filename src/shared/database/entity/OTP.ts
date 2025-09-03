@@ -8,7 +8,7 @@ export class OTP {
 
     @Column()
 
-    otp?: string;
+    otp?: number;
 
     @Column()
     email?: string;
@@ -17,8 +17,8 @@ export class OTP {
     createdAt?: Date
 
 
-    public get getOtp() : string {
-        return  this.otp || "";
+    public get getOtp() : number {
+        return  this.otp || 0
     }
 
 public get isExpired(): boolean {

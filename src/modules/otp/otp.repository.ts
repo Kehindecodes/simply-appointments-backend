@@ -4,34 +4,48 @@ import { MoreThan } from "typeorm";
 import moment from "moment-timezone";
 
 // Get the database timezone from the connection options
-const dbTimezone = (AppDataSource.options.extra as any)?.timezone || "UTC";
+// const dbTimezone = (AppDataSource.options.extra as any)?.timezone || "UTC";
 
 // Calculate 5 minutes ago in the database's timezone
-const fiveMinutesAgo = moment().tz(dbTimezone).subtract(5, "minutes").toDate();
+const fiveMinutesAgo = moment().utc().subtract(5, "minutes").toDate().toISOString();
 
 export const otpRepository = {
   // TODO: automate this process
-  deleteExpiredTokens: async (): Promise<void> => {
-    await AppDataSource.manager
-      .createQueryBuilder()
-      .delete()
-      .from(OTP)
-      .where("createdAt < :now", { now: new Date() })
-      .execute();
-  },
-  async getLatestOtp(email: string): Promise<OTP | null> {
-   try {
+  // deleteExpiredTokens: async (): Promise<void> => {
+  //   await AppDataSource.manager
+  //     .createQueryBuilder()
+  //     .delete()
+  //     .from(OTP)
+  //     .where("email")
+  //     .execute();
+  // },
+  getLatestOtp: async (email: string): Promise<OTP | null> => {
     const otp = await AppDataSource.manager.findOne(OTP, {
       where: {
         email,
-        createdAt: MoreThan(fiveMinutesAgo),
+        createdAt: MoreThan(new Date(fiveMinutesAgo)) ,
       },
       order: { createdAt: "DESC" },
     });
     return otp;
-   } catch (err: any) {
-    console.error(`Error getting latest OTP: ${err}`);
-    return null;
-   }
+  },
+  getOTPByEmail: async (email: string): Promise<OTP | null> => {
+      const otp = await AppDataSource.manager.findOne(OTP, {
+        where: {
+          email,
+        },
+      });
+      return otp;
+
+  },
+  deleteOldOTPByEmail: async (email: string): Promise<void> => {
+      await AppDataSource.manager.delete(OTP, {email });
+
+  },
+  createOTP: async (email: string, otp: number): Promise<void> => {
+    const otpEntity = new OTP();
+    otpEntity.otp = otp;
+    otpEntity.email = email;
+    await AppDataSource.manager.save(otpEntity);
   },
 };
