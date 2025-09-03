@@ -172,9 +172,20 @@ export const authService = {
         password: string,
         confirmPassword: string,
     ): Promise<void> => {
-        if (!password || !confirmPassword || !email) {
-            throw new AppValidationError("All fields are required");
+
+        if(!email){
+            throw new AppValidationError("Email is required");
         }
+
+        if(!password){
+            throw new AppValidationError("Password is required");
+        }
+
+        if(!confirmPassword){
+            throw new AppValidationError("Confirm Password is required");
+        }
+
+
         if (password !== confirmPassword) {
             throw new AppValidationError("Passwords do not match");
         }

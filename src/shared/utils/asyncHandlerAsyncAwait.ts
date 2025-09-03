@@ -6,7 +6,7 @@ export const asyncHandlerAsyncAwait = (fn:(req:Request, res:Response, next:NextF
       await fn(req, res, next);
     } catch (error: any) {
       // If an error occurs during execution, handle it by sending an error response
-      res.status(error.code || 500).json({
+      res.status(error.statusCode || 500).json({
         success: false,
         message: error.message || "Internal Server Error",
       });

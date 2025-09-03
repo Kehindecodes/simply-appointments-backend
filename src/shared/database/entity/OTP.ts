@@ -20,7 +20,6 @@ export class OTP {
     public get getOtp() : string {
         return  this.otp || "";
     }
-// extract the OTP expiration timeout into a configurable constant
 
 public get isExpired(): boolean {
     const OTP_EXPIRATION_TIME = process.env.OTP_EXPIRATION_TIME || 300000; // 5 minutes

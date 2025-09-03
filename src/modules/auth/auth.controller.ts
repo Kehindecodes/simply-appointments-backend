@@ -41,6 +41,6 @@ export const authController = {
       req.body.password,
       req.body.confirmPassword
     );
-    res.status(200).json();
+    res.status(200).json({message: "Password reset successfully"});
   },
 };

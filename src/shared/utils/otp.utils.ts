@@ -1,6 +1,7 @@
 import { SentMessageInfo } from "nodemailer";
 import {transporter} from "../config";
 import dotenv from "dotenv";
+import { AppValidationError } from "../../errors/AppValidationError";
 dotenv.config();
 
 
@@ -10,13 +11,14 @@ export const generateOTP = (): string => {
     return Math.floor(100000 + Math.random() * 900000).toString();
   };
 
+  const senderEmail = process.env.EMAIL_USERNAME;
 
 export const sendOTP = async (otp: string, email: string): Promise<SentMessageInfo> => {
-  if (!process.env.EMAIL_USER) {
-    throw new Error("sender email not found");
+  if (!senderEmail) {
+    throw new AppValidationError("sender email not found");
   }
   const mailOptions = {
-    from: process.env.EMAIL_USER,
+    from: senderEmail,
     to: email,
     subject: "OTP Verification",
     text: `Your OTP is ${otp}`,
