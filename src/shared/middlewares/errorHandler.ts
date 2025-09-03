@@ -1,10 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import { BaseError } from '../../errors/BaseError';
 import { AppValidationError } from '../../errors/AppValidationError';
+import { ApiErrorResponse } from '../utils/ApiErrorResponse';
 
 export const errorHandler = (err: Error, req: Request, res: Response, next: NextFunction) => {
     // Handle known third-party errors
-    if (err instanceof AppValidationError) {
+    if (err instanceof AppValidationError || err instanceof ApiErrorResponse) {
         return res.status(400).json({ message: err.message });
     }
 

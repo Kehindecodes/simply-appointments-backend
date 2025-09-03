@@ -3,14 +3,13 @@ import { CustomRequest } from "../types/custom-express";
 import { AppDataSource } from "../database/migration/data-source";
 import { User } from "../database/entity/User";
 import { Permission } from "../database/entity/Permission";
-import { ApiErrorResponse } from "../utils/ApiErrorResponse";
 
 export const authorizeUser = (permissions: string[]) => {
  return async (req: CustomRequest, res: Response, next: NextFunction) => {
    try{
     const userId = req.userId
     if (!userId) {
-        throw new ApiErrorResponse(401, "User not authenticated");
+        res.status(401).json({message: "User not authenticated"});
     }
 
 console.log(`Fetching user with ID: ${userId}`);
@@ -24,10 +23,10 @@ console.log(`Fetching user with ID: ${userId}`);
       .getOne();
 
             if (!userWithRole || !userWithRole.role) {
-                throw new ApiErrorResponse(403, "Forbidden: User has no role assigned");
+                res.status(403).json({message: "Forbidden: User has no role assigned"});
             }
 
-            const userPermissions = userWithRole.role?.permissions?.map(
+            const userPermissions = userWithRole!.role?.permissions?.map(
                 (p: Permission) => p.name
             ) || [];
 
@@ -37,12 +36,12 @@ console.log(`Fetching user with ID: ${userId}`);
             );
 
             if (!hasAllPermissions) {
-                throw new ApiErrorResponse(403, "Access denied");
+                res.status(403).json({message: "Forbidden: User does not have required permissions"});
             }
             next();
         } catch (error) {
             console.error("Authorization error:", error);
-            return res.status(500).json({ message: "Internal server error during authorization" });
+            return res.status(500).json({message: "Internal server error during authorization"});
         }
     };
 };
