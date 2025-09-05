@@ -5,8 +5,8 @@ import { Request, Response } from "express";
 
 export const PermissionController = {
     createPermission: async (req: Request, res: Response): Promise<void> => {
-        const { id, name, description, roleIds } = req.body;
-        await permissionRepository.create(id, name, description, roleIds);
+        const { id, name, description, roles } = req.body;
+        await permissionRepository.create( name, description, roles);
         res.status(201).json();
     },
     getPermissions: async (req: Request, res: Response): Promise<void> => {
@@ -27,6 +27,23 @@ export const PermissionController = {
     getRoleWithPermission: async (req: Request, res: Response): Promise<void> => {
         const permissionId = req.params.id;
         const permission = await permissionRepository.getRolePermission(Number(permissionId));
+        if (!permission) {
+            throw new NotFoundError(`Permission not found with ID ${permissionId}`);
+        }
+        res.status(200).json(permission);
+    },
+
+    createBulkPermissions: async (req: Request, res: Response): Promise<void> => {
+        const { permissions } = req.body;
+        for (let permission of permissions) {
+            await permissionRepository.create(permission.name, permission.description, permission.roles);
+        }
+        res.status(200).json();
+    },
+
+    getPermissionById: async (req: Request, res: Response): Promise<void> => {
+        const permissionId = req.params.id;
+        const permission = await permissionRepository.getPermissionById(Number(permissionId));
         if (!permission) {
             throw new NotFoundError(`Permission not found with ID ${permissionId}`);
         }

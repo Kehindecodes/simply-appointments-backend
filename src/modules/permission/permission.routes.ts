@@ -7,5 +7,7 @@ const permissionRouter = express.Router();
 permissionRouter.post("/", asyncHandlerAsyncAwait(PermissionController.createPermission));
 permissionRouter.get("/", asyncHandlerAsyncAwait(PermissionController.getPermissions));
 permissionRouter.get("/role/:id", asyncHandlerAsyncAwait(PermissionController.getRoleWithPermission));
+permissionRouter.post("/bulk", asyncHandlerAsyncAwait(PermissionController.createBulkPermissions));
+permissionRouter.get("/:id", asyncHandlerAsyncAwait(PermissionController.getPermissionById));
 
 export default permissionRouter;

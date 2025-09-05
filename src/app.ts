@@ -1,15 +1,14 @@
-import express, { Request, Response } from "express";
+import express from "express";
 import cors from "cors";
-// import userRouter from "./routes/User/user.route";
 import passport from "passport";
 import {localStrategy} from "./shared/config";
-// import permissionRouter from "./routes/Permission/permission.route";
 import authRouter from "./modules/auth/auth.routes";
 import { errorHandler } from "./shared/middlewares/errorHandler";
 import roleRouter from "./modules/role/role.routes";
 import appointmentRouter  from "./modules/appointment/appointment.routes";
 import userRouter from "./modules/user/user.routes";
 import serviceRouter from "./modules/service/service.routes";
+import permissionRouter from "./modules/permission/permission.routes";
 const app = express();
 
 // middlewares
@@ -25,12 +24,12 @@ app.use(cors());
 passport.use("local", localStrategy);
 
 //routes
-// app.use("/api/v1/permissions", permissionRouter);
 app.use("/api/v1/roles", roleRouter);
 app.use("/api/v1/appointments", appointmentRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/services", serviceRouter);
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/permissions", permissionRouter);
 
 // Error handling middleware
 app.use(errorHandler);
