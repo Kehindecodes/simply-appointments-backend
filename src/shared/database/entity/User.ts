@@ -56,7 +56,7 @@ export class User {
     @JoinColumn({ name: 'roleId'})
     role?: Role
 
-    @ManyToMany(() => Service , (service: Service) => service.users)
+    @ManyToMany(() => Service , (service: Service) => service.users,{nullable: true})
         services?: Service[]
         @JoinTable({ name: 'user_service' ,
             joinColumn: { name: 'user_id', referencedColumnName: 'id' },
