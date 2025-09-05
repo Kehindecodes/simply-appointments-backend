@@ -13,7 +13,7 @@ import { preventDoubleBooking } from "../../shared/middlewares/preventDoubleBook
 
 const userRouter = express.Router();
 
-userRouter.post("/:id/appointments",
+userRouter.post("/:userId/appointments",
     jwtAuthentication,
     authorizeUser(["Book Appointments"]),
     checkUser,
@@ -26,7 +26,7 @@ userRouter.post("/:id/appointments",
     asyncHandlerAsyncAwait(userController.bookAppointment)
 );
 
-userRouter.get("/:id",
+userRouter.get("/:userId",
     // jwtAuthentication,
     // authorizeUser(["View Users"]),
     checkUser,
@@ -39,14 +39,14 @@ userRouter.get("/",
     asyncHandlerAsyncAwait(userController.getAllUsers)
 )
 
-userRouter.patch("/:id",
+userRouter.patch("/:userId",
     jwtAuthentication,
     authorizeUser(["Update user"]),
     checkUser,
     asyncHandlerAsyncAwait(userController.updateUser)
 )
 
-userRouter.delete("/:id",
+userRouter.delete("/:userId",
     jwtAuthentication,
     authorizeUser(["delete user"]),
     checkUser,

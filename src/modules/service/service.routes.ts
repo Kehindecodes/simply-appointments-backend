@@ -17,19 +17,19 @@ serviceRouter.get("/",
     authorizeUser(["View Services"]),
     asyncHandlerAsyncAwait(serviceController.getAllServices));
 
-serviceRouter.get("/:id",
+serviceRouter.get("/:serviceId",
     jwtAuthentication,
     authorizeUser(["View Services"]),
     checkService,
     asyncHandlerAsyncAwait(serviceController.getService));
 
-serviceRouter.delete("/:id",
+serviceRouter.delete("/:serviceId",
     jwtAuthentication,
     authorizeUser(["Delete Service"]),
     checkService,
     asyncHandlerAsyncAwait(serviceController.deleteService));
 
-serviceRouter.patch("/:id",
+serviceRouter.patch("/:serviceId",
     jwtAuthentication,
     authorizeUser(["Update Service"]),
     checkService,

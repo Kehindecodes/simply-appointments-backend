@@ -42,7 +42,7 @@ export const PermissionController = {
     },
 
     getPermissionById: async (req: Request, res: Response): Promise<void> => {
-        const permissionId = req.params.id;
+        const permissionId = req.params.permissionId;
         const permission = await permissionRepository.getPermissionById(Number(permissionId));
         if (!permission) {
             throw new NotFoundError(`Permission not found with ID ${permissionId}`);

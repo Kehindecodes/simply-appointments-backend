@@ -33,6 +33,6 @@ export const jwtAuthentication = (req: CustomRequest, res: Response, next: NextF
       next();
     });
   } else {
-    res.status(401).json({ message: 'please login first' });
+    res.status(401).json({ message: 'please login' });
   }
 }

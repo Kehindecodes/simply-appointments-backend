@@ -17,7 +17,7 @@ roleRouter.get("/",
     // authorizeUser(["view Roles"]),
     asyncHandlerAsyncAwait(roleController.getRoles)
 );
-roleRouter.get("/:id",
+roleRouter.get("/:roleId",
     // jwtAuthentication,
     // authorizeUser(["view Roles"]),
     checkRole,
