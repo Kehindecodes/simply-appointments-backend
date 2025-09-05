@@ -28,7 +28,7 @@ interface UserData {
 
 export const authService = {
     registerUser: async (userData: UserData): Promise<void> => {
-        const { name, email, phoneNumber, password, address, userType } = userData;
+        const { name, email, phoneNumber, password, address} = userData;
 
         const user = new User();
         user.name = name;
@@ -36,11 +36,36 @@ export const authService = {
         user.phoneNumber = phoneNumber;
         user.password = password;
         user.address = address;
-        user.userType = userType || UserType.CUSTOMER;
+        user.userType =  UserType.CUSTOMER;
 
         await validateEntity(user);
 
-        const role = await roleRepository.getRoleByName(userType || UserType.CUSTOMER);
+        const role = await roleRepository.getRoleByName(UserType.CUSTOMER);
+
+        if (!role) {
+            throw new NotFoundError("role not found");
+        }
+        user.role = role || undefined;
+
+        const salt = await bcrypt.genSalt(10);
+        user.password = await bcrypt.hash(password, salt);
+
+        await repository.save(user);
+    },
+    registerAdmin: async (userData: UserData): Promise<void> => {
+        const { name, email, phoneNumber, password, address} = userData;
+
+        const user = new User();
+        user.name = name;
+        user.email = email;
+        user.phoneNumber = phoneNumber;
+        user.password = password;
+        user.address = address;
+        user.userType =  UserType.ADMIN;
+
+        await validateEntity(user);
+
+        const role = await roleRepository.getRoleByName( UserType.ADMIN);
 
         if (!role) {
             throw new NotFoundError("role not found");

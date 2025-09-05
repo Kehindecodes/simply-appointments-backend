@@ -7,6 +7,10 @@ export const authController = {
     await authService.registerUser(req.body);
     res.status(201).json();
   },
+  registerAdmin: async (req: CustomRequest, res: Response): Promise<void> => {
+    await authService.registerAdmin(req.body);
+    res.status(201).json();
+  },
   loginUser: async (
     req: CustomRequest,
     res: Response,

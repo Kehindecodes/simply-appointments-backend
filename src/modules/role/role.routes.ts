@@ -1,7 +1,5 @@
 import express from "express";
 import { checkRole } from "../../shared/middlewares/checkRole";
-import { jwtAuthentication } from "../../shared/middlewares/jwtAuthentication";
-import { authorizeUser } from "../../shared/middlewares/authorizeUser";
 import { roleController } from "./role.controller";
 import { asyncHandlerAsyncAwait } from "../../shared/utils/asyncHandlerAsyncAwait";
 

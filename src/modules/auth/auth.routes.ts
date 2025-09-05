@@ -5,7 +5,8 @@ import { asyncHandlerAsyncAwait } from "../../shared/utils/asyncHandlerAsyncAwai
 
 const authRouter = Router();
 
-authRouter.post("/", checkUserExists, asyncHandlerAsyncAwait(authController.registerUser));
+authRouter.post("/register", checkUserExists, asyncHandlerAsyncAwait(authController.registerUser));
+authRouter.post("/register/admin", checkUserExists, asyncHandlerAsyncAwait(authController.registerAdmin));
 authRouter.post("/login", asyncHandlerAsyncAwait(authController.loginUser));
 authRouter.post("/validate-otp", asyncHandlerAsyncAwait(authController.validateOTP));
 authRouter.post("/forgot-password", asyncHandlerAsyncAwait(authController.forgotPassword));

@@ -9,12 +9,11 @@ export const userController = {
 
    updateUser: async (req: CustomRequest, res: Response): Promise<void> => {
           const user = req.user
-          const {name, email, phoneNumber, address, userType} = req.body
+          const {name, email, phoneNumber, address} = req.body
           user!.name = name
           user!.email = email
           user!.phoneNumber = phoneNumber
           user!.address = address
-          user!.userType = userType
           await userRepository.updateUser(user!)
           res.status(200).json(user)
    },
