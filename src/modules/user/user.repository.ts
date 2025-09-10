@@ -1,3 +1,4 @@
+import { Role } from "../../shared/database/entity/Role";
 import { Service } from "../../shared/database/entity/Service";
 import { User } from "../../shared/database/entity/User";
 import { AppDataSource } from "../../shared/database/migration/data-source";
@@ -84,6 +85,10 @@ export const userRepository = {
             where: {id: user.id}});
         userServices!.services = userServices!.services!.filter((service) => service.id !== service.id);
         await AppDataSource.manager.save(userServices);
+    },
+    updateUserRole: async(user:User, role:Role): Promise<void> =>{
+        user.role = role;
+        await userRepository.updateUser(user);
     }
 
 }

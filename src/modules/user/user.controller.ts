@@ -55,6 +55,10 @@ export const userController = {
     const {user} = req
     await userRepository.deleteUserService(user!)
     res.status(204).json()
+   },
+   updateUserRole: async (req: CustomRequest, res: Response): Promise<void> => {
+    const {user, role} = req
+    await userService.changeUserRole(user!, role!)
+    res.status(204).json();
    }
-
 }

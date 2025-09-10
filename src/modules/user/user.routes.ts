@@ -10,6 +10,7 @@ import { passBookingLimit } from "../../shared/middlewares/passBookingLimit";
 import { avoidBookingSameServiceMultipleTimes } from "../../shared/middlewares/avoidMultipleServiceBookings";
 import { passUserBookingLimit } from "../../shared/middlewares/passUserBookingLimit";
 import { preventDoubleBooking } from "../../shared/middlewares/preventDoubleBooking";
+import { checkRole } from "../../shared/middlewares/checkRole";
 
 const userRouter = express.Router();
 
@@ -80,6 +81,14 @@ userRouter.delete("/:staffId/services/:serviceId",
     authorizeUser(["Delete staff service"]),
     checkStaff,
     asyncHandlerAsyncAwait(userController.deleteUserService)
+)
+
+userRouter.patch("/:userId/roles",
+    jwtAuthentication,
+    authorizeUser(["Change Role"]),
+    checkUser,
+    checkRole,
+    asyncHandlerAsyncAwait(userController.updateUserRole)
 )
 
 export default userRouter;

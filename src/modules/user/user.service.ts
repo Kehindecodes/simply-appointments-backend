@@ -1,3 +1,5 @@
+import { UserType } from "../../shared/config/enums/UserType";
+import { Role } from "../../shared/database/entity/Role";
 import { User } from "../../shared/database/entity/User";
 import { appointmentService } from "../appointment/appointment.service";
 import { serviceRepository } from "../service/service.repository";
@@ -51,6 +53,15 @@ export const userService = {
             data.push(user);
         }
         return data;
+    },
+
+    changeUserRole: async (user: User, role: Role): Promise<void> => {
+        await userRepository.updateUserRole(user, role);
+        if (role.name === "Staff") {
+            user.userType = UserType.STAFF;
+            user.isAvailable = true;
+        }
+        await userRepository.updateUser(user);
     }
 
 }
