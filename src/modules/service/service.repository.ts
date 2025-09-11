@@ -13,7 +13,7 @@ getServiceWithAssignedStaff: async(serviceId: string): Promise<Service | null> =
     },
 
     getServiceById: async(serviceId: string): Promise<Service | null> => {
-        return AppDataSource.manager.findOne(Service, {where: {id: serviceId}})
+        return await AppDataSource.manager.findOne(Service, {where: {id: serviceId}})
 
     },
 
@@ -23,7 +23,7 @@ getServiceWithAssignedStaff: async(serviceId: string): Promise<Service | null> =
     duration: string,
     price: number,
    ) => {
-    const service = AppDataSource.manager.create(Service, {
+    const service = await AppDataSource.manager.create(Service, {
         serviceName,
         description,
         duration,
@@ -47,6 +47,6 @@ getServiceWithAssignedStaff: async(serviceId: string): Promise<Service | null> =
     },
 
     getAllServices: async () => {
-        return AppDataSource.manager.find(Service);
+        return await AppDataSource.manager.find(Service);
     },
 }

@@ -18,23 +18,43 @@ export const userController = {
           res.status(200).json(user)
    },
    getUser: async (req: CustomRequest, res: Response): Promise<void> => {
+    try {
     const user = req.user
     res.status(200).json(user)
+   } catch (error) {
+    console.error("Error getting user:", error);
+    res.status(500).json({message: "Internal server error"});
+   }
    },
    getAllUsers: async (req: CustomRequest, res: Response): Promise<void> => {
+    try {
     const users = await userService.getAllUsers(req.query)
     res.status(200).json(users)
+   } catch (error) {
+    console.error("Error getting all users:", error);
+    res.status(500).json({message: "Internal server error"});
+   }
    },
    bookAppointment: async (req: CustomRequest, res: Response): Promise<void> => {
+   try {
     const {user, staff, service} = req
     const {time, date} = req.body
     await appointmentService.bookAppointment({time, service, date, user, staff})
     res.status(200).json()
+   } catch (error) {
+    console.error("Error booking appointment:", error);
+    res.status(500).json({message: "Internal server error"});
+   }
    },
    deleteUser: async (req: CustomRequest, res: Response): Promise<void> => {
+   try {
     const user = req.user
     await userRepository.deleteUser(user!)
     res.status(204).json()
+   } catch (error) {
+    console.error("Error deleting user:", error);
+    res.status(500).json({message: "Internal server error"});
+   }
    },
    getUserAppointments: async (req: CustomRequest, res: Response): Promise<void> => {
     const user = req.user
@@ -42,23 +62,43 @@ export const userController = {
     res.status(200).json(appointments)
    },
    addServiceToUser: async (req: CustomRequest, res: Response): Promise<void> => {
-    const {user, service} = req
-    await userRepository.addServiceToUser(user!, service!)
+   try {
+      const {staff, service} = req
+    await userRepository.addServiceToUser(staff!, service!)
     res.status(204).json()
+   } catch (error) {
+    console.error("Error adding service to user:", error);
+    res.status(500).json({message: "Internal server error"});
+   }
    },
    getUserServices: async (req: CustomRequest, res: Response): Promise<void> => {
-    const user = req.user
-    const services = await userRepository.getUserServices(user!)
+   try {
+    const staff = req.staff
+    const services = await userRepository.getUserServices(staff!)
     res.status(200).json(services)
+   } catch (error) {
+    console.error("Error getting user services:", error);
+    res.status(500).json({message: "Internal server error"});
+   }
    },
    deleteUserService: async (req: CustomRequest, res: Response): Promise<void> => {
-    const {user} = req
-    await userRepository.deleteUserService(user!)
+   try {
+    const {staff} = req
+    await userRepository.deleteUserService(staff!)
     res.status(204).json()
+   } catch (error) {
+    console.error("Error deleting user service:", error);
+    res.status(500).json({message: "Internal server error"});
+   }
    },
    updateUserRole: async (req: CustomRequest, res: Response): Promise<void> => {
-    const {user, role} = req
+   try {
+    const { user, role} = req
     await userService.changeUserRole(user!, role!)
     res.status(204).json();
+   } catch (error) {
+    console.error("Error updating user role:", error);
+    res.status(500).json({message: "Internal server error"});
    }
+}
 }

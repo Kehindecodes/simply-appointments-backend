@@ -169,6 +169,7 @@ export const authService = {
                         return;
                     }
                     throw new AppValidationError("Invalid OTP");
+
                 }
                 throw new NotFoundError("No user found");
 

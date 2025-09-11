@@ -71,7 +71,7 @@ userRouter.get("/:staffId/services/:serviceId",
 
 userRouter.get("/:staffId/services",
     jwtAuthentication,
-    authorizeUser(["View Staff Services"]),
+    // authorizeUser(["View Staff Services"]),
     checkStaff,
     asyncHandlerAsyncAwait(userController.getUserServices)
 )
@@ -90,5 +90,27 @@ userRouter.patch("/:userId/roles",
     checkRole,
     asyncHandlerAsyncAwait(userController.updateUserRole)
 )
+
+userRouter.post("/:staffId/services/:serviceId",
+    jwtAuthentication,
+    authorizeUser(["Add staff service"]),
+    checkService,
+    checkStaff,
+    asyncHandlerAsyncAwait(userController.addServiceToUser)
+)
+
+userRouter.delete("/:staffId/services/:serviceId",
+    jwtAuthentication,
+    authorizeUser(["Delete staff service"]),
+    checkStaff,
+    asyncHandlerAsyncAwait(userController.deleteUserService)
+)
+
+// userRouter.get("/:staffId/services",
+//     jwtAuthentication,
+//     // authorizeUser(["view services"]),
+//     checkStaff,
+//     asyncHandlerAsyncAwait(userController.getUserServices)
+// )
 
 export default userRouter;

@@ -8,10 +8,8 @@ export const checkService = async (
     next: NextFunction
 ) => {
     try {
-        // check the route params for valid service Id
         let serviceId = req.params.serviceId;
         if (!serviceId) {
-            //check the parsed body instead
             const post = req.body;
             if (!post.serviceId) {
                 res.status(400).json({ message: "Service id is required" });
