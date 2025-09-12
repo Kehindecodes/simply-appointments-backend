@@ -61,19 +61,11 @@ userRouter.get("/:id/appointments",
     asyncHandlerAsyncAwait(userController.getUserAppointments)
 )
 
-userRouter.get("/:staffId/services/:serviceId",
-    jwtAuthentication,
-    authorizeUser(["Add Staff Service "]),
-    checkService,
-    checkStaff,
-    asyncHandlerAsyncAwait(userController.addServiceToUser)
-)
-
 userRouter.get("/:staffId/services",
     jwtAuthentication,
     // authorizeUser(["View Staff Services"]),
     checkStaff,
-    asyncHandlerAsyncAwait(userController.getUserServices)
+    asyncHandlerAsyncAwait(userController.getStaffWithServices)
 )
 
 userRouter.delete("/:staffId/services/:serviceId",
@@ -96,7 +88,7 @@ userRouter.post("/:staffId/services/:serviceId",
     authorizeUser(["Add staff service"]),
     checkService,
     checkStaff,
-    asyncHandlerAsyncAwait(userController.addServiceToUser)
+    asyncHandlerAsyncAwait(userController.assignServiceToStaff)
 )
 
 userRouter.delete("/:staffId/services/:serviceId",
@@ -106,11 +98,5 @@ userRouter.delete("/:staffId/services/:serviceId",
     asyncHandlerAsyncAwait(userController.deleteUserService)
 )
 
-// userRouter.get("/:staffId/services",
-//     jwtAuthentication,
-//     // authorizeUser(["view services"]),
-//     checkStaff,
-//     asyncHandlerAsyncAwait(userController.getUserServices)
-// )
 
 export default userRouter;

@@ -56,14 +56,14 @@ export class User {
     @JoinColumn({ name: 'roleId'})
     role?: Role
 
-    @ManyToMany(() => Service , (service: Service) => service.users,{nullable: true})
-        services?: Service[]
-        @JoinTable({ name: 'user_service' ,
-            joinColumn: { name: 'user_id', referencedColumnName: 'id' },
-            inverseJoinColumn: { name: 'service_id', referencedColumnName: 'id' },
+    @ManyToMany(() => Service, (service: Service) => service.users)
+    @JoinTable({
+        name: "staff_services",
+        joinColumn: { name: "user_id", referencedColumnName: "id" },
+        inverseJoinColumn: { name: "service_id", referencedColumnName: "id" }
+    })
+    services?: Service[]
 
-        })
-        service?: Service
     @IsOptional()
     @Column(
         {nullable:true}

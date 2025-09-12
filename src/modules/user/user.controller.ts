@@ -61,21 +61,21 @@ export const userController = {
     const appointments = await appointmentRepository.getAppointmentsByUserId(user!)
     res.status(200).json(appointments)
    },
-   addServiceToUser: async (req: CustomRequest, res: Response): Promise<void> => {
+   assignServiceToStaff: async (req: CustomRequest, res: Response): Promise<void> => {
    try {
       const {staff, service} = req
-    await userRepository.addServiceToUser(staff!, service!)
-    res.status(204).json()
+    await userRepository.addServiceToStaff(staff!, service!)
+    res.status(204).end()
    } catch (error) {
-    console.error("Error adding service to user:", error);
+    console.error("Error adding service to staff:", error);
     res.status(500).json({message: "Internal server error"});
    }
    },
-   getUserServices: async (req: CustomRequest, res: Response): Promise<void> => {
+   getStaffWithServices: async (req: CustomRequest, res: Response): Promise<void> => {
    try {
     const staff = req.staff
-    const services = await userRepository.getUserServices(staff!)
-    res.status(200).json(services)
+    const staffWithServices = await userRepository.getStaffWithServices(staff!)
+    res.status(200).json(staffWithServices!.services)
    } catch (error) {
     console.error("Error getting user services:", error);
     res.status(500).json({message: "Internal server error"});
@@ -83,8 +83,8 @@ export const userController = {
    },
    deleteUserService: async (req: CustomRequest, res: Response): Promise<void> => {
    try {
-    const {staff} = req
-    await userRepository.deleteUserService(staff!)
+    const {staff, service} = req
+    await userRepository.deleteUserService(staff!, service!)
     res.status(204).json()
    } catch (error) {
     console.error("Error deleting user service:", error);

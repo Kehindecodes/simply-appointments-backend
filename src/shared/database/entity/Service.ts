@@ -59,7 +59,6 @@ export class Service {
     createdAt!: Date;
 
     @ManyToMany(() => User, (user: User) => user.services)
-    @JoinTable()
     users?: User[]
 
     @Column({
