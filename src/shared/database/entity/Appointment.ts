@@ -4,6 +4,7 @@ import {
     CreateDateColumn,
     Entity,
     PrimaryGeneratedColumn,
+    UpdateDateColumn,
 } from "typeorm";
 import {
     registerDecorator,
@@ -44,12 +45,11 @@ export class Appointment {
     @Column()
     userId?: string;
 
-    @Matches(/^\d{2}:\d{2} (AM|PM)$/, { message: "Invalid time format. Use HH:mm AM/PM " })
     @IsNotEmpty({ message: "Appointment time is required" })
-    @Column()
+    @Column({type: "timestamptz"})
     time?: string;
 
-    @Column()
+    @Column({type: "timestamptz"})
     endTime?: string;
 
     @IsNotPastDate()
@@ -57,7 +57,7 @@ export class Appointment {
         message: "Invalid date format. Use YYYY-MM-DD",
     })
     @IsNotEmpty({ message: "Appointment date is required" })
-    @Column()
+    @Column({type: "date"})
     date?: Date;
 
     @IsString()
@@ -76,6 +76,9 @@ export class Appointment {
 
     @CreateDateColumn()
     createdAt!: Date;
+
+    @UpdateDateColumn()
+    updatedAt!: Date;
 
     @Column({
         default: false,
