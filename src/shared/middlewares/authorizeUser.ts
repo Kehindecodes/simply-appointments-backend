@@ -24,6 +24,7 @@ console.log(`Fetching user with ID: ${userId}`);
 
             if (!userWithRole || !userWithRole.role) {
                 res.status(403).json({message: "Forbidden: User has no role assigned"});
+                return;
             }
 
             const userPermissions = userWithRole!.role?.permissions?.map(
@@ -37,6 +38,7 @@ console.log(`Fetching user with ID: ${userId}`);
 
             if (!hasAllPermissions) {
                 res.status(403).json({message: "Forbidden: User does not have required permissions"});
+                return;
             }
             next();
         } catch (error) {

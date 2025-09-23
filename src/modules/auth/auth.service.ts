@@ -162,7 +162,7 @@ export const authService = {
                             process.env.SECRET_KEY as string,
                             {
                                 algorithm: "HS256",
-                                expiresIn: "1h",
+                                // expiresIn: "1h",
                             }
                         );
                         res.header("Authorization", `Bearer ${token}`);

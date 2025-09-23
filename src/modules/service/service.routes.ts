@@ -14,7 +14,7 @@ serviceRouter.post("/",
 
 serviceRouter.get("/",
     jwtAuthentication,
-    authorizeUser(["View Services"]),
+    // authorizeUser(["View Services"]),
     asyncHandlerAsyncAwait(serviceController.getAllServices));
 
 serviceRouter.get("/:serviceId",

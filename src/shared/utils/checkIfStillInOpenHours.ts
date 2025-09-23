@@ -1,6 +1,6 @@
 import { parse, isWithinInterval } from "date-fns";
 
-const openHours = [
+export const openHours = [
     {
         day: "Sunday",
         open: "12:00 PM",

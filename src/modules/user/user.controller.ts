@@ -41,9 +41,9 @@ export const userController = {
     const {time, date} = req.body
     await appointmentService.bookAppointment({time, service, date, user, staff})
     res.status(200).json()
-   } catch (error) {
+   } catch (error: any) {
     console.error("Error booking appointment:", error);
-    res.status(500).json({message: "Internal server error"});
+    res.status(error.statusCode).json({message: error.message});
    }
    },
    deleteUser: async (req: CustomRequest, res: Response): Promise<void> => {
