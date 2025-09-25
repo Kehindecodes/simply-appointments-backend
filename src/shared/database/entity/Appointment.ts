@@ -47,10 +47,10 @@ export class Appointment {
 
     @IsNotEmpty({ message: "Appointment time is required" })
     @Column({type: "timestamptz"})
-    time?: string;
+    time?: Date;
 
     @Column({type: "timestamptz"})
-    endTime?: string;
+    endTime?: Date;
 
     @IsNotPastDate()
     @Matches(/^\d{4}-\d{2}-\d{2}$/, {

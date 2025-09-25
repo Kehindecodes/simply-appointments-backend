@@ -14,13 +14,13 @@ export const appointmentRepository = {
     status: AppointmentStatus
   ) => {
     const appointment = AppDataSource.manager.create(Appointment, {
-      time,
+      time: new Date(`${date} ${time}`),
       staffId,
       serviceId,
-      date,
+      date: new Date(date),
       userId,
       status,
-      endTime,
+      endTime: new Date(`${date} ${endTime}`),
     });
 
     await validateEntity(appointment);
@@ -51,7 +51,7 @@ export const appointmentRepository = {
     return appointment;
   },
 
-  findStaffAppointmentAtDateTime: async (staffId: string, time: string, date: Date) => {
+  findStaffAppointmentAtDateTime: async (staffId: string, time: Date, date: Date) => {
     const appointment = await AppDataSource.manager.findOne(Appointment, {
         where: {
             staffId: staffId,

@@ -8,8 +8,8 @@ export const preventDoubleBooking = async (req: CustomRequest, res: Response, ne
         try{
             const appointment = await AppDataSource.manager.findOne(Appointment, {
                 where: {
-                    time: time,
-                    date: date,
+                    time: new Date(`${date} ${time}`),
+                    date:  new Date(date),
                     userId:req.userId
                 },
             });
