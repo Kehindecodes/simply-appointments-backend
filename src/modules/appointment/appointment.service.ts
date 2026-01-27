@@ -17,7 +17,7 @@ export const appointmentService = {
     let { time, staff, service, date, user } = appointmentData;
     const [hours, minutes] = time?.split(":");
     const appointmentDateTime = new Date(date);
-    appointmentDateTime.setHours(
+    appointmentDateTime.setHours( 
       parseInt(hours, 10),
       parseInt(minutes, 10),
       0,
@@ -80,7 +80,7 @@ export const appointmentService = {
       appointmentStartTime,
       availableStaffId,
       service.id,
-      new Date(date).toISOString(),frv44r4fr4r4frv4frv4fr4frv4
+      new Date(date).toISOString(),
       appointmentEndtime.toISOString().split("T")[0],
       user.id,
       AppointmentStatus.PENDING
